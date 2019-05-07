@@ -1,0 +1,15 @@
+SELECT TOP (1000) C.[ID]
+      ,C.[SmashID]
+      ,C.[Name]
+      ,C.[SmashPopMains]
+      ,C.[SmashPopAlts]
+      ,C.[Tier]
+      ,C.[Popularity]
+	  ,C.[SmashOriginID]
+	  ,SG.[SubTitle] AS 'SmashOrigin'
+	  ,OG.[Title] AS 'Origin'
+FROM [SmashPopMVC].[dbo].[Characters] AS C
+INNER JOIN [SmashPopMVC].[dbo].[Games] AS SG ON C.SmashOriginID=SG.ID
+LEFT JOIN [SmashPopMVC].[dbo].[Games] AS OG ON C.OriginID=OG.ID;
+
+  

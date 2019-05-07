@@ -1,0 +1,262 @@
+SET IDENTITY_INSERT [dbo].[Games] ON
+GO
+INSERT [dbo].[Games]([ID], [Title], [SubTitle], [ReleaseDate], [Discriminator])
+VALUES (1, 'Super Smash Bros', 'Classic', '01/21/1999', 'SmashGame')
+GO
+INSERT [dbo].[Games]([ID], [Title], [SubTitle], [ReleaseDate], [Discriminator])
+VALUES (2, 'Super Smash Bros', 'Melee', '11/21/2001', 'SmashGame')
+GO
+INSERT [dbo].[Games]([ID], [Title], [SubTitle], [ReleaseDate], [Discriminator])
+VALUES (3, 'Super Smash Bros', 'Brawl', '01/31/2008', 'SmashGame')
+GO
+INSERT [dbo].[Games]([ID], [Title], [SubTitle], [ReleaseDate], [Discriminator])
+VALUES (4, 'Super Smash Bros', 'Wii U', '11/21/2014', 'SmashGame')
+GO
+INSERT [dbo].[Games]([ID], [Title], [SubTitle], [ReleaseDate], [Discriminator])
+VALUES (5, 'Super Smash Bros', 'Ultimate', '12/07/2018', 'SmashGame')
+GO
+INSERT [dbo].[Games]([ID], [Title], [ReleaseDate], [Discriminator])
+VALUES (6, 'Donkey Kong', '07/09/1981', 'OriginGame')
+GO
+INSERT [dbo].[Games]([ID], [Title], [ReleaseDate], [Discriminator])
+VALUES (7, 'Legend of Zelda', '02/21/1986', 'OriginGame')
+GO
+INSERT [dbo].[Games]([ID], [Title], [ReleaseDate], [Discriminator])
+VALUES (8, 'Metroid', '08/06/1986', 'OriginGame')
+GO
+SET IDENTITY_INSERT [dbo].[Games] OFF
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID], [OriginID])
+VALUES (1, 'Mario', 'mario', 0, 0, 'B', 0, 1, 6)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID], [OriginID])
+VALUES (2, 'Donkey Kong', 'donkey-kong', 0, 0, 'G', 0, 1, 6)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID], [OriginID])
+VALUES (3, 'Link', 'link', 0, 0, 'G', 0, 1, 7)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID], [OriginID])
+VALUES (4, 'Samus', 'samus', 0, 0, 'G', 0, 1, 8)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES ('4E', 'Dark Samus', 'dark-samus', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (5, 'Yoshi', 'yoshi', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (6, 'Kirby', 'kirby', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (7, 'Fox', 'fox', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (8, 'Pikachu', 'pikachu', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (9, 'Luigi', 'luigi', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (10, 'Ness', 'ness', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (11, 'Captain Falcon', 'captain-falcon', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (12, 'Jigglypuff', 'jigglypuff', 0, 0, 'G', 0, 1)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (13, 'Peach', 'peach', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES ('13E', 'Daisy', 'daisy', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (14, 'Bowser', 'bowser', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (15, 'Ice Climbers', 'ice-climbers', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (16, 'Sheik', 'sheik', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (17, 'Zelda', 'zelda', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (18, 'Dr. Mario', 'dr-mario', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (19, 'Pichu', 'pichu', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (20, 'Falco', 'falco', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (21, 'Marth', 'marth', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES ('21E', 'Lucina', 'lucina', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (22, 'Young Link', 'young-link', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (23, 'Ganondorf', 'ganondorf', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (24, 'Mewtwo', 'mewtwo', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (25, 'Roy', 'roy', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES ('25E', 'Chrom', 'chrom', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (26, 'Mr. Game & Watch', 'mr-game-and-watch', 0, 0, 'G', 0, 2)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (27, 'Meta Knight', 'meta-knight', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (28, 'Pit', 'pit', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES ('28E', 'Dark Pit', 'dark-pit', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (29, 'Zero Suit Samus', 'zero-suit-samus', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (30, 'Wario', 'wario', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (31, 'Snake', 'snake', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (32, 'Ike', 'ike', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (33, 'Pokemon Trainer Squirtle', 'squirtle', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (34, 'Pokemon Trainer Ivysaur', 'ivysaur', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (35, 'Pokemon Trainer Charizard', 'charizard', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (36, 'Diddy Kong', 'diddy-kong', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (37, 'Lucas', 'lucas', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (38, 'Sonic', 'sonic', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (39, 'King Dedede', 'king-dedede', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (40, 'Olimar', 'olimar', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (41, 'Lucario', 'lucario', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (42, 'R.O.B.', 'rob', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (43, 'Toon Link', 'toon-link', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (44, 'Wolf', 'wolf', 0, 0, 'G', 0, 3)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (45, 'Villager', 'villager', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (46, 'MegaMan',  'megaman', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (47, 'Wii Fit Trainer', 'wii-fit-trainer', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (48, 'Rosalina and Luma', 'rosalina', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (49, 'Little Mac', 'little-mac', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (50, 'Greninja', 'greninja', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (51, 'Mii Brawler', 'mii-brawler', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (52, 'Mii SwordFighter', 'mii-swordfighter', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (53, 'Mii Gunner', 'mii-gunner', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (54, 'Palutena', 'palutena', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (55, 'Pac-man', 'pac-man', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (56, 'Robin', 'robin', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (57, 'Shulk', 'shulk', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (58, 'Bowser Jr.', 'bowser-jr', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (59, 'Duck Hunt', 'duck-hunt', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (60, 'Ryu', 'ryu', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES ('60E', 'Ken', 'ken', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (61, 'Cloud', 'cloud', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (62, 'Corrin', 'corrin', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (63, 'Bayonetta', 'bayonetta', 0, 0, 'G', 0, 4)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (64, 'Inkling', 'inkling', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (65, 'Ridley', 'ridley', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (66, 'Simon', 'simon', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES ('66E', 'Richter', 'richter', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (67, 'King K. Rool', 'king-k-rool', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (68, 'Isabelle', 'isabelle', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (69, 'Incineroar', 'incineroar', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (70, 'Piranha Plant', 'piranha-plant', 0, 0, 'G', 0, 5)
+GO
+INSERT [dbo].[Characters]([SmashID], [Name], [ImageName], [SmashPopMains], [SmashPopAlts], [Tier], [Popularity], [SmashOriginID])
+VALUES (71, 'Joker', 'joker', 0, 0, 'G', 0, 5)
+GO

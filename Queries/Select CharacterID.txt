@@ -1,0 +1,12 @@
+SELECT TOP (1000) [CharacterID]
+      ,[Name]
+      ,[SmashPopMains]
+      ,[SmashPopAlts]
+      ,[CurrentTier]
+      ,[Popularity]
+      ,[FirstAppearedID]
+  FROM [SmashPop].[dbo].[Characters]
+  ORDER BY 
+	CASE ISNUMERIC([CharacterID])
+		WHEN 1 THEN CONVERT(INT, [CharacterID])
+  END

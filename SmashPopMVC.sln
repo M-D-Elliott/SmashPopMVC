@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashPopMVC", "SmashPopMVC\SmashPopMVC.csproj", "{C25FE3EA-9BC3-41DF-966F-4478FEB66B4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmashPopMVC", "SmashPopMVC\SmashPopMVC.csproj", "{C25FE3EA-9BC3-41DF-966F-4478FEB66B4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashPopMVC.Data", "SmashPopMVC.Data\SmashPopMVC.Data.csproj", "{DEB9CE14-5BB2-4127-ACAD-C4672ECA3624}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashPopMVC.Services", "SmashPopMVC.Services\SmashPopMVC.Services.csproj", "{55BCAF4C-3165-4A3B-A9D7-D159BE084C54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{C25FE3EA-9BC3-41DF-966F-4478FEB66B4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C25FE3EA-9BC3-41DF-966F-4478FEB66B4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C25FE3EA-9BC3-41DF-966F-4478FEB66B4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEB9CE14-5BB2-4127-ACAD-C4672ECA3624}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEB9CE14-5BB2-4127-ACAD-C4672ECA3624}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEB9CE14-5BB2-4127-ACAD-C4672ECA3624}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEB9CE14-5BB2-4127-ACAD-C4672ECA3624}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55BCAF4C-3165-4A3B-A9D7-D159BE084C54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55BCAF4C-3165-4A3B-A9D7-D159BE084C54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55BCAF4C-3165-4A3B-A9D7-D159BE084C54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55BCAF4C-3165-4A3B-A9D7-D159BE084C54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

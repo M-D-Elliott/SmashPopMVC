@@ -1,0 +1,32 @@
+﻿@model SmashPopMVC.Models.Character.CharacterDataListingModel
+@using SmashPopMVC.Models.Character
+
+@{
+    ViewData["Title"] = "Whack-A-Main!";
+}
+
+<environment include="Development">
+    <link rel="stylesheet" href="~/css/MiniGames/whack.css" />
+</environment>
+
+<div class="vertical-center">
+    <div id="Stats">
+        <h3>Score: <span id="Score">0</span></h3>
+        <h3>Level: <span id="Level">1</span></h3>
+        <div>
+            <h5>Combo: </h5>
+            <div id="Combo"></div>
+        </div>
+        <button id="Start" onclick="startGame()">Start</button>
+        <button id="End" onclick="endGame()">End</button>
+        <div><h3>Time: <span id="Time">0</span></h3></div>
+    </div>
+    <div id="GameArea" class="no-select">
+        Game Area
+    </div>
+</div>
+
+<script>
+    const whackCharacters = @Json.Serialize(Model.CharacterList);
+</script>
+

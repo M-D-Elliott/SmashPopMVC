@@ -216,7 +216,8 @@ namespace SmashPopMVC.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var shortName = model.Email.Substring(0, model.Email.IndexOf("@"));
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, MemberSince = DateTime.Now, ShortName = shortName };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

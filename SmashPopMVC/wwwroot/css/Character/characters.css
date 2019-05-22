@@ -1,0 +1,40 @@
+﻿.fa-window-close {
+    color: #f3172d;
+}
+
+.relative-parent,
+.relative-parent img {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+    .relative-parent .btn {
+        position: absolute;
+        top: 1%;
+        right: 1%;
+        z-index: 2;
+    }
+
+.btn.grey-white {
+    background-color: lightgrey;
+}
+
+    .btn.grey-white:hover {
+        background-color: white;
+    }
+
+h4 {
+    color: pink;
+}
+
+.flex-container {
+    display: flex;
+    height: 70%;
+    width: 85%;
+    flex-wrap: wrap;
+}
+
+.character:hover {
+    background-position-y: -50px;
+}

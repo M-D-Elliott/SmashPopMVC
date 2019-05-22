@@ -1,0 +1,61 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using SmashPopMVC.Models.ApplicationUser
+
+@model SmashPopMVC.Models.ApplicationUser.ProfileIndexModel
+
+<div class="container">
+    <div id="Profile" class="row">
+        <div id="ProfileData" class="col-sm-6 col-md-3 pull-left">
+            @Model.Name
+            <div id="ProfileImages" class="row">
+                @if (Model.ID == Model.CurrentUserID)
+                {
+                    <div id="Main" class="col-6 card flex-item modal-link updatable" title="@Model.MainName">
+                        <img class="card-img-top character @Model.MainImage" alt="...">
+                    </div>
+                    <div id="Alt" class="col-6 card flex-item modal-link updatable" title="@Model.AltName">
+                        <img class="card-img-top character @Model.AltImage" alt="...">
+                    </div>
+                }
+                else
+                {
+                    <div class="col-6 card flex-item" title="@Model.MainName">
+                        <img class="card-img-top character @Model.MainImage" alt="...">
+                    </div>
+                    <div class="col-6 card flex-item" title="@Model.AltName">
+                        <img class="card-img-top character @Model.AltImage" alt="...">
+                    </div>
+                }
+
+            </div>
+            @Html.Partial("_UserUpdatePartial", Model.UpdateViewModel)
+            @if (User.Identity.IsAuthenticated && Model.ID != Model.CurrentUserID && !Model.CurrentUserIsFriends)
+            {
+                @Html.Partial("_AddFriendPartial", new AddFriendViewModel { UserID = Model.CurrentUserID, FriendID = Model.ID });
+            }
+        </div>
+        <div id="ProfileFriends" class="col-sm-6 col-md-3 pull-right">
+            <p>Friends:</p>
+            <div class="row">
+                @foreach (var friend in Model.Friends.ApprovedFriends)
+                {
+                <div class="col-6 card flex-item" title="@friend.MainName">
+                    <a asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="@friend.ID"><h4 class="card-title">@friend.Name</h4></a>
+                    <img class="card-img-top character @friend.MainImage" alt="...">
+                </div>
+                }
+            </div>
+            @if (User.Identity.IsAuthenticated && Model.ID == Model.CurrentUserID)
+            {
+                <p>Accept?</p>
+                <div class="row">
+                    @foreach (var friend in Model.Friends.FriendRequests)
+                    {
+                        <p>@friend.Name</p>
+                        @Html.Partial("_AcceptFriendPartial", new AcceptFriendViewModel { RequestID = friend.RequestID });
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

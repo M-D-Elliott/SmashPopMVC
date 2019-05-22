@@ -1,0 +1,69 @@
+﻿.vertical-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    background-color: red;
+}
+
+#GameArea {
+    position: relative;
+    width: 90%;
+    height: 80vh;
+    background-color: blue;
+    /*cursor: url('/images/MiniGames/hammer.png'), default;*/
+}
+
+#Stats {
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    height: 10vh;
+    justify-content: space-between;
+}
+
+#Stats > h3,
+#Stats > h5,
+#Stats > button,
+#Stats > div {
+    width: 20%;
+}
+
+#End {
+    display:none;
+}
+
+.no-select {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+}
+
+.whack-icon {
+    border: 1px solid red;
+    border-radius: 50%;
+    position: absolute;
+    cursor: pointer;
+    transition:all 4s;
+}
+
+.shrink {
+    -moz-transform: scale(0.2);
+    -webkit-transform: scale(0.2);
+    -ms-transform: scale(0.2);
+    -o-transform: scale(0.2);
+    transform: scale(0.2);
+}
+
+.grow {
+    -moz-transform: scale(1.3);
+    -webkit-transform: scale(1.3);
+    -ms-transform: scale(1.3);
+    -o-transform: scale(1.3);
+    transform: scale(1.3);
+}

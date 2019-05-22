@@ -7,6 +7,10 @@ namespace SmashPopMVC.Models.Character
 {
     public class CharacterSelectingModel
     {
-        public IEnumerable<CharacterListingModel> CharacterList { get; set; } 
+        public int ID { get; set; }
+        public string SmashID { get; set; }
+        public string Name { get; set; }
+        public string Tier { get; set; }
+        public string ImageName { get; set; }
     }
 }

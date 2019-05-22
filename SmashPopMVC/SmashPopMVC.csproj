@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmashPopMVC.Data\SmashPopMVC.Data.csproj" />
-    <ProjectReference Include="..\SmashPopMVC.Services\SmashPopMVC.Services.csproj" />
+    <ProjectReference Include="..\SmashPopMVC.Services\SmashPopMVC.Service.csproj" />
   </ItemGroup>
 
 </Project>

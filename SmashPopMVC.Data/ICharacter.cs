@@ -6,7 +6,7 @@ namespace SmashPopMVC.Data
 {
     public interface ICharacter
     {
-        Character GetByID(int id);
+        Character GetByID(int? id);
         IEnumerable<Character> GetAll();
         IEnumerable<Character> GetAllWithGames();
 

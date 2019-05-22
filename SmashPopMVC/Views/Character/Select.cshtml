@@ -1,0 +1,32 @@
+﻿@using SmashPopMVC.Models.Character
+
+@model SmashPopMVC.Models.Character.CharacterListingModel
+
+<environment include="Development">
+    <link rel="stylesheet" href="~/css/Character/characters.css" />
+</environment>
+
+<div class="modal-body">
+    <button type="button" class="btn btn-outline-dark ml-1 float-right grey-white modal-close-btn" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+    <hr>
+    <h4 class="display-4">Choose your character!</h4>
+    <hr>
+    <div class="center">
+        <div class="row flex-container">
+            @foreach (CharacterSelectingModel character in Model.CharacterList)
+            {
+                <div class="card flex-item" title="@character.Name" id="@character.ID">
+                    <img class="card-img-top character @character.ImageName" alt="...">
+                </div>
+            }
+            <div class="card flex-item" title="Random">
+                <img class="card-img-top character random" alt="...">
+            </div>
+        </div>
+    </div>
+    <div class="center">
+        <div id="SelectedCharacters" class="row flex-container">
+        </div>
+    </div>
+    <button id="SubmitButton" class="btn btn-dark" data-dismiss="modal"> OK!</button>
+</div>

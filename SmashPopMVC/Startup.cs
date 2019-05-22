@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmashPopMVC.Data;
 using SmashPopMVC.Services;
+using SmashPopMVC.Service;
 using SmashPopMVC.Data.Models;
 
 namespace SmashPopMVC
@@ -31,6 +32,9 @@ namespace SmashPopMVC
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IGame, GameService>();
+            services.AddScoped<ICharacter, CharacterService>();
+            services.AddScoped<IApplicationUser, ApplicationUserService>();
 
             services.AddMvc();
         }

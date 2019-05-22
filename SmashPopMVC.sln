@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.28307.421
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmashPopMVC", "SmashPopMVC\SmashPopMVC.csproj", "{C25FE3EA-9BC3-41DF-966F-4478FEB66B4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashPopMVC.Data", "SmashPopMVC.Data\SmashPopMVC.Data.csproj", "{DEB9CE14-5BB2-4127-ACAD-C4672ECA3624}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmashPopMVC.Data", "SmashPopMVC.Data\SmashPopMVC.Data.csproj", "{DEB9CE14-5BB2-4127-ACAD-C4672ECA3624}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmashPopMVC.Services", "SmashPopMVC.Services\SmashPopMVC.Services.csproj", "{55BCAF4C-3165-4A3B-A9D7-D159BE084C54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmashPopMVC.Service", "SmashPopMVC.Services\SmashPopMVC.Service.csproj", "{55BCAF4C-3165-4A3B-A9D7-D159BE084C54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

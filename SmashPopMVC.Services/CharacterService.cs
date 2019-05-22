@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SmashPopMVC.Data;
 using SmashPopMVC.Data.Models;
 
-namespace SmashPopMVC.Services
+namespace SmashPopMVC.Service
 {
     public class CharacterService : ICharacter
     {
@@ -29,12 +29,15 @@ namespace SmashPopMVC.Services
                 .Include(c => c.SmashOrigin);
         }
 
-        public Character GetByID(int id)
+        public Character GetByID(int? id)
         {
-            return _context.Characters.Where(c => c.ID == id)
-                .Include(c => c.Origin)
-                .Include(c => c.SmashOrigin)
-                .FirstOrDefault();
+            if(id == null)
+            {
+                return null;
+            }
+            //return _context.Characters.Where(c => c.ID == id)
+            //    .FirstOrDefault();
+            return _context.Characters.FirstOrDefault(c => c.ID == id);
         }
 
         public async Task Add(Character character)

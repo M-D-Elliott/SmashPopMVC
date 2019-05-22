@@ -116,6 +116,7 @@ namespace SmashPopMVC.Data.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ShortName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true)
                 },
@@ -234,19 +235,29 @@ namespace SmashPopMVC.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FriendRelationship",
+                name: "Friends",
                 columns: table => new
                 {
-                    RelationshipID = table.Column<int>(type: "int", nullable: false)
+                    ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FriendId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    BecameFriendsTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    FriendRequestFlag = table.Column<int>(type: "int", nullable: false),
+                    RequestTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    RequestedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    RequestedToId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FriendRelationship", x => x.RelationshipID);
+                    table.PrimaryKey("PK_Friends", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_FriendRelationship_AspNetUsers_FriendId",
-                        column: x => x.FriendId,
+                        name: "FK_Friends_AspNetUsers_RequestedById",
+                        column: x => x.RequestedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Friends_AspNetUsers_RequestedToId",
+                        column: x => x.RequestedToId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -322,9 +333,14 @@ namespace SmashPopMVC.Data.Migrations
                 column: "SmashOriginID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FriendRelationship_FriendId",
-                table: "FriendRelationship",
-                column: "FriendId");
+                name: "IX_Friends_RequestedById",
+                table: "Friends",
+                column: "RequestedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Friends_RequestedToId",
+                table: "Friends",
+                column: "RequestedToId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -345,7 +361,7 @@ namespace SmashPopMVC.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "FriendRelationship");
+                name: "Friends");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

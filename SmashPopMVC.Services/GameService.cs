@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SmashPopMVC.Data;
 using SmashPopMVC.Data.Models;
 
-namespace SmashPopMVC.Services
+namespace SmashPopMVC.Service
 {
     public class GameService : IGame
     {

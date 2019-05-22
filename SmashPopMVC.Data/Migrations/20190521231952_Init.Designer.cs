@@ -7,12 +7,13 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 using SmashPopMVC.Data;
+using SmashPopMVC.Data.Models;
 using System;
 
 namespace SmashPopMVC.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190503203358_Init")]
+    [Migration("20190521231952_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +176,8 @@ namespace SmashPopMVC.Data.Migrations
 
                     b.Property<string>("SecurityStamp");
 
+                    b.Property<string>("ShortName");
+
                     b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<string>("UserName")
@@ -238,18 +241,28 @@ namespace SmashPopMVC.Data.Migrations
                     b.ToTable("Characters");
                 });
 
-            modelBuilder.Entity("SmashPopMVC.Data.Models.FriendRelationship", b =>
+            modelBuilder.Entity("SmashPopMVC.Data.Models.Friend", b =>
                 {
-                    b.Property<int>("RelationshipID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("FriendId");
+                    b.Property<DateTime?>("BecameFriendsTime");
 
-                    b.HasKey("RelationshipID");
+                    b.Property<int>("FriendRequestFlag");
 
-                    b.HasIndex("FriendId");
+                    b.Property<DateTime?>("RequestTime");
 
-                    b.ToTable("FriendRelationship");
+                    b.Property<string>("RequestedById");
+
+                    b.Property<string>("RequestedToId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("RequestedById");
+
+                    b.HasIndex("RequestedToId");
+
+                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("SmashPopMVC.Data.Models.Game", b =>
@@ -372,11 +385,15 @@ namespace SmashPopMVC.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SmashPopMVC.Data.Models.FriendRelationship", b =>
+            modelBuilder.Entity("SmashPopMVC.Data.Models.Friend", b =>
                 {
-                    b.HasOne("SmashPopMVC.Data.Models.ApplicationUser", "Friend")
-                        .WithMany("Friends")
-                        .HasForeignKey("FriendId");
+                    b.HasOne("SmashPopMVC.Data.Models.ApplicationUser", "RequestedBy")
+                        .WithMany("SentFriendRequests")
+                        .HasForeignKey("RequestedById");
+
+                    b.HasOne("SmashPopMVC.Data.Models.ApplicationUser", "RequestedTo")
+                        .WithMany("ReceievedFriendRequests")
+                        .HasForeignKey("RequestedToId");
                 });
 #pragma warning restore 612, 618
         }

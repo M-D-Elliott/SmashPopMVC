@@ -8,6 +8,7 @@ using SmashPopMVC.Service.Validators;
 using System.Collections.Generic;
 using SmashPopMVC.Models.ApplicationUser;
 using System;
+using SmashPopMVC.Models.Comment;
 
 namespace SmashPopMVC.Controllers
 {
@@ -105,7 +106,7 @@ namespace SmashPopMVC.Controllers
         public string CurrentUserShortName()
         {
             var id = _userManager.GetUserId(User);
-            var user = _applicationUserService.GetUser(id, friends: false);
+            var user = _applicationUserService.GetUser(id);
             return user.ShortName ?? user.UserName;
         }
 
@@ -115,13 +116,24 @@ namespace SmashPopMVC.Controllers
                 .Select(u => new UserListingModel
                 {
                     ID = u.Id,
-                    Name = u.UserName,
+                    Name = u.UserName.Substring(0, u.UserName.IndexOf('@')),
                     Joined = u.MemberSince.ToString(),
                     MainName = u.Main == null ? "Random" : u.Main.Name,
                     MainImage = u.Main == null ? "random" : u.Main.ImageName,
                     AltName = u.Alt == null ? "Random" : u.Alt.Name,
                     AltImage = u.Alt == null ? "random" : u.Alt.ImageName,
                 });
+        }
+
+        private UserListingModel BuildUserData(ApplicationUser user)
+        {
+            return new UserListingModel
+            {
+                ID = user.Id,
+                Name = user.UserName.Substring(0, user.UserName.IndexOf('@')),
+                MainName = user.Main == null ? "Random" : user.Main.Name,
+                MainImage = user.Main == null ? "random" : user.Main.ImageName,
+            };
         }
 
         private ProfileIndexModel BuildUserProfile(ApplicationUser user)
@@ -132,7 +144,6 @@ namespace SmashPopMVC.Controllers
                 MainID = user.Main?.ID,
                 AltID = user.Alt?.ID,
             };
-
             var currentUserID = _userManager.GetUserId(User);
             return new ProfileIndexModel
             {
@@ -146,38 +157,47 @@ namespace SmashPopMVC.Controllers
                 AltImage = user.Alt == null ? "random" : user.Alt.ImageName,
                 PartnerName = user.Partner?.UserName,
                 PartnerMainImage = user.Partner?.Main.ImageName,
-                Friends = BuildFriendListing(user),
+                Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived),
+                Comments = BuildCommentListing(user.Comments),
                 UpdateViewModel = updateViewModel,
             };
         }
 
-        private FriendListingModel BuildFriendListing(ApplicationUser user)
+        private IEnumerable<CommentDataModel> BuildCommentListing(IEnumerable<Comment> comments)
         {
-            var approvedFriends = user.FriendsApproved
-                .Select(f => new UserListingModel
+            return comments
+                .Select(c => new CommentDataModel
                 {
-                    ID = f.Id,
-                    Name = f.UserName.Substring(0, f.UserName.IndexOf('@')),
-                    MainName = f.Main == null ? "Random" : f.Main.Name,
-                    MainImage = f.Main == null ? "random" : f.Main.ImageName,
+                    Comment = c,
+                    Title = c.Title,
+                    Content = c.Content,
+                    Created = c.Created.ToString(),
+                    PosterName = c.Poster.UserName.Substring(0, c.Poster.UserName.IndexOf('@')),
+                    Replies = BuildCommentListing(c.Replies),
+                })
+                .OrderByDescending(c => c.Created);
+        }
+
+        private FriendListingModel BuildFriendListing(ICollection<ApplicationUser> friendsApproved,
+                                                      ICollection<Friend> friendRequestsSent,
+                                                      ICollection<Friend> friendRequestsReceived)
+        {
+            var approvedFriends = friendsApproved
+                .Select(f => new UserFriendModel
+                {
+                    FriendData = BuildUserData(f),
                 });
-            var requestedFriends = user.FriendRequestsSent
-                .Select(f => new UserListingModel
+            var requestedFriends = friendRequestsSent
+                .Select(f => new UserFriendModel
                 {
                     RequestID = f.ID,
-                    ID = f.RequestedTo.Id,
-                    Name = f.RequestedTo.UserName.Substring(0, f.RequestedTo.UserName.IndexOf('@')),
-                    MainName = f.RequestedTo.Main == null ? "Random" : f.RequestedTo.Main.Name,
-                    MainImage = f.RequestedTo.Main == null ? "random" : f.RequestedTo.Main.ImageName,
+                    FriendData = BuildUserData(f.RequestedTo),
                 });
-            var friendRequests = user.FriendRequestsReceived
-                .Select(f => new UserListingModel
+            var friendRequests = friendRequestsReceived
+                .Select(f => new UserFriendModel
                 {
                     RequestID = f.ID,
-                    ID = f.RequestedBy.Id,
-                    Name = f.RequestedBy.UserName.Substring(0, f.RequestedBy.UserName.IndexOf('@')),
-                    MainName = f.RequestedBy.Main == null ? "Random" : f.RequestedBy.Main.Name,
-                    MainImage = f.RequestedBy.Main == null ? "random" : f.RequestedBy.Main.ImageName,
+                    FriendData = BuildUserData(f.RequestedBy),
                 });
 
             return new FriendListingModel

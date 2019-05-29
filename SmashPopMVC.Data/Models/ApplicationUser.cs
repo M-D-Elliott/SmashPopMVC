@@ -13,6 +13,7 @@ namespace SmashPopMVC.Data.Models
         {
             SentFriendRequests = new List<Friend>();
             ReceievedFriendRequests = new List<Friend>();
+            Comments = new List<Comment>();
         }
 
         // Generic Profile data
@@ -24,12 +25,15 @@ namespace SmashPopMVC.Data.Models
         public virtual ApplicationUser Partner { get; set; }
         public virtual ICollection<Friend> SentFriendRequests { get; set; }
         public virtual ICollection<Friend> ReceievedFriendRequests { get; set; }
+        public virtual IEnumerable<Comment> Comments { get; set; }
 
         // SmashPop specific data
         public virtual Character Main { get; set; }
         public virtual Character Alt { get; set; }
         public virtual Game FavoriteSmashGame { get; set; }
 
+
+        // Friends list data expression.
         [NotMapped]
         public virtual ICollection<ApplicationUser> FriendsApproved
         {
@@ -40,7 +44,6 @@ namespace SmashPopMVC.Data.Models
                 return friends;
             }
         }
-
         [NotMapped]
         public virtual ICollection<ApplicationUser> Friends
         {
@@ -51,7 +54,6 @@ namespace SmashPopMVC.Data.Models
                 return friends;
             }
         }
-
         [NotMapped]
         public virtual ICollection<Friend> FriendRequestsSent
         {
@@ -60,7 +62,6 @@ namespace SmashPopMVC.Data.Models
                 return SentFriendRequests.Where(x => !x.Approved).ToList();
             }
         }
-
         [NotMapped]
         public virtual ICollection<Friend> FriendRequestsReceived
         {

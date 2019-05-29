@@ -13,9 +13,10 @@ using System;
 namespace SmashPopMVC.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190522210158_Reduced length of comment title.")]
+    partial class Reducedlengthofcommenttitle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -266,7 +267,7 @@ namespace SmashPopMVC.Data.Migrations
 
                     b.HasIndex("ReplyToID");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("SmashPopMVC.Data.Models.Friend", b =>

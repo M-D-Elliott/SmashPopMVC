@@ -20,18 +20,19 @@ namespace SmashPopMVC.Service
             _characterService = characterService;
         }
 
-        public ApplicationUser GetUser(string id, bool friends = false)
+        public ApplicationUser GetUser(string id, bool social = false)
         {
             var user = _context.ApplicationUsers.Where(u => u.Id == id);
             user = user
                 .Include(u => u.Main)
                 .Include(u => u.Alt);
 
-            if (friends)
+            if (social)
             {
                 user = user
                     .Include(u => u.SentFriendRequests).ThenInclude(s => s.RequestedTo).ThenInclude(f => f.Main)
                     .Include(u => u.ReceievedFriendRequests).ThenInclude(s => s.RequestedBy).ThenInclude(f => f.Main)
+                    .Include(u => u.Comments).ThenInclude(c => c.Replies)
                     .Include(u => u.Partner).ThenInclude(p => p.Main);
             }
 
@@ -92,7 +93,7 @@ namespace SmashPopMVC.Service
 
         public void AddFriend(string userID, string friendUserID)
         {
-            var user = GetUser(userID, friends: true);
+            var user = GetUser(userID, social: true);
             var new_friend = GetUser(friendUserID);
             var friendRequest = new Friend()
             {

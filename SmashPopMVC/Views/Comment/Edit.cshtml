@@ -1,0 +1,9 @@
+﻿@model SmashPopMVC.Models.Comment.CommentDataModel
+
+<form asp-controller="ApplicationUser" asp-action="EditComment" class="EditCommentForm">
+    <input type="hidden" asp-for="@Model.Comment" class="Comment" />
+    <input placeholder="Title" type="text" asp-for="@Model.Title" class="title-input" style="display: none;" />
+    <textarea placeholder="Content..." asp-for="@Model.Content" class="content-input" style="display: none;"></textarea>
+</form>
+<h2 class="comment-title">@Model.Title</h2>
+<p class="comment-content">@Model.Content</p>

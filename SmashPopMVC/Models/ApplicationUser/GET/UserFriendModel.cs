@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace SmashPopMVC.Models.ApplicationUser
 {
-    public class CurrentUserDataModel
+    public class UserFriendModel
     {
-        public string ShortName { get; set; }
+        public int RequestID { get; set; }
+        public UserListingModel FriendData { get; set; }
     }
 }

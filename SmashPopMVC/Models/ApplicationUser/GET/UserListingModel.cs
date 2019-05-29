@@ -7,7 +7,6 @@ namespace SmashPopMVC.Models.ApplicationUser
 {
     public class UserListingModel
     {
-        public int RequestID { get; set; }
         public string ID { get; set; }
         public string Name { get; set; }
         public string Joined { get; set; }

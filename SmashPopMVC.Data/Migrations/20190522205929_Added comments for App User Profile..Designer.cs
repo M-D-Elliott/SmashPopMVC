@@ -13,9 +13,10 @@ using System;
 namespace SmashPopMVC.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190522205929_Added comments for App User Profile.")]
+    partial class AddedcommentsforAppUserProfile
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -255,8 +256,7 @@ namespace SmashPopMVC.Data.Migrations
 
                     b.Property<int?>("ReplyToID");
 
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(15)");
+                    b.Property<string>("Title");
 
                     b.HasKey("ID");
 
@@ -266,7 +266,7 @@ namespace SmashPopMVC.Data.Migrations
 
                     b.HasIndex("ReplyToID");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("SmashPopMVC.Data.Models.Friend", b =>

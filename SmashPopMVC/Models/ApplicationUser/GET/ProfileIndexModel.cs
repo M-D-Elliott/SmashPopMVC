@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using SmashPopMVC.Models.Comment;
+using System.Collections.Generic;
 
 namespace SmashPopMVC.Models.ApplicationUser
 {
@@ -16,6 +17,7 @@ namespace SmashPopMVC.Models.ApplicationUser
         public string PartnerMainImage { get; set; }
         public FriendListingModel Friends { get; set; }
         public UpdateViewModel UpdateViewModel { get; set; }
+        public IEnumerable<CommentDataModel> Comments { get; set; }
 
         public bool ThisUser { get; set; }
     }

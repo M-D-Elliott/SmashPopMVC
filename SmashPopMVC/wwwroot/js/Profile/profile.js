@@ -1,6 +1,11 @@
 ﻿$('#ProfileImages .updatable').click(function () {
     const mainOrAlt = $(this).attr('id');
-    $.ajax({
+    const currentCharacter = $(this).clone();
+    currentCharacter.prepend('<button type="button" class="btn grey-white ml-0 p-0"><i class="fa fa-window-close p-0 m-0"></i></button>');
+    currentCharacter.children('button').click(function (e) { removeFromSelected($(e.target)) });
+    currentCharacter.addClass('relative-parent');
+    currentCharacter.removeClass('modal-link updatable col-6');
+;    $.ajax({
         type: "GET",
         url: '/Character/Select',
         success: function (res) {
@@ -8,6 +13,7 @@
             modal.addClass('main-alt-select');
             modal.html(res);
             modal.find('#SubmitButton').click(function () { changeUserImages(mainOrAlt) });
+            modal.find('#SelectedCharacters').append(currentCharacter);
             modal.data('maxSelect', 1);
             modal.modal('show');
         },
@@ -31,14 +37,16 @@ $('#UpdateUser').click(function (e) {
 });
 
 function changeUserImages(mainOrAlt) {
-    var modal = $('#modal-container .modal-content');
-    selectedCharacter = modal.find('#SelectedCharacters').children();
-    $('#' + mainOrAlt + 'ID').val(selectedCharacter.attr('id'));
-    let userCharacterCard = $('#' + mainOrAlt)
-    userCharacterCard.attr('title', selectedCharacter.attr('title'));
-    userCharacterCard.children().remove();
-    userCharacterCard.append(selectedCharacter.children('img'))
-    $('#UpdateUser').show();
+    const modal = $('#modal-container .modal-content');
+    const userCharacterCard = $('#' + mainOrAlt);
+    const selectedCharacter = modal.find('#SelectedCharacters div:first-child img');
+    if (selectedCharacter.length != 0) {
+        $('#' + mainOrAlt + 'ID').val(selectedCharacter.attr('id'));
+        userCharacterCard.children().remove();
+        userCharacterCard.append(selectedCharacter);
+        $('#UpdateUser').show();
+        modal.removeClass('main-alt-select');
+    }
 }
 
 $('#AddFriend').click(function (e) {

@@ -26,6 +26,7 @@ namespace SmashPopMVC.Data.Models
         public virtual ICollection<Friend> SentFriendRequests { get; set; }
         public virtual ICollection<Friend> ReceievedFriendRequests { get; set; }
         public virtual IEnumerable<Comment> Comments { get; set; }
+        public virtual IEnumerable<Vote> Votes { get; set; }
 
         // SmashPop specific data
         public virtual Character Main { get; set; }

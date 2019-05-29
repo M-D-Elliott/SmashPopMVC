@@ -41,7 +41,7 @@ namespace SmashPopMVC.Controllers
 
             var model = new CharacterDataListingModel
             {
-                CharacterList = BuildCharacterDataListing(characters),
+                CharacterList = BuildCharacterData(characters),
             };
 
             return View(model);
@@ -60,7 +60,7 @@ namespace SmashPopMVC.Controllers
                 });
         }
 
-        private IEnumerable<CharacterDataModel> BuildCharacterDataListing(IEnumerable<Character> characters)
+        private IEnumerable<CharacterDataModel> BuildCharacterData(IEnumerable<Character> characters)
         {
             return characters
                 .Select(c => new CharacterDataModel

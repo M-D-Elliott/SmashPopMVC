@@ -12,12 +12,10 @@ namespace SmashPopMVC.Service
     public class ApplicationUserService : IApplicationUser
     {
         private readonly ApplicationDbContext _context;
-        private readonly ICharacter _characterService;
 
-        public ApplicationUserService(ApplicationDbContext context, ICharacter characterService)
+        public ApplicationUserService(ApplicationDbContext context)
         {
             _context = context;
-            _characterService = characterService;
         }
 
         public ApplicationUser GetUser(string id, bool social = false)
@@ -33,7 +31,8 @@ namespace SmashPopMVC.Service
                     .Include(u => u.SentFriendRequests).ThenInclude(s => s.RequestedTo).ThenInclude(f => f.Main)
                     .Include(u => u.ReceievedFriendRequests).ThenInclude(s => s.RequestedBy).ThenInclude(f => f.Main)
                     .Include(u => u.Comments).ThenInclude(c => c.Replies)
-                    .Include(u => u.Partner).ThenInclude(p => p.Main);
+                    .Include(u => u.Partner).ThenInclude(p => p.Main)
+                    .Include(u => u.Votes);
             }
 
             return user.FirstOrDefault();
@@ -61,26 +60,23 @@ namespace SmashPopMVC.Service
             return users.OrderBy(u => u.NormalizedUserName);
         }
 
-        public void UpdateUserCharacters(string userID, int? mainID, int? altID)
+        public void UpdateUserCharacters(string userID, Character new_main, Character new_alt)
         {
             var user = GetUser(userID);
             if (user != null)
             {
-                var new_main = _characterService.GetByID(mainID);
                 if(user.Main?.ID != new_main?.ID)
                 {
-                    user.Main = new_main;
+                    user.Main = new_main ?? null;
                     if(user.Main != null)
                     {
                         _context.Entry(user.Main).State = EntityState.Modified;
                     }
-
                 }
 
-                var new_alt = _characterService.GetByID(altID);
                 if (user.Alt?.ID != new_alt?.ID)
                 {
-                    user.Alt = new_alt;
+                    user.Alt = new_alt ?? null;
                     if(user.Alt != null)
                     {
                         _context.Entry(user.Alt).State = EntityState.Modified;
@@ -89,29 +85,6 @@ namespace SmashPopMVC.Service
             }
             _context.Entry(user).State = EntityState.Modified;
             _context.SaveChanges();
-        }
-
-        public void AddFriend(string userID, string friendUserID)
-        {
-            var user = GetUser(userID, social: true);
-            var new_friend = GetUser(friendUserID);
-            var friendRequest = new Friend()
-            {
-                RequestedBy = user,
-                RequestedTo = new_friend,
-                RequestTime = DateTime.Now,
-                FriendRequestFlag = FriendRequestFlag.None
-            };
-            user.SentFriendRequests.Add(friendRequest);
-            _context.SaveChanges();
-        }
-
-        public void AcceptFriend(int friendID)
-        {
-            var friendship = _context.Friends.Where(f => f.ID == friendID).First();
-            friendship.FriendRequestFlag = FriendRequestFlag.Approved;
-            _context.SaveChanges();
-
         }
     }
 }

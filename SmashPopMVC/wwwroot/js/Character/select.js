@@ -18,9 +18,19 @@ function addToSelected(charCard, max = 5) {
             $(this).remove();
         }
     });
-
+    charCard.addClass('relative-parent');
+    charCard.prepend('<button type="button" class="btn grey-white ml-0 p-0"><i class="fa fa-window-close p-0 m-0"></i></button>');
+    charCard.children('button').click(function (e) {removeFromSelected($(e.target)); });
     selectedCharacters.append(charCard);
     if (selectedCharacters.children().length > max) {
         selectedCharacters.children('div:first').remove()
     }
+}
+
+function removeFromSelected(target) {
+    let charCard = target.parent();
+    if (target.is('i')) {
+        charCard = charCard.parent();
+    }
+    charCard.remove();
 }

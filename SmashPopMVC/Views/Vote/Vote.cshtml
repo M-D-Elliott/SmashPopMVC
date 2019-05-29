@@ -1,0 +1,71 @@
+﻿@model SmashPopMVC.Models.Vote.VoteListingModel;
+
+<div class="container body-content">
+    <div class="row">
+        @if (Model.Results.Any())
+        {
+            <table class="table table-hover table-bordered" id="userListingTable">
+                <tbody>
+                    @foreach (var vote in Model.Results)
+                    {
+                    <tr>
+                        <td>
+                            <div class="center">
+                                <div class="row flex-item most-difficult">
+                                    <div class="card flex-item">
+                                        <img id="@vote.MostDifficult.ID" title="vote.MostDifficult.Name" class="card-img-top character @vote.MostDifficult.ImageName relative-parent" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="center">
+                                <div class="row flex-item least-difficult">
+                                    <div class="card flex-item">
+                                        <img id="@vote.LeastDifficult.ID" title="vote.LeastDifficult.Name" class="card-img-top character @vote.LeastDifficult.ImageName relative-parent" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="center">
+                                <div class="row flex-item flavor-of-the-month">
+                                    <div class="card flex-item">
+                                        <img id="@vote.FlavorOfTheMonth.ID" title="vote.FlavorOfTheMonth.Name" class="card-img-top character @vote.FlavorOfTheMonth.ImageName relative-parent" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="center">
+                                <div class="row flex-item most-powerful">
+                                    <div class="card flex-item">
+                                        <img id="@vote.MostPowerful.ID" title="vote.MostPowerful.Name" class="card-img-top character @vote.MostPowerful.ImageName relative-parent" alt="...">
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="userSocial">
+                                <div class="userName">
+                                    <a asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="@vote.UserID">@vote.UserName</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="noResults">
+                <i class="material-icons md-72">question_answer</i>
+                <h3>
+                    Can't find users by that query. Try again?
+                </h3>
+            </div>
+        }
+    </div>
+</div>

@@ -16,9 +16,7 @@ namespace SmashPopMVC.Data
 
         ApplicationUser GetUser(
             string id, 
-            bool friends = false);
-        void UpdateUserCharacters(string userID, int? mainID, int? altID);
-        void AddFriend(string userID, string friendUserID);
-        void AcceptFriend(int friendID);
+            bool social = false);
+        void UpdateUserCharacters(string userID, Character new_main, Character new_alt);
     }
 }

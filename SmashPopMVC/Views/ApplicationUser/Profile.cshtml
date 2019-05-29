@@ -11,20 +11,20 @@
             <div id="ProfileImages" class="row">
                 @if (Model.ID == Model.CurrentUserID)
                 {
-                    <div id="Main" class="col-6 card flex-item modal-link updatable" title="@Model.MainName">
-                        <img class="card-img-top character @Model.MainImage" alt="...">
+                    <div id="Main" class="main col-6 card flex-item modal-link updatable">
+                        <img id="@Model.UpdateViewModel.MainID" title="@Model.Main.Name" class="card-img-top character @Model.Main.ImageName" alt="...">
                     </div>
-                    <div id="Alt" class="col-6 card flex-item modal-link updatable" title="@Model.AltName">
-                        <img class="card-img-top character @Model.AltImage" alt="...">
+                    <div id="Alt" class="alt col-6 card flex-item modal-link updatable">
+                        <img id="@Model.UpdateViewModel.AltID" title="@Model.Alt.Name"  class="card-img-top character @Model.Alt.ImageName" alt="...">
                     </div>
                 }
                 else
                 {
-                    <div class="col-6 card flex-item" title="@Model.MainName">
-                        <img class="card-img-top character @Model.MainImage" alt="...">
+                    <div class="col-6 card flex-item" title="@Model.Main.Name">
+                        <img class="card-img-top character @Model.Main.ImageName" alt="...">
                     </div>
-                    <div class="col-6 card flex-item" title="@Model.AltName">
-                        <img class="card-img-top character @Model.AltImage" alt="...">
+                    <div class="col-6 card flex-item" title="@Model.Alt.Name">
+                        <img class="card-img-top character @Model.Alt.ImageName" alt="...">
                     </div>
                 }
 
@@ -35,8 +35,8 @@
                 @Html.Partial("_AddFriendPartial", new AddFriendViewModel { UserID=Model.CurrentUserID, FriendID=Model.ID });
             }
         </div>
-        <div id="ProfileBets" class="col-sm-6 col-md-3 pull-right">
-            <h4>Bets</h4>
+        <div id="RecentVotes" class="col-sm-6 col-md-3 pull-right">
+            <a asp-controller="Vote" asp-action="GetUserVotes" asp-route-userID="@Model.ID"><h4>Votes</h4></a>
         </div>
     </div>
     <div id="ProfileSocial">

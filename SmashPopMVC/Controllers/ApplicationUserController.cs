@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using SmashPopMVC.Models.ApplicationUser;
 using System;
 using SmashPopMVC.Models.Comment;
+using SmashPopMVC.Models.Vote;
+using SmashPopMVC.Models.Character;
 
 namespace SmashPopMVC.Controllers
 {
@@ -16,11 +18,18 @@ namespace SmashPopMVC.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationUser _applicationUserService;
+        private readonly ICharacter _characterService;
+        private readonly IFriend _friendService;
 
-        public ApplicationUserController(UserManager<ApplicationUser> userManager, IApplicationUser applicationUserService)
+        public ApplicationUserController(UserManager<ApplicationUser> userManager, 
+                                         IApplicationUser applicationUserService, 
+                                         ICharacter characterService, 
+                                         IFriend friendService)
         {
             _userManager = userManager;
             _applicationUserService = applicationUserService;
+            _characterService = characterService;
+            _friendService = friendService;
         }
 
         [AllowAnonymous]
@@ -39,7 +48,7 @@ namespace SmashPopMVC.Controllers
                 }
             }
 
-            var user = _applicationUserService.GetUser(id, friends: true);
+            var user = _applicationUserService.GetUser(id, social: true);
 
             if(user != null)
             {
@@ -82,7 +91,9 @@ namespace SmashPopMVC.Controllers
 
             if (ModelState.IsValid)
             {
-                _applicationUserService.UpdateUserCharacters(viewModel.UserID, viewModel.MainID, viewModel.AltID);
+                var new_main = _characterService.GetByID(viewModel.MainID);
+                var new_alt = _characterService.GetByID(viewModel.AltID);
+                _applicationUserService.UpdateUserCharacters(viewModel.UserID, new_main, new_alt);
             }
         }
 
@@ -92,7 +103,9 @@ namespace SmashPopMVC.Controllers
         {
             if(ModelState.IsValid)
             {
-                _applicationUserService.AddFriend(viewModel.UserID, viewModel.FriendID);
+                var user = _applicationUserService.GetUser(viewModel.UserID, social: true);
+                var newFriend = _applicationUserService.GetUser(viewModel.FriendID, social: true);
+                _friendService.AddFriend(user, newFriend);
             }
         }
 
@@ -100,7 +113,7 @@ namespace SmashPopMVC.Controllers
         [ValidateAntiForgeryToken]
         public void AcceptFriend(int requestID)
         {
-            _applicationUserService.AcceptFriend(requestID);
+            _friendService.AcceptFriend(requestID);
         }
 
         public string CurrentUserShortName()
@@ -151,14 +164,13 @@ namespace SmashPopMVC.Controllers
                 CurrentUserID = currentUserID,
                 CurrentUserIsFriends = user.Friends.Where(f => f.Id == currentUserID).Any(),
                 Name = user.ShortName ?? user.UserName,
-                MainName = user.Main == null ? "Random" : user.Main.Name,
-                MainImage = user.Main == null ? "random" : user.Main.ImageName,
-                AltName = user.Alt == null ? "Random" : user.Alt.Name,
-                AltImage = user.Alt == null ? "random" : user.Alt.ImageName,
+                Main = BuildCharacterData(user.Main),
+                Alt = BuildCharacterData(user.Alt),
                 PartnerName = user.Partner?.UserName,
                 PartnerMainImage = user.Partner?.Main.ImageName,
                 Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived),
                 Comments = BuildCommentListing(user.Comments),
+                Votes = BuildVoteListing(user.Votes),
                 UpdateViewModel = updateViewModel,
             };
         }
@@ -207,6 +219,31 @@ namespace SmashPopMVC.Controllers
                 FriendRequests = friendRequests,
             };
 
+        }
+
+        private IEnumerable<VoteDataModel> BuildVoteListing(IEnumerable<Vote> votes)
+        {
+            return votes
+                .Select(v => new VoteDataModel
+                {
+                    Created = v.Created.ToString(":d"),
+                    UserID = v.VoterID,
+                    UserName = v.Voter.UserName.Substring(0, v.Voter.UserName.IndexOf('@')),
+                    MostDifficult = BuildCharacterData(v.MostDifficult),
+                    LeastDifficult = BuildCharacterData(v.LeastDifficult),
+                    FlavorOfTheMonth = BuildCharacterData(v.FlavorOfTheMonth),
+                    MostPowerful = BuildCharacterData(v.MostPowerful),
+                });
+        }
+
+        private CharacterDataModel BuildCharacterData(Character c)
+        {
+            return new CharacterDataModel
+            {
+                ID = c.ID,
+                Name = c == null ? "Random" : c.Name,
+                ImageName = c == null ? "random" : c.ImageName,
+            };
         }
     }
 }

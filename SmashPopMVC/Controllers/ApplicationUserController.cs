@@ -83,7 +83,7 @@ namespace SmashPopMVC.Controllers
         [ValidateAntiForgeryToken]
         public void Update(UpdateViewModel viewModel)
         {
-            var currentUserID = _userManager.GetUserId(User);
+            var currentUserID = GetCurrentUserID();
             if (viewModel.UserID != currentUserID)
             {
                 return;
@@ -157,7 +157,7 @@ namespace SmashPopMVC.Controllers
                 MainID = user.Main?.ID,
                 AltID = user.Alt?.ID,
             };
-            var currentUserID = _userManager.GetUserId(User);
+            var currentUserID = GetCurrentUserID();
             return new ProfileIndexModel
             {
                 ID = user.Id,
@@ -170,9 +170,14 @@ namespace SmashPopMVC.Controllers
                 PartnerMainImage = user.Partner?.Main.ImageName,
                 Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived),
                 Comments = BuildCommentListing(user.Comments),
-                Votes = BuildVoteListing(user.Votes),
+                Votes = BuildVoteListing(user.Votes, take: 3),
                 UpdateViewModel = updateViewModel,
             };
+        }
+
+        private string GetCurrentUserID()
+        {
+            return _userManager.GetUserId(User);
         }
 
         private IEnumerable<CommentDataModel> BuildCommentListing(IEnumerable<Comment> comments)
@@ -221,9 +226,11 @@ namespace SmashPopMVC.Controllers
 
         }
 
-        private IEnumerable<VoteDataModel> BuildVoteListing(IEnumerable<Vote> votes)
+        private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000)
         {
-            return votes
+            var results = votes
+                .OrderBy(v => v.Created)
+                .Take(take)
                 .Select(v => new VoteDataModel
                 {
                     Created = v.Created.ToString(":d"),
@@ -234,13 +241,24 @@ namespace SmashPopMVC.Controllers
                     FlavorOfTheMonth = BuildCharacterData(v.FlavorOfTheMonth),
                     MostPowerful = BuildCharacterData(v.MostPowerful),
                 });
+
+            var newVoteModel = new NewVoteModel
+            {
+                UserID = GetCurrentUserID(),
+            };
+
+            return new VoteListingModel
+            {
+                Results = results,
+                NewVoteModel = newVoteModel,
+            };
         }
 
         private CharacterDataModel BuildCharacterData(Character c)
         {
             return new CharacterDataModel
             {
-                ID = c.ID,
+                ID = c?.ID,
                 Name = c == null ? "Random" : c.Name,
                 ImageName = c == null ? "random" : c.ImageName,
             };

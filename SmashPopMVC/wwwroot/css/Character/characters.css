@@ -1,4 +1,24 @@
-﻿.fa-window-close {
+﻿#Characters .card.come-in {
+    transform: translateY(50px);
+    animation: come-in 0.01s ease forwards;
+}
+
+#Characters .card {
+    display: none;
+}
+
+.forty-percent-height {
+    min-height: 40vh;
+}
+
+@keyframes come-in {
+    to {
+        transform: translateY(0);
+    }
+}
+
+
+.fa-window-close {
     color: #f3172d;
 }
 

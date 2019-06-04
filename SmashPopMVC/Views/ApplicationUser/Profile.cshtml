@@ -1,8 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @using SmashPopMVC.Models.ApplicationUser
 @using SmashPopMVC.Models.Comment
+@using SmashPopMVC.Models.Vote
 
 @model SmashPopMVC.Models.ApplicationUser.ProfileIndexModel
+
+<environment include="Development">
+    <link rel="stylesheet" href="~/css/ApplicationUser/profile.css" />
+</environment>
 
 <div class="container">
     <div id="Profile" class="row">
@@ -11,20 +16,28 @@
             <div id="ProfileImages" class="row">
                 @if (Model.ID == Model.CurrentUserID)
                 {
-                    <div id="Main" class="main col-6 card flex-item modal-link updatable">
-                        <img id="@Model.UpdateViewModel.MainID" title="@Model.Main.Name" class="card-img-top character @Model.Main.ImageName" alt="...">
+                    <div id="Main" class="col-6 card flex-item modal-link updatable">
+                        <img
+                             title="@Model.Main.Name"
+                             class="card-img-top character @Model.Main.ImageName"
+                             data-id="@Model.Main.ID"
+                             alt="...">
                     </div>
-                    <div id="Alt" class="alt col-6 card flex-item modal-link updatable">
-                        <img id="@Model.UpdateViewModel.AltID" title="@Model.Alt.Name"  class="card-img-top character @Model.Alt.ImageName" alt="...">
+                    <div id="Alt" class="col-6 card flex-item modal-link updatable">
+                        <img
+                             title="@Model.Alt.Name"
+                             class="@Model.Main.ID card-img-top character @Model.Alt.ImageName"
+                             data-id="@Model.Alt.ID"
+                             alt="...">
                     </div>
                 }
                 else
                 {
-                    <div class="col-6 card flex-item" title="@Model.Main.Name">
-                        <img class="card-img-top character @Model.Main.ImageName" alt="...">
+                    <div class="col-6 card flex-item">
+                        <img class="card-img-top character @Model.Main.ImageName" alt="..." title="@Model.Main.Name">
                     </div>
-                    <div class="col-6 card flex-item" title="@Model.Alt.Name">
-                        <img class="card-img-top character @Model.Alt.ImageName" alt="...">
+                    <div class="col-6 card flex-item">
+                        <img class="card-img-top character @Model.Alt.ImageName" alt="..." title="@Model.Alt.Name">
                     </div>
                 }
 
@@ -35,8 +48,13 @@
                 @Html.Partial("_AddFriendPartial", new AddFriendViewModel { UserID=Model.CurrentUserID, FriendID=Model.ID });
             }
         </div>
-        <div id="RecentVotes" class="col-sm-6 col-md-3 pull-right">
-            <a asp-controller="Vote" asp-action="GetUserVotes" asp-route-userID="@Model.ID"><h4>Votes</h4></a>
+        <div id="RecentVotes" class="col-sm-6 col-md-3 pull-right container">
+            @Html.ActionLink("Vote now!", "New", "Vote", Model.Votes.NewVoteModel)
+            <a asp-controller="Vote" asp-action="Results" asp-route-model="@Model.Votes"><h4>Vote History:</h4></a>
+            @if (Model.Votes.Results.Any())
+            {
+                @Html.Partial("_profileVoteListingPartial", Model.Votes)
+            }
         </div>
     </div>
     <div id="ProfileSocial">

@@ -18,7 +18,7 @@ namespace SmashPopMVC.Models.ApplicationUser
         public FriendListingModel Friends { get; set; }
         public UpdateViewModel UpdateViewModel { get; set; }
         public IEnumerable<CommentDataModel> Comments { get; set; }
-        public IEnumerable<VoteDataModel> Votes { get; set; }
+        public VoteListingModel Votes { get; set; }
 
         public bool ThisUser { get; set; }
     }

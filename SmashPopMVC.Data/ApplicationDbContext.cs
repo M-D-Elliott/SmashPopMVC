@@ -17,6 +17,7 @@ namespace SmashPopMVC.Data
         public DbSet<Friend> Friends { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Vote> Votes { get; set; }
+        public DbSet<Tally> Tallies { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -65,6 +66,11 @@ namespace SmashPopMVC.Data
                 .HasOne(v => v.Voter)
                 .WithMany(u => u.Votes)
                 .HasForeignKey(v => v.VoterID);
+
+            modelBuilder.Entity<Vote>()
+                .HasOne(v => v.Tally)
+                .WithMany(t => t.Votes)
+                .HasForeignKey(v => v.TallyID);
         }
     }
 }

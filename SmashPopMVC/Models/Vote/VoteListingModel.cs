@@ -8,5 +8,6 @@ namespace SmashPopMVC.Models.Vote
     public class VoteListingModel
     {
         public IEnumerable<VoteDataModel> Results { get; set; }
+        public NewVoteModel NewVoteModel { get; set; }
     }
 }

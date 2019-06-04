@@ -14,6 +14,7 @@ namespace SmashPopMVC.Data.Models
             SentFriendRequests = new List<Friend>();
             ReceievedFriendRequests = new List<Friend>();
             Comments = new List<Comment>();
+            Votes = new List<Vote>();
         }
 
         // Generic Profile data

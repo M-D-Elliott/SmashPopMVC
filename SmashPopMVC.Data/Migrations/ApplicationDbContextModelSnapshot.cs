@@ -317,6 +317,22 @@ namespace SmashPopMVC.Data.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Game");
                 });
 
+            modelBuilder.Entity("SmashPopMVC.Data.Models.Tally", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Created");
+
+                    b.Property<string>("Month");
+
+                    b.Property<string>("Year");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Tallies");
+                });
+
             modelBuilder.Entity("SmashPopMVC.Data.Models.Vote", b =>
                 {
                     b.Property<int>("ID")
@@ -332,6 +348,8 @@ namespace SmashPopMVC.Data.Migrations
 
                     b.Property<int?>("MostPowerfulID");
 
+                    b.Property<int>("TallyID");
+
                     b.Property<string>("VoterID");
 
                     b.HasKey("ID");
@@ -344,9 +362,11 @@ namespace SmashPopMVC.Data.Migrations
 
                     b.HasIndex("MostPowerfulID");
 
+                    b.HasIndex("TallyID");
+
                     b.HasIndex("VoterID");
 
-                    b.ToTable("Vote");
+                    b.ToTable("Votes");
                 });
 
             modelBuilder.Entity("SmashPopMVC.Data.Models.OriginGame", b =>
@@ -489,6 +509,11 @@ namespace SmashPopMVC.Data.Migrations
                     b.HasOne("SmashPopMVC.Data.Models.Character", "MostPowerful")
                         .WithMany("MostPowerfulVotes")
                         .HasForeignKey("MostPowerfulID");
+
+                    b.HasOne("SmashPopMVC.Data.Models.Tally", "Tally")
+                        .WithMany("Votes")
+                        .HasForeignKey("TallyID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SmashPopMVC.Data.Models.ApplicationUser", "Voter")
                         .WithMany("Votes")

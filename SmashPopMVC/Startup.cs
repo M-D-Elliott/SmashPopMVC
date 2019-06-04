@@ -37,7 +37,9 @@ namespace SmashPopMVC
             services.AddScoped<IApplicationUser, ApplicationUserService>();
             services.AddScoped<IComment, CommentService>();
             services.AddScoped<IVote, VoteService>();
+            services.AddScoped<ITally, TallyService>();
             services.AddScoped<IFriend, FriendService>();
+            services.AddScoped<ITally, TallyService>();
 
             services.AddMvc();
         }

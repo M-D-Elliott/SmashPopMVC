@@ -31,6 +31,7 @@ namespace SmashPopMVC.Service
                 .Include(v => v.FlavorOfTheMonth)
                 .Include(v => v.MostPowerful)
                 .Include(v => v.Voter)
+                .Include(v => v.Tally)
                 .OrderByDescending(v => v.Created);
         }
 
@@ -49,5 +50,12 @@ namespace SmashPopMVC.Service
                 .Include(v => v.Voter)
                 .OrderByDescending(v => v.Created);
         }
+
+        public void Add(Vote vote)
+        {
+            _context.Votes.Add(vote);
+            _context.SaveChanges();
+        }
+
     }
 }

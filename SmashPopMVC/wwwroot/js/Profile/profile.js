@@ -1,118 +1,8 @@
-﻿$('#ProfileImages .updatable').click(function () {
-    const mainOrAlt = $(this).attr('id');
-    const currentCharacter = $(this).clone();
-    currentCharacter.prepend('<button type="button" class="btn grey-white ml-0 p-0"><i class="fa fa-window-close p-0 m-0"></i></button>');
-    currentCharacter.children('button').click(function (e) { removeFromSelected($(e.target)) });
-    currentCharacter.addClass('relative-parent');
-    currentCharacter.removeClass('modal-link updatable col-6');
-;    $.ajax({
-        type: "GET",
-        url: '/Character/Select',
-        success: function (res) {
-            var modal = $('#modal-container .modal-content');
-            modal.addClass('main-alt-select');
-            modal.html(res);
-            modal.find('#SubmitButton').click(function () { changeUserImages(mainOrAlt) });
-            modal.find('#SelectedCharacters').append(currentCharacter);
-            modal.data('maxSelect', 1);
-            modal.modal('show');
-        },
-    });
-});
-
-$('#UpdateUser').click(function (e) {
-    e.preventDefault();
-    const data = $('#UserUpdateForm').serialize();
-    $.ajax({
-        type: "POST",
-        url: '/ApplicationUser/Update',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: data,
-        dataType: "json",
-        success: function () { alert('Success'); },
-        error: function(ts) { }
-    });
-    $(this).hide();
-    return false;
-});
-
-function changeUserImages(mainOrAlt) {
-    const modal = $('#modal-container .modal-content');
-    const userCharacterCard = $('#' + mainOrAlt);
-    const selectedCharacter = modal.find('#SelectedCharacters div:first-child img');
-    if (selectedCharacter.length != 0) {
-        $('#' + mainOrAlt + 'ID').val(selectedCharacter.attr('id'));
-        userCharacterCard.children().remove();
-        userCharacterCard.append(selectedCharacter);
+﻿function changeUserImage(modal, mainOrAlt, modalClass = '') {
+    if (changeCharacterCard(modal, mainOrAlt, modalClass)) {
         $('#UpdateUser').show();
-        modal.removeClass('main-alt-select');
     }
 }
-
-$('#AddFriend').click(function (e) {
-    e.preventDefault();
-    const data = $('#AddFriendForm').serialize();
-    console.log(data);
-    $.ajax({
-        type: "POST",
-        url: '/ApplicationUser/AddFriend',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: data,
-        dataType: "json",
-        success: function () { alert('Success'); },
-        error: function (ts) { }
-    });
-    $(this).remove();
-    return false;
-});
-
-$('.accept-friend').click(function (e) {
-    e.preventDefault();
-    const data = $(this).parent().serialize();
-    $.ajax({
-        type: "POST",
-        url: '/ApplicationUser/AcceptFriend',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: data,
-        dataType: "json",
-        success: function () { alert('Success'); },
-        error: function (ts) { }
-    });
-});
-
-$('#NewComment').click(function (e) {
-    e.preventDefault();
-    const data = $(this).parent().serialize();
-    $.ajax({
-        type: "POST",
-        url: '/Comment/New',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: data,
-        success: function (res) {
-            console.log(res);
-            const res_object = $('#ProfileComments #comment-temp').html(res);
-            const form = res_object.children('form');
-            form.on("keydown", ":input:not(textarea)", function (e) {
-                return event.key != "Enter";
-            });
-            form.on("keydown", "textarea", function (e) {
-                if (e.key == "Enter") { submitComment(form); }
-            });
-            form.children('.content-input').blur(function (e) { submitComment(form) });
-            $('#ProfileComments').children('#comments-body').prepend(res_object.children());
-            res_object.html('');
-        },
-        error: function (ts) {
-            console.log("error", ts);
-        }
-    });
-    return false;
-});
-
-$(document).ready(function () {
-
-});
-
 
 function submitComment(form) {
     const data = form.serialize();
@@ -136,4 +26,92 @@ function submitComment(form) {
         error: function (ts) { }
     });
 }
+
+$(document).ready(function () {
+    $('#ProfileImages .updatable').click(function () {
+        const modal = $('#modal-container .modal-content');
+        const select = this;
+        const type = $(this).attr('id');
+        const addClass = 'main-alt-select';
+        const callBack = function () {
+            changeUserImage(modal, type, modalClass = addClass)
+        };
+        loadCharacterModal(modal, select, 1, callBack, modalClass = addClass);
+    });
+
+    $('#UpdateUser').click(function (e) {
+        e.preventDefault();
+        const data = $('#UserUpdateForm').serialize();
+        $.ajax({
+            type: "POST",
+            url: '/ApplicationUser/Update',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: data,
+            dataType: "json",
+            success: function () { alert('Success'); },
+            error: function (ts) { }
+        });
+        $(this).hide();
+        return false;
+    });
+
+    $('#AddFriend').click(function (e) {
+        e.preventDefault();
+        const data = $('#AddFriendForm').serialize();
+        $.ajax({
+            type: "POST",
+            url: '/ApplicationUser/AddFriend',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: data,
+            dataType: "json",
+            success: function () { alert('Success'); },
+            error: function (ts) { }
+        });
+        $(this).remove();
+        return false;
+    });
+
+    $('.accept-friend').click(function (e) {
+        e.preventDefault();
+        const data = $(this).parent().serialize();
+        $.ajax({
+            type: "POST",
+            url: '/ApplicationUser/AcceptFriend',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: data,
+            dataType: "json",
+            success: function () { alert('Success'); },
+            error: function (ts) { }
+        });
+    });
+
+    $('#NewComment').click(function (e) {
+        e.preventDefault();
+        const data = $(this).parent().serialize();
+        $.ajax({
+            type: "POST",
+            url: '/Comment/New',
+            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+            data: data,
+            success: function (res) {
+                console.log(res);
+                const res_object = $('#ProfileComments #comment-temp').html(res);
+                const form = res_object.children('form');
+                form.on("keydown", ":input:not(textarea)", function (e) {
+                    return event.key != "Enter";
+                });
+                form.on("keydown", "textarea", function (e) {
+                    if (e.key == "Enter") { submitComment(form); }
+                });
+                form.children('.content-input').blur(function (e) { submitComment(form) });
+                $('#ProfileComments').children('#comments-body').prepend(res_object.children());
+                res_object.html('');
+            },
+            error: function (ts) {
+                console.log("error", ts);
+            }
+        });
+        return false;
+    });
+});
 

@@ -1,8 +1,8 @@
 ﻿@model SmashPopMVC.Models.ApplicationUser.UpdateViewModel
 
 <form asp-controller="ApplicationUser" asp-action="Update" id="UserUpdateForm">
-    <input type="hidden" asp-for="@Model.UserID" id="UserID"/>
-    <input type="hidden" asp-for="@Model.MainID" id="MainID"/>
-    <input type="hidden" asp-for="@Model.AltID" id="AltID"/>
+    <input type="hidden" asp-for="@Model.UserID" id="UserIDInput"/>
+    <input type="hidden" asp-for="@Model.MainID" id="MainIDInput"/>
+    <input type="hidden" asp-for="@Model.AltID" id="AltIDInput"/>
     <button id="UpdateUser" class="btn btn-dark" value="submit" style="display: none;"><i class="fa fa-database"></i> Update</button>
 </form>

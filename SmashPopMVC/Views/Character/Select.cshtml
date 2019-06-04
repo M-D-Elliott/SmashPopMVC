@@ -7,16 +7,19 @@
 </environment>
 
 <div class="modal-body">
-    <button type="button" class="btn btn-outline-dark ml-1 float-right grey-white modal-close-btn" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+    <button type="button" class="btn btn-outline-dark ml-1 float-right grey-white modal-close-btn"><i class="fa fa-window-close"></i></button>
     <hr>
     <h4 class="display-4">Choose your character!</h4>
     <hr>
-    <div class="center" id="Characters">
-        <div class="row flex-container">
+    <div class="center forty-percent-height">
+        <div class="row flex-container" id="Characters">
             @foreach (CharacterSelectingModel character in Model.CharacterList)
             {
-                <div class="card flex-item">
-                    <img id="@character.ID" title="@character.Name" class="card-img-top character @character.ImageName relative-parent" alt="...">
+                <div class="card flex-item clickable-card">
+                    <img title="@character.Name"
+                         class="card-img-top character @character.ImageName relative-parent"
+                         data-id="@character.ID"
+                         alt="...">
                 </div>
             }
             <div class="card flex-item" title="Random">
@@ -28,5 +31,5 @@
         <div id="SelectedCharacters" class="row flex-container">
         </div>
     </div>
-    <button id="SubmitButton" class="btn btn-dark" data-dismiss="modal"> OK!</button>
+    <button id="SubmitButton" class="btn btn-dark"> OK!</button>
 </div>

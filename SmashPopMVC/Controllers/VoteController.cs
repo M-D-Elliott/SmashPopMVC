@@ -2,6 +2,7 @@
 using SmashPopMVC.Data;
 using SmashPopMVC.Data.Models;
 using SmashPopMVC.Models.Character;
+using SmashPopMVC.Models.Tally;
 using SmashPopMVC.Models.Vote;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,16 @@ namespace SmashPopMVC.Controllers
     public class VoteController : Controller
     {
         private readonly IVote _voteService;
+        private readonly IApplicationUser _applicationUserService;
+        private readonly ICharacter _characterService;
+        private readonly ITally _tallyService;
 
-        public VoteController(IVote voteService, IApplicationUser userService)
+        public VoteController(IVote voteService, IApplicationUser applicationUserService, ICharacter characterService, ITally tallyService)
         {
             _voteService = voteService;
+            _applicationUserService = applicationUserService;
+            _characterService = characterService;
+            _tallyService = tallyService;
         }
 
         [HttpGet]
@@ -25,13 +32,60 @@ namespace SmashPopMVC.Controllers
             var votes = _voteService.GetByUser(userID);
 
             var model = BuildVoteListing(votes);
-            return GetVotes(model);
+            return Results(model);
         }
 
         [HttpGet]
-        public IActionResult GetVotes(VoteListingModel model)
+        public IActionResult Results(VoteListingModel model)
         {
             return View(model);
+        }
+        
+        [HttpGet]
+        public IActionResult New(NewVoteModel model)
+        {
+            var now = DateTime.Now;
+            var tally = _tallyService.GetByDateCreatedOrCreate(now);
+
+            model.Created = now;
+            model.MostDifficult = null;
+            model.LeastDifficult = null;
+            model.FlavorOfTheMonth = null;
+            model.MostPowerful = null;
+            model.TallyData = BuildTallyData(tally);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Add(NewVoteModel model)
+        {
+            var vote = new Vote
+            {
+                Voter = _applicationUserService.GetUser(model.UserID),
+                Created = model.Created,
+                MostDifficult = _characterService.GetByID(model.MostDifficult.ID),
+                LeastDifficult = _characterService.GetByID(model.LeastDifficult.ID),
+                FlavorOfTheMonth = _characterService.GetByID(model.FlavorOfTheMonth.ID),
+                MostPowerful = _characterService.GetByID(model.MostPowerful.ID),
+                Tally = _tallyService.Get(model.TallyData.ID),
+            };
+            if (ModelState.IsValid)
+            {
+                _voteService.Add(vote);
+            }
+            return RedirectToAction("Profile", "ApplicationUser");
+        }
+
+        private TallyDataModel BuildTallyData(Tally tally)
+        {
+            return new TallyDataModel
+            {
+                ID = tally.ID,
+                Month = tally.Month,
+                Year = tally.Year,
+            };
         }
 
         private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes)

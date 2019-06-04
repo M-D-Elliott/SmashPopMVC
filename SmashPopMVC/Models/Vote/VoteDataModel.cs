@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace SmashPopMVC.Models.Vote
 {
-    public class VoteDataModel
+    public class VoteDataModel : VoteModel
     {
         public string Created { get; set; }
-        public string UserID { get; set; }
-        public string UserName { get; set; }
-        public CharacterDataModel MostDifficult { get; set; }
-        public CharacterDataModel LeastDifficult { get; set; }
-        public CharacterDataModel FlavorOfTheMonth { get; set; }
-        public CharacterDataModel MostPowerful { get; set; }
     }
 }

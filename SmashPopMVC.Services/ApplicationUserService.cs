@@ -32,7 +32,10 @@ namespace SmashPopMVC.Service
                     .Include(u => u.ReceievedFriendRequests).ThenInclude(s => s.RequestedBy).ThenInclude(f => f.Main)
                     .Include(u => u.Comments).ThenInclude(c => c.Replies)
                     .Include(u => u.Partner).ThenInclude(p => p.Main)
-                    .Include(u => u.Votes);
+                    .Include(u => u.Votes).ThenInclude(v => v.LeastDifficult)
+                    .Include(u => u.Votes).ThenInclude(v => v.MostDifficult)
+                    .Include(u => u.Votes).ThenInclude(v => v.FlavorOfTheMonth)
+                    .Include(u => u.Votes).ThenInclude(v => v.MostPowerful);
             }
 
             return user.FirstOrDefault();
@@ -82,9 +85,9 @@ namespace SmashPopMVC.Service
                         _context.Entry(user.Alt).State = EntityState.Modified;
                     }
                 }
+                _context.Entry(user).State = EntityState.Modified;
+                _context.SaveChanges();
             }
-            _context.Entry(user).State = EntityState.Modified;
-            _context.SaveChanges();
         }
     }
 }

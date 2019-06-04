@@ -12,5 +12,6 @@ namespace SmashPopMVC.Data
 
         Task Add(Character character);
         Task Delete(int id);
+        Character GetByIDOrRandom(int? id);
     }
 }

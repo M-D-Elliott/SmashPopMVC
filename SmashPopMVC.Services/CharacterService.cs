@@ -11,10 +11,12 @@ namespace SmashPopMVC.Service
     public class CharacterService : ICharacter
     {
         private readonly ApplicationDbContext _context;
+        private readonly Random _random;
 
         public CharacterService(ApplicationDbContext context)
         {
             _context = context;
+            _random = new Random();
         }
 
         public IEnumerable<Character> GetAll()
@@ -29,14 +31,25 @@ namespace SmashPopMVC.Service
                 .Include(c => c.SmashOrigin);
         }
 
+        public Character GetByIDOrRandom(int? id)
+        {
+            if (id == null)
+            {
+                int toSkip = _random.Next(0, _context.Characters.ToList().Count);
+                return _context.Characters.Skip(toSkip).Take(1).First();
+            }
+            else
+            {
+                return _context.Characters.FirstOrDefault(c => c.ID == id);
+            }
+        }
+
         public Character GetByID(int? id)
         {
             if(id == null)
             {
                 return null;
             }
-            //return _context.Characters.Where(c => c.ID == id)
-            //    .FirstOrDefault();
             return _context.Characters.FirstOrDefault(c => c.ID == id);
         }
 

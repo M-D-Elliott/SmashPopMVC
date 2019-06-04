@@ -1,4 +1,4 @@
-﻿function changeUserImage(modal, mainOrAlt, modalClass = '') {
+﻿function changeUserImage(modal, mainOrAlt, modalClass) {
     if (changeCharacterCard(modal, mainOrAlt, modalClass)) {
         $('#UpdateUser').show();
     }
@@ -34,9 +34,9 @@ $(document).ready(function () {
         const type = $(this).attr('id');
         const addClass = 'main-alt-select';
         const callBack = function () {
-            changeUserImage(modal, type, modalClass = addClass)
+            changeUserImage(modal, type, addClass)
         };
-        loadCharacterModal(modal, select, 1, callBack, modalClass = addClass);
+        loadCharacterModal(modal, select, 1, callBack, addClass);
     });
 
     $('#UpdateUser').click(function (e) {

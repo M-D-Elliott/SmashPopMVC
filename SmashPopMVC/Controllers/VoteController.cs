@@ -65,10 +65,10 @@ namespace SmashPopMVC.Controllers
             {
                 Voter = _applicationUserService.GetUser(model.UserID),
                 Created = model.Created,
-                MostDifficult = _characterService.GetByID(model.MostDifficult.ID),
-                LeastDifficult = _characterService.GetByID(model.LeastDifficult.ID),
-                FlavorOfTheMonth = _characterService.GetByID(model.FlavorOfTheMonth.ID),
-                MostPowerful = _characterService.GetByID(model.MostPowerful.ID),
+                MostDifficult = _characterService.GetByIDOrRandom(model.MostDifficult.ID),
+                LeastDifficult = _characterService.GetByIDOrRandom(model.LeastDifficult.ID),
+                FlavorOfTheMonth = _characterService.GetByIDOrRandom(model.FlavorOfTheMonth.ID),
+                MostPowerful = _characterService.GetByIDOrRandom(model.MostPowerful.ID),
                 Tally = _tallyService.Get(model.TallyData.ID),
             };
             if (ModelState.IsValid)

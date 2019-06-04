@@ -229,7 +229,7 @@ namespace SmashPopMVC.Controllers
         private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000)
         {
             var results = votes
-                .OrderBy(v => v.Created)
+                .OrderByDescending(v => v.Created)
                 .Take(take)
                 .Select(v => new VoteDataModel
                 {

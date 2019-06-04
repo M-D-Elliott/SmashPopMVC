@@ -1,6 +1,9 @@
 ﻿let animate = true;
 
-function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, modalClass = '') {
+function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, modalClass) {
+    if (modalClass === undefined) {
+        modalClass = "";
+    }
     const select = $(initialSelect).clone();
     animate = true;
     select.removeClass('modal-link updatable col-6');
@@ -13,7 +16,7 @@ function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, mod
             success: function (res) {
                 modal.html(res);
                 const characters = modal.find('#Characters .card');
-                characters.click(function () { addToSelected($(this).clone(), max = maxSelect) })
+                characters.click(function () { addToSelected($(this).clone(), maxSelect) })
                 modal.on('click', function () {
                     endAnimateCharacterCard();
                 });
@@ -26,7 +29,7 @@ function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, mod
 }
 
 function startCharacterModal(modal, select, maxSelect, submitCallBack) {
-    addToSelected(select, max = maxSelect);
+    addToSelected(select, maxSelect);
     submitButton = modal.find('#SubmitButton');
     submitButton.off('click');
     submitButton.on('click', function () {
@@ -60,7 +63,10 @@ function animateCharacterCard(card) {
     });
 }
 
-function addToSelected(charCard, max = 5) {
+function addToSelected(charCard, max) {
+    if (max === undefined) {
+        max = 5;
+    }
     const selectedCharacters = $('#SelectedCharacters');
     selectedCharacters.children().each(function () {
         if ($(this).attr('title') == charCard.attr('title')) {
@@ -82,6 +88,9 @@ function removeFromSelected(target) {
 }
 
 function changeCharacterCard(modal, type, modalClass) {
+    if (modalClass === undefined) {
+        modalClass = '';
+    }
     const characterCard = $('#' + type);
     const selectedCharacter = modal.find('#SelectedCharacters div:first-child img');
     const hiddenInput = $('#' + type + 'IDInput');

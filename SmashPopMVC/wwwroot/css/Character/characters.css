@@ -62,7 +62,3 @@ h4 {
     width: 85%;
     flex-wrap: wrap;
 }
-
-.character:hover {
-    background-position-y: -50px;
-}

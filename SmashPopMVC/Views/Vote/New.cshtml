@@ -24,7 +24,7 @@
         </div>
     </div>
     <form asp-controller="Vote" asp-action="Add" id="VoteSubmitForm">
-        <input type="hidden" asp-for="@Model.Created" id="CreatedInput" />
+        <input type="hidden" asp-for="@Model.Created" id="CreatedInput" value="@Model.Created"/>
         <input type="hidden" asp-for="@Model.UserID" id="UserIDInput" />
         <input type="hidden" asp-for="@Model.MostDifficult.ID" id="MostDifficultIDInput" />
         <input type="hidden" asp-for="@Model.LeastDifficult.ID" id="LeastDifficultIDInput" />

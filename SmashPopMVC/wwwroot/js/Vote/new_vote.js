@@ -1,4 +1,4 @@
-﻿function setUserVote(modal, type, modalClass = '') {
+﻿function setUserVote(modal, type, modalClass) {
     changeCharacterCard(modal, type, modalClass);
 }
 
@@ -9,8 +9,8 @@ $(document).ready(function () {
         const type = $(this).attr('id');
         const addClass = 'vote-select';
         const callBack = function () {
-            setUserVote(modal, type, modalClass = addClass);
+            setUserVote(modal, type, addClass);
         };
-        loadCharacterModal(modal, select, 1, callBack, modalClass = addClass);
+        loadCharacterModal(modal, select, 1, callBack, addClass);
     });
 });

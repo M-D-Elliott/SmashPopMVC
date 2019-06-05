@@ -11,7 +11,7 @@
 
 <div class="container">
     <div id="Profile" class="row">
-        <div id="ProfileData" class="col-sm-6 col-md-3 pull-left">
+        <div id="ProfileData" class="col-md-6">
             @Model.Name
             <div id="ProfileImages" class="row">
                 @if (Model.ID == Model.CurrentUserID)
@@ -48,7 +48,7 @@
                 @Html.Partial("_AddFriendPartial", new AddFriendViewModel { UserID=Model.CurrentUserID, FriendID=Model.ID });
             }
         </div>
-        <div id="RecentVotes" class="col-sm-6 col-md-3 pull-right container">
+        <div id="RecentVotes" class="col-md-6">
             @Html.ActionLink("Vote now!", "New", "Vote", Model.Votes.NewVoteModel)
             <a asp-controller="Vote" asp-action="Results" asp-route-model="@Model.Votes"><h4>Vote History:</h4></a>
             @if (Model.Votes.Results.Any())

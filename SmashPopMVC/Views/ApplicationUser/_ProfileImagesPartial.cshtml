@@ -1,0 +1,29 @@
+﻿@model SmashPopMVC.Models.ApplicationUser.AcceptFriendViewModel
+
+<div id="ProfileImages" class="row">
+    @if (Model.ID == Model.CurrentUserID)
+    {
+        <div id="Main" class="col-6 card flex-item modal-link updatable">
+            <img title="@Model.Main.Name"
+                 class="card-img-top character @Model.Main.ImageName"
+                 data-id="@Model.Main.ID"
+                 alt="...">
+        </div>
+        <div id="Alt" class="col-6 card flex-item modal-link updatable">
+            <img title="@Model.Alt.Name"
+                 class="@Model.Main.ID card-img-top character @Model.Alt.ImageName"
+                 data-id="@Model.Alt.ID"
+                 alt="...">
+        </div>
+    }
+    else
+    {
+        <div class="col-6 card flex-item">
+            <img class="card-img-top character @Model.Main.ImageName" alt="..." title="@Model.Main.Name">
+        </div>
+        <div class="col-6 card flex-item">
+            <img class="card-img-top character @Model.Alt.ImageName" alt="..." title="@Model.Alt.Name">
+        </div>
+    }
+
+</div>

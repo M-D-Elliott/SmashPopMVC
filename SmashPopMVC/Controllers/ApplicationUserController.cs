@@ -185,7 +185,7 @@ namespace SmashPopMVC.Controllers
             return comments
                 .Select(c => new CommentDataModel
                 {
-                    Comment = c,
+                    ID = c.ID,
                     Title = c.Title,
                     Content = c.Content,
                     Created = c.Created.ToString(),

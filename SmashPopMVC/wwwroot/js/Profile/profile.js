@@ -6,24 +6,21 @@
 
 function submitComment(form) {
     const data = form.serialize();
-    form.remove()
-
-    console.log(data);
+    form.remove();
     $.ajax({
         type: "POST",
         url: '/Comment/Add',
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         data: data,
-        dataType: "json",
+        dataType: "html",
         success: function (res) {
-            console.log(res);
             const res_object = $('#ProfileComments #comment-temp').html(res);
             const form = res_object.children('form');
             form.children('.content-input').blur(function (e) { submitComment(form) });
             $('#ProfileComments').children('#comments-body').prepend(res_object.children());
             res_object.html('');
         },
-        error: function (ts) { }
+        error: function (ts) { console.log('error', ts)}
     });
 }
 
@@ -94,7 +91,6 @@ $(document).ready(function () {
             contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
             data: data,
             success: function (res) {
-                console.log(res);
                 const res_object = $('#ProfileComments #comment-temp').html(res);
                 const form = res_object.children('form');
                 form.on("keydown", ":input:not(textarea)", function (e) {

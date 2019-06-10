@@ -9,7 +9,7 @@
 <div class="modal-body">
     <button type="button" class="btn btn-outline-dark ml-1 float-right grey-white modal-close-btn"><i class="fa fa-window-close"></i></button>
     <hr>
-    <h4 class="display-4">Choose your character!</h4>
+    <h4 id="ChooseYourCharacter" class="display-4">Choose your character!</h4>
     <hr>
     <div class="center forty-percent-height">
         <div class="row flex-container" id="Characters">
@@ -17,18 +17,21 @@
             {
                 <div class="card flex-item clickable-card">
                     <img title="@character.Name"
-                         class="card-img-top character @character.ImageName relative-parent"
+                         class="card-img-top character @character.ImageName"
                          data-id="@character.ID"
                          alt="...">
                 </div>
             }
-            <div class="card flex-item" title="Random">
+            <div class="card flex-item clickable-card" title="Random">
                 <img class="card-img-top character random" alt="...">
             </div>
         </div>
     </div>
     <div class="center">
         <div id="SelectedCharacters" class="row flex-container">
+        </div>
+        <div id="emptyCharCard" class="card flex-item relative-parent" title="" style="display:none;">
+            <button type="button" class="btn grey-white ml-0 p-0"><i class="fa fa-window-close p-0 m-0"></i></button>
         </div>
     </div>
     <button id="SubmitButton" class="btn btn-dark"> OK!</button>

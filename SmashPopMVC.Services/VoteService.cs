@@ -32,7 +32,8 @@ namespace SmashPopMVC.Service
                 .Include(v => v.MostPowerful)
                 .Include(v => v.Voter)
                 .Include(v => v.Tally)
-                .OrderByDescending(v => v.Created);
+                .OrderByDescending(v => v.Created)
+                .Take(take);
         }
 
         public IEnumerable<Vote> GetByCharacter(int characterID, int take = 1000)

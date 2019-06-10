@@ -7,7 +7,7 @@ namespace SmashPopMVC.Data
 {
     public interface IComment
     {
-        Comment Get(int commentID);
+        Comment Get(int? commentID);
         void Add(Comment comment);
         void Update(Comment comment);
 

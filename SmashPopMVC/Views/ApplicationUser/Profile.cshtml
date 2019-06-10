@@ -12,63 +12,48 @@
 <div class="container">
     <div id="Profile" class="row">
         <div id="ProfileData" class="col-md-6">
-            @Model.Name
-            <div id="ProfileImages" class="row">
-                @if (Model.ID == Model.CurrentUserID)
-                {
-                    <div id="Main" class="col-6 card flex-item modal-link updatable">
-                        <img
-                             title="@Model.Main.Name"
-                             class="card-img-top character @Model.Main.ImageName"
-                             data-id="@Model.Main.ID"
-                             alt="...">
-                    </div>
-                    <div id="Alt" class="col-6 card flex-item modal-link updatable">
-                        <img
-                             title="@Model.Alt.Name"
-                             class="@Model.Main.ID card-img-top character @Model.Alt.ImageName"
-                             data-id="@Model.Alt.ID"
-                             alt="...">
-                    </div>
-                }
-                else
-                {
-                    <div class="col-6 card flex-item">
-                        <img class="card-img-top character @Model.Main.ImageName" alt="..." title="@Model.Main.Name">
-                    </div>
-                    <div class="col-6 card flex-item">
-                        <img class="card-img-top character @Model.Alt.ImageName" alt="..." title="@Model.Alt.Name">
-                    </div>
-                }
-
+            <h2 id="ProfileUserName">@Model.Name</h2>
+            <br />
+            <div id="ProfileImages">
+                <div id="Main" class="@("col-6 card" + ((Model.ID == Model.CurrentUserID) ? " modal-link updatable" : ""))">
+                    <h6 class="card-title">Main</h6>
+                    <img title="@Model.Main.Name"
+                         class="card-img-top character @Model.Main.ImageName"
+                         data-id="@Model.Main.ID"
+                         alt="...">
+                </div>
+                <div id="Alt" class="@("col-6 card " + ((Model.ID == Model.CurrentUserID) ? "modal-link updatable" : ""))">
+                    <h6 class="card-title">Alt</h6>
+                    <img title="@Model.Alt.Name"
+                         class="@Model.Main.ID card-img-top character @Model.Alt.ImageName"
+                         data-id="@Model.Alt.ID"
+                         alt="...">
+                </div>
             </div>
             @Html.Partial("_UserUpdatePartial", Model.UpdateViewModel)
+            <div id="JoinDate">
+                <h4>User since: @Model.Joined</h4>
+            </div>
             @if (User.Identity.IsAuthenticated && Model.ID != Model.CurrentUserID && !Model.CurrentUserIsFriends)
             {
-                @Html.Partial("_AddFriendPartial", new AddFriendViewModel { UserID=Model.CurrentUserID, FriendID=Model.ID });
+                @Html.Partial("../Friend/_AddFriendPartial", new AddFriendViewModel { UserID = Model.CurrentUserID, FriendID = Model.ID });
             }
         </div>
-        <div id="RecentVotes" class="col-md-6">
-            @Html.ActionLink("Vote now!", "New", "Vote", Model.Votes.NewVoteModel)
-            <a asp-controller="Vote" asp-action="Results" asp-route-model="@Model.Votes"><h4>Vote History:</h4></a>
+        <div id="RecentVotes" class="col-md-6 container">
+            @if (Model.Votes.NewVoteModel != null)
+            {
+                @Html.ActionLink("Vote now!", "New", "Vote", Model.Votes.NewVoteModel)
+            }
+            <a asp-controller="Vote" asp-action="Results" asp-route-id="@Model.ID" method="post"><h4>Vote History:</h4></a>
             @if (Model.Votes.Results.Any())
             {
-                @Html.Partial("_profileVoteListingPartial", Model.Votes)
+                @Html.Partial("../Vote/_voteListingPartial", Model.Votes)
             }
         </div>
     </div>
     <div id="ProfileSocial">
         <div id="ProfileComments" class="col-md-8 pull-left">
-            <div id="comment-temp"></div>
-            @Html.Partial("../Comment/_NewPartial", new NewCommentModel { PosteeID=Model.ID, PosterID=Model.CurrentUserID, Title="", Content="" })
-            <div id="comments-body">
-                @foreach (var comment in Model.Comments)
-                {
-                    <div class="comment">
-                        @Html.Partial("../Comment/Edit", comment)
-                    </div>
-                }
-            </div>
+            @Html.Partial("../Comment/_ProfileCommentsPartial", Model.Comments)
         </div>
         <div id="ProfileFriends" class="col-md-4 pull-right">
             <p>Friends:</p>
@@ -88,7 +73,7 @@
                     @foreach (var friend in Model.Friends.FriendRequests)
                     {
                         <p>@friend.FriendData.Name</p>
-                        @Html.Partial("_AcceptFriendPartial", new AcceptFriendViewModel { RequestID = friend.RequestID });
+                        @Html.Partial("../Friend/_AcceptFriendPartial", new AcceptFriendViewModel { RequestID = friend.RequestID });
                     }
                 </div>
             }

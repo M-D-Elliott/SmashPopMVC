@@ -7,7 +7,6 @@ function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, mod
     const select = $(initialSelect).clone();
     animate = true;
     select.removeClass('modal-link updatable col-6');
-    select.removeAttr('id');
     modal.addClass(modalClass);
     if ($.trim(modal.html()) == '' || !(modal.find('#Characters').length)) {
         $.ajax({
@@ -16,7 +15,7 @@ function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, mod
             success: function (res) {
                 modal.html(res);
                 const characters = modal.find('#Characters .card');
-                characters.click(function () { addToSelected($(this).clone(), maxSelect) })
+                characters.click(function () { addToSelected($(this).children('img').clone(), maxSelect) })
                 modal.on('click', function () {
                     endAnimateCharacterCard();
                 });
@@ -29,7 +28,10 @@ function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, mod
 }
 
 function startCharacterModal(modal, select, maxSelect, submitCallBack) {
-    addToSelected(select, maxSelect);
+    addToSelected(select.children('img').clone(), maxSelect);
+    const select_type = select.attr('id');
+    select.removeAttr('id');
+    modal.children('.modal-body').children('#ChooseYourCharacter').text(`Choose your ${select_type} Character!`);
     submitButton = modal.find('#SubmitButton');
     submitButton.off('click');
     submitButton.on('click', function () {
@@ -63,19 +65,20 @@ function animateCharacterCard(card) {
     });
 }
 
-function addToSelected(charCard, max) {
+function addToSelected(img, max) {
     if (max === undefined) {
         max = 5;
     }
     const selectedCharacters = $('#SelectedCharacters');
+    let charCard = selectedCharacters.siblings('#emptyCharCard')
+        .clone()
+        .css({ "display": "block" })
+        .append(img);
     selectedCharacters.children().each(function () {
         if ($(this).attr('title') == charCard.attr('title')) {
             $(this).remove();
         }
     });
-    charCard.addClass('relative-parent');
-    charCard.removeClass('clickable-card');
-    charCard.prepend('<button type="button" class="btn grey-white ml-0 p-0"><i class="fa fa-window-close p-0 m-0"></i></button>');
     charCard.children('button').click(function () { removeFromSelected($(this)); });
     selectedCharacters.append(charCard);
     if (selectedCharacters.children().length > max) {
@@ -88,19 +91,21 @@ function removeFromSelected(target) {
 }
 
 function changeCharacterCard(modal, type, modalClass) {
-    if (modalClass === undefined) {
-        modalClass = '';
+    if (modalClass !== undefined) {
+        modal.removeClass(modalClass);
     }
     const characterCard = $('#' + type);
-    const selectedCharacter = modal.find('#SelectedCharacters div:first-child img');
+    const originalImage = characterCard.children('img');
+    const newImage = modal.find('#SelectedCharacters div:first-child img');
     const hiddenInput = $('#' + type + 'IDInput');
-    const newID = selectedCharacter.attr('data-id');
-    console.log(hiddenInput.val(), newID);
-    if (selectedCharacter.length > 0 && hiddenInput.val() !== newID) {
+    const newID = newImage.attr('data-id');
+    
+    if (newImage.length > 0 && hiddenInput.val() !== newID) {
+        characterCard.children('.card-title').text(newImage.attr('title'));
         hiddenInput.val(newID);
-        characterCard.children().remove();
-        characterCard.append(selectedCharacter.clone());
-        modal.removeClass(modalClass);
+        newImage
+            .insertBefore(originalImage);
+        originalImage.remove();
         return true;
     }
     return false;

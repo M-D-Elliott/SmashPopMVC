@@ -35,6 +35,7 @@ namespace SmashPopMVC.Controllers
             {
                 Postee = _applicationUserService.GetUser(model.PosteeID),
                 Poster = _applicationUserService.GetUser(model.PosterID),
+                ReplyTo = _commentService.Get(model.ReplyToID),
                 Title = model.Title,
                 Content = model.Content,
                 Created = DateTime.Now,

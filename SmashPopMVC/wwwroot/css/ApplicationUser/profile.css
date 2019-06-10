@@ -1,1 +1,64 @@
-﻿
+﻿#ProfileData {
+    display: table;
+}
+
+/*||||||| Profile Images ||||||||*/
+#ProfileImages .card {
+    display: inline-block;
+    border: 1px solid #666666;
+    padding: 0;
+}
+
+#ProfileImages .card div.card-title {
+    max-width: 50%;
+}
+
+#ProfileImages .card h6.card-title {
+    border-bottom: 1px solid #666666;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#ProfileImages .card img {
+    zoom: 1.5;
+    /*transform: scale(2);
+    transform-origin: 0 0;
+    -ms-transform: scale(2);
+    -ms-transform-origin: 0 0;
+    -webkit-transform: scale(2);
+    -webkit-transform-origin: 0 0;
+    -moz-transform: scale(2);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(2);
+    -o-transform-origin: 0 0;*/
+}
+
+
+/*||||||| Profile Comments ||||||||*/
+
+#ProfileComments {
+    max-height: 100vh;
+    background: purple;
+    overflow: scroll;
+    -ms-overflow-style: none; /* IE 10+*/ 
+    scrollbar-width: none; /* Firefox */
+
+}
+#ProfileComments::-webkit-scrollbar {
+    display: none; /* Safari and Chrome */
+}
+
+#ProfileComments #comments-body {
+    max-height: inherit;
+    background: green;
+}
+
+.comment {
+    float: left;
+    width: 100%;
+    background: orange;
+    border: 1px solid #666666;
+}
+
+/*||||||| Votes ||||||||*/

@@ -25,19 +25,12 @@ namespace SmashPopMVC.Controllers
             _characterService = characterService;
             _tallyService = tallyService;
         }
-
+        
         [HttpGet]
-        public IActionResult GetUserVotes(string userID)
+        public IActionResult Results(string id)
         {
-            var votes = _voteService.GetByUser(userID);
-
+            var votes = _voteService.GetByUser(id);
             var model = BuildVoteListing(votes);
-            return Results(model);
-        }
-
-        [HttpGet]
-        public IActionResult Results(VoteListingModel model)
-        {
             return View(model);
         }
         
@@ -93,7 +86,7 @@ namespace SmashPopMVC.Controllers
             var results = votes
                 .Select(v => new VoteDataModel
                 {
-                    Created = v.Created.ToString(":d"),
+                    Created = v.Created.ToString("d"),
                     UserID = v.VoterID,
                     UserName = v.Voter.UserName.Substring(0, v.Voter.UserName.IndexOf('@')),
                     MostDifficult = BuildCharacterData(v.MostDifficult),

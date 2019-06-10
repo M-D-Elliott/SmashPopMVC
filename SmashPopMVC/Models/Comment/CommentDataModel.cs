@@ -6,5 +6,6 @@ namespace SmashPopMVC.Models.Comment
     {
         public int ID { get; set; }
         public IEnumerable<CommentDataModel> Replies { get; set; }
+        public NewCommentModel NewCommentModel { get; set; }
     }
 }

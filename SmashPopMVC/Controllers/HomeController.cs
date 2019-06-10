@@ -12,6 +12,10 @@ namespace SmashPopMVC.Controllers
     {
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Profile", "ApplicationUser");
+            }
             return View();
         }
 
@@ -33,12 +37,5 @@ namespace SmashPopMVC.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        [HttpPost]
-        public ActionResult Characters()
-        {
-            return RedirectToAction("Index");
-        }
-
     }
 }

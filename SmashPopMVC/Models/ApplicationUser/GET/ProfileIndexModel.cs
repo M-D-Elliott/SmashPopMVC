@@ -11,13 +11,14 @@ namespace SmashPopMVC.Models.ApplicationUser
         public string CurrentUserID { get; set; }
         public bool CurrentUserIsFriends { get; set; }
         public string Name { get; set; }
+        public string Joined { get; set; }
         public CharacterDataModel Main { get; set; }
         public CharacterDataModel Alt { get; set; }
         public string PartnerName { get; set; }
         public string PartnerMainImage { get; set; }
         public FriendListingModel Friends { get; set; }
         public UpdateViewModel UpdateViewModel { get; set; }
-        public IEnumerable<CommentDataModel> Comments { get; set; }
+        public CommentListingModel Comments { get; set; }
         public VoteListingModel Votes { get; set; }
 
         public bool ThisUser { get; set; }

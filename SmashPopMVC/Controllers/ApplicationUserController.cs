@@ -158,6 +158,12 @@ namespace SmashPopMVC.Controllers
                 AltID = user.Alt?.ID,
             };
             var currentUserID = GetCurrentUserID();
+            var commentListing = new CommentListingModel
+            {
+                Comments = BuildCommentListing(user.Comments.Where(c => c.ReplyToID == null), currentUserID),
+                NewCommentModel = BuildNewCommentModel(user.Id, currentUserID, null),
+            };
+
             return new ProfileIndexModel
             {
                 ID = user.Id,
@@ -166,11 +172,12 @@ namespace SmashPopMVC.Controllers
                 Name = user.ShortName ?? user.UserName,
                 Main = BuildCharacterData(user.Main),
                 Alt = BuildCharacterData(user.Alt),
+                Joined = user.MemberSince.ToString("d"),
                 PartnerName = user.Partner?.UserName,
                 PartnerMainImage = user.Partner?.Main.ImageName,
                 Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived),
-                Comments = BuildCommentListing(user.Comments),
-                Votes = BuildVoteListing(user.Votes, take: 3),
+                Comments = commentListing,
+                Votes = BuildVoteListing(user.Votes, take: 3, currentUser: user.Id == currentUserID),
                 UpdateViewModel = updateViewModel,
             };
         }
@@ -180,7 +187,7 @@ namespace SmashPopMVC.Controllers
             return _userManager.GetUserId(User);
         }
 
-        private IEnumerable<CommentDataModel> BuildCommentListing(IEnumerable<Comment> comments)
+        private IEnumerable<CommentDataModel> BuildCommentListing(IEnumerable<Comment> comments, string currentUserID)
         {
             return comments
                 .Select(c => new CommentDataModel
@@ -190,9 +197,20 @@ namespace SmashPopMVC.Controllers
                     Content = c.Content,
                     Created = c.Created.ToString(),
                     PosterName = c.Poster.UserName.Substring(0, c.Poster.UserName.IndexOf('@')),
-                    Replies = BuildCommentListing(c.Replies),
+                    Replies = BuildCommentListing(c.Replies, currentUserID),
+                    NewCommentModel = BuildNewCommentModel(c.PosteeID, currentUserID, c.ID),
                 })
                 .OrderByDescending(c => c.Created);
+        }
+
+        private NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID)
+        {
+            return new NewCommentModel
+            {
+                PosteeID = posteeID,
+                PosterID = posterID,
+                ReplyToID = replyToID == null ? null : replyToID,
+            };
         }
 
         private FriendListingModel BuildFriendListing(ICollection<ApplicationUser> friendsApproved,
@@ -226,14 +244,14 @@ namespace SmashPopMVC.Controllers
 
         }
 
-        private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000)
+        private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000, bool currentUser=false)
         {
             var results = votes
                 .OrderByDescending(v => v.Created)
                 .Take(take)
                 .Select(v => new VoteDataModel
                 {
-                    Created = v.Created.ToString(":d"),
+                    Created = v.Created.ToString("d"),
                     UserID = v.VoterID,
                     UserName = v.Voter.UserName.Substring(0, v.Voter.UserName.IndexOf('@')),
                     MostDifficult = BuildCharacterData(v.MostDifficult),
@@ -242,15 +260,19 @@ namespace SmashPopMVC.Controllers
                     MostPowerful = BuildCharacterData(v.MostPowerful),
                 });
 
-            var newVoteModel = new NewVoteModel
-            {
-                UserID = GetCurrentUserID(),
-            };
 
             return new VoteListingModel
             {
                 Results = results,
-                NewVoteModel = newVoteModel,
+                NewVoteModel = currentUser ? BuildNewVoteModel() : null,
+            };
+        }
+
+        private NewVoteModel BuildNewVoteModel()
+        {
+            return new NewVoteModel
+            {
+                UserID = GetCurrentUserID(),
             };
         }
 

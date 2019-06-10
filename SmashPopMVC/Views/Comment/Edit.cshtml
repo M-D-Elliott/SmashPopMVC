@@ -1,9 +1,20 @@
 ﻿@model SmashPopMVC.Models.Comment.CommentDataModel
 
-<form asp-controller="ApplicationUser" asp-action="EditComment" class="EditCommentForm">
-    <input type="hidden" asp-for="@Model.ID" class="ID" />
-    <input placeholder="Title" type="text" asp-for="@Model.Title" class="title-input" style="display: none;" />
-    <textarea placeholder="Content..." asp-for="@Model.Content" class="content-input" style="display: none;"></textarea>
-</form>
-<h2 class="comment-title">@Model.Title</h2>
-<p class="comment-content">@Model.Content</p>
+<div class="comment">
+    <form asp-controller="ApplicationUser" asp-action="EditComment" class="EditCommentForm">
+        <input type="hidden" asp-for="@Model.ID" class="ID" />
+        <input placeholder="Title" type="text" asp-for="@Model.Title" class="title-input" style="display: none;" />
+        <textarea placeholder="Content..." asp-for="@Model.Content" class="content-input" style="display: none;"></textarea>
+    </form>
+    <h2 class="comment-title">@Model.Title</h2>
+    <p class="comment-content">@Model.Content</p>
+    <div class="new-comment">
+        @Html.Partial("../Comment/_NewPartial", Model.NewCommentModel)
+    </div>
+    <div class="replies">
+        @foreach (var reply in Model.Replies)
+        {
+            @Html.Partial("../Comment/Edit", reply)
+        }
+    </div>
+</div>

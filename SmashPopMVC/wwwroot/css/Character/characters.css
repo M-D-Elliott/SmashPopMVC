@@ -48,11 +48,11 @@
     background-color: lightgrey;
 }
 
-    .btn.grey-white:hover {
-        background-color: white;
-    }
+.btn.grey-white:hover {
+    background-color: white;
+}
 
-h4 {
+#ChooseYourCharacter {
     color: pink;
 }
 
@@ -62,3 +62,4 @@ h4 {
     width: 85%;
     flex-wrap: wrap;
 }
+

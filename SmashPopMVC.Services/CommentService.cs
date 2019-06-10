@@ -23,8 +23,12 @@ namespace SmashPopMVC.Service
             _context.SaveChanges();
         }
 
-        public Comment Get(int commentID)
+        public Comment Get(int? commentID)
         {
+            if(commentID == null)
+            {
+                return null;
+            }
             return _context.Comments
                 .Where(c => c.ID == commentID)
                 .FirstOrDefault();

@@ -4,6 +4,17 @@
     }
 }
 
+function createObjectFromHtml(html, jQIdentifier) {
+    const temp_object = $('#SmashPopTemp');
+    temp_object.html(html);
+    var domObject = temp_object.children(jQIdentifier).clone();
+    if (!domObject.length) {
+        console.log('No object called ' + jQIdentifier + ' found.');
+    }
+    temp_object.html('');
+    return domObject;
+}
+
 function requestNewCommentForm(form, commentParent) {
     data = form.serialize();
     $.ajax({
@@ -11,18 +22,17 @@ function requestNewCommentForm(form, commentParent) {
         url: '/Comment/New',
         contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
         data: data,
+        dataType: "html",
         success: function (res) {
-            const res_object = $('#ProfileComments #comment-temp').html(res);
-            const form = res_object.children('form');
-            form.on("keydown", ":input:not(textarea)", function (e) {
+            const newCommentForm = createObjectFromHtml(res, 'form');
+            newCommentForm.on("keydown", ":input:not(textarea)", function (e) {
                 return event.key != "Enter";
             });
-            form.on("keydown", "textarea", function (e) {
-                if (e.key == "Enter") { submitComment(form, commentParent); }
+            newCommentForm.on("keydown", "textarea", function (e) {
+                if (e.key == "Enter") { submitNewComment(newCommentForm, commentParent); }
             });
-            form.children('.content-input').blur(function (e) { submitComment(form, commentParent) });
-            commentParent.prepend(res_object.children());
-            res_object.html('');
+            newCommentForm.children('.content-input').blur(function (e) { submitNewComment(newCommentForm, commentParent) });
+            commentParent.prepend(newCommentForm);
         },
         error: function (ts) {
             console.log("error", ts);
@@ -30,7 +40,12 @@ function requestNewCommentForm(form, commentParent) {
     });
 }
 
-function submitComment(form, commentParent) {
+function requestReplyForm(form) {
+    const commentParent = form.parent().siblings('.replies');
+    requestNewCommentForm(form, commentParent);
+}
+
+function submitNewComment(form, commentParent) {
     const data = form.serialize();
     form.remove();
     $.ajax({
@@ -40,14 +55,25 @@ function submitComment(form, commentParent) {
         data: data,
         dataType: "html",
         success: function (res) {
-            const res_object = $('#ProfileComments #comment-temp').html(res);
-            const form = res_object.children('form');
-            form.children('.content-input').blur(function (e) { submitComment(form) });
-            commentParent.prepend(res_object.children());
-            res_object.html('');
+            const comment = createObjectFromHtml(res, '.comment');
+            const replyForm = comment.children('.comment-links').children('.NewCommentForm');
+            const replyButton = replyForm.children('.comment-reply');
+            replyButton.off('click');
+            replyButton.on('click', function (e) {
+                e.preventDefault();
+                console.log('yes');
+                requestReplyForm($(this).parent());
+                return false;
+            });
+            commentParent.prepend(comment);
         },
         error: function (ts) { console.log('error', ts)}
     });
+}
+
+function revealEditCommentForm(form) {
+    form.children('.title-input, .content-input').show();
+    form.parent().children('.comment-title, .comment-content').hide();
 }
 
 $(document).ready(function () {
@@ -108,8 +134,8 @@ $(document).ready(function () {
         });
     });
 
-    $('#NewComment').click(function (e) {
-        console.log('new');
+    $('#NewComment').off('click');
+    $('#NewComment').on('click', function (e) {
         e.preventDefault();
         const form = $(this).parent();
         const commentParent = $('#ProfileComments').children('#comments-body');
@@ -117,13 +143,22 @@ $(document).ready(function () {
         return false;
     });
 
-    $('.comment-reply').click(function (e) {
-        console.log('reply');
+    $('.comment-reply').off('click');
+    $('.comment-reply').on('click', function (e) {
+        e.preventDefault();
+        requestReplyForm($(this).parent());
+        return false;
+    });
+
+    $('.edit').off('click');
+    $('.edit').on('click', function () {
         e.preventDefault();
         const form = $(this).parent();
-        const commentParent = form.parent().siblings('.replies');
-        requestNewCommentForm(form, commentParent);
-        return false;
+        revealEditCommentForm(form);
+    });
+
+    $('.EditCommentForm').children('.content-input').blur(function (e) {
+        submitCommentEdit();
     });
 });
 

@@ -160,7 +160,7 @@ namespace SmashPopMVC.Controllers
             var currentUserID = GetCurrentUserID();
             var commentListing = new CommentListingModel
             {
-                Comments = BuildCommentListing(user.Comments.Where(c => c.ReplyToID == null), currentUserID),
+                Comments = BuildProfileCommentListing(user.Comments.Where(c => c.ReplyToID == null), currentUserID),
                 NewCommentModel = BuildNewCommentModel(user.Id, currentUserID, null),
             };
 
@@ -187,9 +187,10 @@ namespace SmashPopMVC.Controllers
             return _userManager.GetUserId(User);
         }
 
-        private IEnumerable<CommentDataModel> BuildCommentListing(IEnumerable<Comment> comments, string currentUserID)
+        private IEnumerable<CommentDataModel> BuildProfileCommentListing(IEnumerable<Comment> comments, string currentUserID)
         {
             return comments
+                .OrderByDescending(c => c.Created)
                 .Select(c => new CommentDataModel
                 {
                     ID = c.ID,
@@ -197,16 +198,18 @@ namespace SmashPopMVC.Controllers
                     Content = c.Content,
                     Created = c.Created.ToString(),
                     PosterName = c.Poster.UserName.Substring(0, c.Poster.UserName.IndexOf('@')),
-                    Replies = BuildCommentListing(c.Replies, currentUserID),
+                    PosterID = c.Poster.Id,
+                    Replies = BuildProfileCommentListing(c.Replies, currentUserID),
                     NewCommentModel = BuildNewCommentModel(c.PosteeID, currentUserID, c.ID),
-                })
-                .OrderByDescending(c => c.Created);
+                });
         }
 
         private NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID)
         {
             return new NewCommentModel
             {
+                Content = "",
+                Title = "",
                 PosteeID = posteeID,
                 PosterID = posterID,
                 ReplyToID = replyToID == null ? null : replyToID,

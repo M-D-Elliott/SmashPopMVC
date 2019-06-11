@@ -1,6 +1,5 @@
 ﻿@model SmashPopMVC.Models.Comment.CommentListingModel
 
-<div id="comment-temp"></div>
 @Html.Partial("../Comment/_NewPartial", Model.NewCommentModel)
 <div id="comments-body">
     @foreach (var comment in Model.Comments)

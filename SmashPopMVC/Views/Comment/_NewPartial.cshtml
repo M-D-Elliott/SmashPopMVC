@@ -3,8 +3,8 @@
 <form asp-controller="Comment" asp-action="Add" class="NewCommentForm">
     <input type="hidden" asp-for="@Model.PosteeID" id="PosteeID" />
     <input type="hidden" asp-for="@Model.PosterID" id="PosterID" />
-    <input type="hidden" asp-for="@Model.ReplyToID" class="ReplyToID" />
-    <input type="hidden" asp-for="@Model.Title" id="Title" />
-    <input type="hidden" asp-for="@Model.Content" id="Content" />
-    <button id="@(Model.ReplyToID  == null ? "NewComment" : "")" class="@("btn btn-success" + ((Model.ReplyToID == null) ? "" : " comment-reply"))" value="submit"><i class="fas fa-plus"></i>@(Model.ReplyToID == null ? "New" : "Reply")</button>
+    <input type="hidden" asp-for="@Model.ReplyToID" class="ReplyToID" value="@Model.ReplyToID" />
+    <input type="hidden" asp-for="@Model.Title" id="Title" value="" />
+    <input type="hidden" asp-for="@Model.Content" id="Content" value="" />
+    <button id="@(Model.ReplyToID  == null ? "NewComment" : "")" class="@("btn btn-success" + ((Model.ReplyToID == null) ? "" : " comment-reply"))" value="submit" onclick="return false;"><i class="fas fa-plus"></i>@(Model.ReplyToID == null ? "New" : "Reply")</button>
 </form>

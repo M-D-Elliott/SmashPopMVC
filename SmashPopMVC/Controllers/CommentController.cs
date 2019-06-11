@@ -44,15 +44,7 @@ namespace SmashPopMVC.Controllers
             if (ModelState.IsValid)
             {
                 _commentService.Add(comment);
-                var dataModel = new CommentDataModel
-                {
-                    ID = comment.ID,
-                    Title = comment.Title,
-                    Content = comment.Content,
-                    PosterName = comment.Poster.ShortName,
-                    Created = comment.Created.ToString(),
-
-                };
+                var dataModel = BuildCommentEditModel(comment, comment.Poster.Id);
                 return PartialView("Edit", dataModel);
             }
             else
@@ -60,8 +52,7 @@ namespace SmashPopMVC.Controllers
                 return NotFound();
             }
         }
-
-        [HttpGet]
+        
         public IActionResult Edit(CommentDataModel model)
         {
             return PartialView(model);
@@ -75,6 +66,33 @@ namespace SmashPopMVC.Controllers
             comment.Content = model.Content;
             comment.Title = model.Title;
             _commentService.Update(comment);
+        }
+
+        private CommentDataModel BuildCommentEditModel(Comment comment, string currentUserID)
+        {
+            var newCommentModel = BuildNewCommentModel(comment.PosteeID, currentUserID, comment.ID);
+            return new CommentDataModel
+            {
+                ID = comment.ID,
+                Title = comment.Title,
+                Content = comment.Content,
+                Replies = null,
+                PosterName = comment.Poster.ShortName,
+                Created = comment.Created.ToString(),
+                NewCommentModel = newCommentModel,
+            };
+        }
+
+        private NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID)
+        {
+            return new NewCommentModel
+            {
+                PosteeID = posteeID,
+                PosterID = posterID,
+                ReplyToID = replyToID == null ? null : replyToID,
+                Content = "",
+                Title = "",
+            };
         }
     }
 }

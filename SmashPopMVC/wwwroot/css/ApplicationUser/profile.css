@@ -61,4 +61,16 @@
     border: 1px solid #666666;
 }
 
+.replies {
+    margin-left: 5%;
+}
+
+.comment-links > div,
+.comment-links > form,
+.comment-links > button {
+    display: inline-block;
+    margin: 0 2% 0 0;
+    padding: 0px;
+}
+
 /*||||||| Votes ||||||||*/

@@ -31,6 +31,7 @@ namespace SmashPopMVC.Service
                     .Include(u => u.SentFriendRequests).ThenInclude(s => s.RequestedTo).ThenInclude(f => f.Main)
                     .Include(u => u.ReceievedFriendRequests).ThenInclude(s => s.RequestedBy).ThenInclude(f => f.Main)
                     .Include(u => u.Comments).ThenInclude(c => c.Replies)
+                    .Include(u => u.Comments).ThenInclude(c => c.Poster)
                     .Include(u => u.Partner).ThenInclude(p => p.Main)
                     .Include(u => u.Votes).ThenInclude(v => v.LeastDifficult)
                     .Include(u => u.Votes).ThenInclude(v => v.MostDifficult)

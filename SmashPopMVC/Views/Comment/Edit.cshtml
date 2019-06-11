@@ -1,20 +1,33 @@
 ﻿@model SmashPopMVC.Models.Comment.CommentDataModel
 
 <div class="comment">
-    <form asp-controller="ApplicationUser" asp-action="EditComment" class="EditCommentForm">
-        <input type="hidden" asp-for="@Model.ID" class="ID" />
-        <input placeholder="Title" type="text" asp-for="@Model.Title" class="title-input" style="display: none;" />
-        <textarea placeholder="Content..." asp-for="@Model.Content" class="content-input" style="display: none;"></textarea>
-    </form>
     <h2 class="comment-title">@Model.Title</h2>
     <p class="comment-content">@Model.Content</p>
-    <div class="new-comment">
+    <div class="comment-links">
         @Html.Partial("../Comment/_NewPartial", Model.NewCommentModel)
+        @if (Model.NewCommentModel.PosterID == Model.PosterID)
+        {
+            <form asp-controller="ApplicationUser" asp-action="EditComment" class="EditCommentForm">
+                <input type="hidden" asp-for="@Model.ID" class="ID" />
+                <input placeholder="Title" type="text" asp-for="@Model.Title" class="title-input" style="display: none;" />
+                <textarea placeholder="Content..." asp-for="@Model.Content" class="content-input" style="display: none;"></textarea>
+                <button class="edit" onclick="return false;">Edit</button>
+            </form>
+        }
+        <div class="comment-poster">
+            Poster:<a asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="@Model.PosterID">@Model.PosterName</a>
+        </div>
+        <div class="comment-date">
+            @Model.Created
+        </div>
     </div>
     <div class="replies">
-        @foreach (var reply in Model.Replies)
+        @if (Model.Replies != null)
         {
-            @Html.Partial("../Comment/Edit", reply)
+            @foreach (var reply in Model.Replies)
+            {
+                @Html.Partial("../Comment/Edit", reply)
+            }
         }
     </div>
 </div>

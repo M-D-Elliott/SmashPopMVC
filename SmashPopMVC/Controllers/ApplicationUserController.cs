@@ -175,7 +175,7 @@ namespace SmashPopMVC.Controllers
                 Joined = user.MemberSince.ToString("d"),
                 PartnerName = user.Partner?.UserName,
                 PartnerMainImage = user.Partner?.Main.ImageName,
-                Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived),
+                Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived, isCurrentUser: (currentUserID == user.Id)),
                 Comments = commentListing,
                 Votes = BuildVoteListing(user.Votes, take: 3, currentUser: user.Id == currentUserID),
                 UpdateViewModel = updateViewModel,
@@ -194,9 +194,9 @@ namespace SmashPopMVC.Controllers
                 .Select(c => new CommentDataModel
                 {
                     ID = c.ID,
-                    Title = c.Title,
                     Content = c.Content,
-                    Created = c.Created.ToString(),
+                    Date = c.Created.ToString("yyyy-MM-dd"),
+                    Time = c.Created.ToString("HH:mm:ss"),
                     PosterName = c.Poster.UserName.Substring(0, c.Poster.UserName.IndexOf('@')),
                     PosterID = c.Poster.Id,
                     Replies = BuildProfileCommentListing(c.Replies, currentUserID),
@@ -209,7 +209,6 @@ namespace SmashPopMVC.Controllers
             return new NewCommentModel
             {
                 Content = "",
-                Title = "",
                 PosteeID = posteeID,
                 PosterID = posterID,
                 ReplyToID = replyToID == null ? null : replyToID,
@@ -218,24 +217,28 @@ namespace SmashPopMVC.Controllers
 
         private FriendListingModel BuildFriendListing(ICollection<ApplicationUser> friendsApproved,
                                                       ICollection<Friend> friendRequestsSent,
-                                                      ICollection<Friend> friendRequestsReceived)
+                                                      ICollection<Friend> friendRequestsReceived,
+                                                      bool isCurrentUser = false)
         {
             var approvedFriends = friendsApproved
                 .Select(f => new UserFriendModel
                 {
                     FriendData = BuildUserData(f),
+                    Accepted = true,
                 });
             var requestedFriends = friendRequestsSent
                 .Select(f => new UserFriendModel
                 {
                     RequestID = f.ID,
                     FriendData = BuildUserData(f.RequestedTo),
+                    Accepted = false,
                 });
             var friendRequests = friendRequestsReceived
                 .Select(f => new UserFriendModel
                 {
                     RequestID = f.ID,
                     FriendData = BuildUserData(f.RequestedBy),
+                    Accepted = false,
                 });
 
             return new FriendListingModel
@@ -243,6 +246,7 @@ namespace SmashPopMVC.Controllers
                 ApprovedFriends = approvedFriends,
                 RequestedFriends = requestedFriends,
                 FriendRequests = friendRequests,
+                IsCurrentUser = isCurrentUser,
             };
 
         }

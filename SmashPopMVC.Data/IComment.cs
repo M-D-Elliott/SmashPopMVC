@@ -15,7 +15,5 @@ namespace SmashPopMVC.Data
         IEnumerable<Comment> SearchComments(
             string userID,
             string searchQuery);
-                
-
     }
 }

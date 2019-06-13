@@ -35,15 +35,26 @@
 }
 
 
-/*||||||| Profile Comments ||||||||*/
+
+/*||||||| Profile Social ||||||||*/
+
+#ProfileSocial > #ProfileComments {
+    margin-right: 6%;
+}
+
+.flex-container {
+    display: flex;
+}
+
+/*|| Profile Comments ||*/
 
 #ProfileComments {
     max-height: 100vh;
-    background: purple;
+    background: #666666;
     overflow: scroll;
-    -ms-overflow-style: none; /* IE 10+*/ 
+    -ms-overflow-style: none; /* IE 10+*/
     scrollbar-width: none; /* Firefox */
-
+    padding: 0;
 }
 #ProfileComments::-webkit-scrollbar {
     display: none; /* Safari and Chrome */
@@ -54,23 +65,36 @@
     background: green;
 }
 
-.comment {
-    float: left;
-    width: 100%;
-    background: orange;
+#comments-body > .comment {
     border: 1px solid #666666;
+}
+
+.replies > .comment {
+    border-left : 1px solid #666666;
+}
+
+.comment {
+    /*float: left;*/
+    width: 100%;
+    background: FloralWhite;
+    padding: 2%;
 }
 
 .replies {
     margin-left: 5%;
 }
 
-.comment-links > div,
-.comment-links > form,
-.comment-links > button {
+.comment-links div,
+.comment-links form,
+.comment-links button,
+.comment-links span {
     display: inline-block;
-    margin: 0 2% 0 0;
+    margin: 0 0.5%;
     padding: 0px;
+}
+
+ {
+
 }
 
 /*||||||| Votes ||||||||*/

@@ -1,0 +1,45 @@
+﻿@model SmashPopMVC.Models.ApplicationUser.FriendListingModel
+@using SmashPopMVC.Models.ApplicationUser
+
+<div class="row">
+    @if (!Model.ApprovedFriends.Any() || Model.ApprovedFriends == null)
+    {
+        <p> Use the user search to find your friends!</p>
+    }
+    else
+    {
+        <p>Friends:</p>
+        @foreach (var friend in Model.ApprovedFriends)
+        {
+            @Html.Partial("../Friend/_FriendDataCardPartial", friend)
+        }
+    }
+</div>
+@if (User.Identity.IsAuthenticated && Model.IsCurrentUser)
+{
+<div class="center">
+    @if (Model.FriendRequests.Any() && Model.FriendRequests != null)
+    {
+        <br />
+        <div class="row">
+            <p>My Requests:</p>
+            @foreach (var friend in Model.FriendRequests)
+            {
+                @Html.Partial("../Friend/_FriendDataCardPartial", friend)
+            }
+        </div>
+    }
+    @if (Model.RequestedFriends.Any() && Model.RequestedFriends != null)
+    {
+        <br />
+        <div class="row">
+            <p>Requsted Received:</p>
+            @foreach (var friend in Model.RequestedFriends)
+            {
+                @Html.Partial("../Friend/_FriendDataCardPartial", friend)
+            }
+        </div>
+    }
+</div>
+
+}

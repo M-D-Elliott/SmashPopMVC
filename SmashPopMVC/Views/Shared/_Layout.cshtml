@@ -38,12 +38,10 @@
                     @if (loggedIn)
                     {
                         <li><a asp-area="" asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="">Profile</a></li>
+                        <li>@await Html.PartialAsync("../Search/SearchFieldPartial")</li>
                         <li><a asp-area="" asp-controller="Character" asp-action="Whack">Whack-A-Main!</a></li>
                     }
                 </ul>
-                <div class="nav navbar-nav">
-                    @await Html.PartialAsync("../Search/SearchFieldPartial")
-                </div>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>

@@ -25,7 +25,7 @@
                 <div id="Alt" class="@("col-6 card " + ((Model.ID == Model.CurrentUserID) ? "modal-link updatable" : ""))">
                     <h6 class="card-title">Alt</h6>
                     <img title="@Model.Alt.Name"
-                         class="@Model.Main.ID card-img-top character @Model.Alt.ImageName"
+                         class="@Model.Main.ID card-img-top character @Model.Alt.ImageName clickable"
                          data-id="@Model.Alt.ID"
                          alt="...">
                 </div>
@@ -51,32 +51,12 @@
             }
         </div>
     </div>
-    <div id="ProfileSocial">
-        <div id="ProfileComments" class="col-md-8 pull-left">
+    <div id="ProfileSocial" class="flex-container">
+        <div id="ProfileComments" class="col-md-7 flex-item">
             @Html.Partial("../Comment/_ProfileCommentsPartial", Model.Comments)
         </div>
-        <div id="ProfileFriends" class="col-md-4 pull-right">
-            <p>Friends:</p>
-            <div class="row">
-                @foreach (var friend in Model.Friends.ApprovedFriends)
-                {
-                    <div class="col-6 card flex-item" title="@friend.FriendData.MainName">
-                        <a asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="@friend.FriendData.ID"><h4 class="card-title">@friend.FriendData.Name</h4></a>
-                        <img class="card-img-top character @friend.FriendData.MainImage" alt="...">
-                    </div>
-                }
-            </div>
-            @if (User.Identity.IsAuthenticated && Model.ID == Model.CurrentUserID)
-            {
-                <p>Accept?</p>
-                <div class="row">
-                    @foreach (var friend in Model.Friends.FriendRequests)
-                    {
-                        <p>@friend.FriendData.Name</p>
-                        @Html.Partial("../Friend/_AcceptFriendPartial", new AcceptFriendViewModel { RequestID = friend.RequestID });
-                    }
-                </div>
-            }
+        <div id="ProfileFriends" class="col-md-4 flex-item">
+            @Html.Partial("../Friend/_ProfileFriendsPartial", Model.Friends)
         </div>
     </div>
 </div>

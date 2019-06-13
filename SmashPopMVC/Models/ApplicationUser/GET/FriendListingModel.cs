@@ -10,5 +10,6 @@ namespace SmashPopMVC.Models.ApplicationUser
         public IEnumerable<UserFriendModel> ApprovedFriends { get; set; }
         public IEnumerable<UserFriendModel> RequestedFriends { get; set; }
         public IEnumerable<UserFriendModel> FriendRequests { get; set; }
+        public bool IsCurrentUser { get; set; }
     }
 }

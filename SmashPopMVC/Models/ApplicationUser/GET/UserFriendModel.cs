@@ -9,5 +9,6 @@ namespace SmashPopMVC.Models.ApplicationUser
     {
         public int RequestID { get; set; }
         public UserListingModel FriendData { get; set; }
+        public bool Accepted { get; set; }
     }
 }

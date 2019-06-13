@@ -22,7 +22,8 @@
     background-image: url('/images/Character/SmashCharIconsFinal.jpg');
 }
 
-.character:hover {
+.clickable-card .character:hover,
+.updatable .character:hover {
     background-position-y: -50px;
 }
 

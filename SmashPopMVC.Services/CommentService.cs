@@ -31,6 +31,7 @@ namespace SmashPopMVC.Service
             }
             return _context.Comments
                 .Where(c => c.ID == commentID)
+                .Include(c => c.Poster)
                 .FirstOrDefault();
         }
 

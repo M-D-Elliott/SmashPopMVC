@@ -36,7 +36,6 @@ namespace SmashPopMVC.Controllers
                 Postee = _applicationUserService.GetUser(model.PosteeID),
                 Poster = _applicationUserService.GetUser(model.PosterID),
                 ReplyTo = _commentService.Get(model.ReplyToID),
-                Title = model.Title,
                 Content = model.Content,
                 Created = DateTime.Now,
                 Replies = new List<Comment>(),
@@ -44,7 +43,7 @@ namespace SmashPopMVC.Controllers
             if (ModelState.IsValid)
             {
                 _commentService.Add(comment);
-                var dataModel = BuildCommentEditModel(comment, comment.Poster.Id);
+                var dataModel = BuildCommentEditModel(comment);
                 return PartialView("Edit", dataModel);
             }
             else
@@ -52,33 +51,35 @@ namespace SmashPopMVC.Controllers
                 return NotFound();
             }
         }
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Update(CommentDataModel model)
+        {
+            var comment = _commentService.Get(model.ID);
+            comment.Content = model.Content;
+            _commentService.Update(comment);
+            var dataModel = BuildCommentEditModel(comment);
+            return PartialView("Edit", dataModel);
+        }
+
         public IActionResult Edit(CommentDataModel model)
         {
             return PartialView(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public void Update(CommentDataModel model)
+        private CommentDataModel BuildCommentEditModel(Comment comment)
         {
-            var comment = _commentService.Get(model.ID);
-            comment.Content = model.Content;
-            comment.Title = model.Title;
-            _commentService.Update(comment);
-        }
-
-        private CommentDataModel BuildCommentEditModel(Comment comment, string currentUserID)
-        {
-            var newCommentModel = BuildNewCommentModel(comment.PosteeID, currentUserID, comment.ID);
+            var newCommentModel = BuildNewCommentModel(comment.PosteeID, comment.Poster.Id, comment.ID);
             return new CommentDataModel
             {
                 ID = comment.ID,
-                Title = comment.Title,
                 Content = comment.Content,
                 Replies = null,
                 PosterName = comment.Poster.ShortName,
-                Created = comment.Created.ToString(),
+                PosterID = comment.Poster.Id,
+                Date = comment.Created.ToString("yyyy-MM-dd"),
+                Time = comment.Created.ToString("HH:mm:ss"),
                 NewCommentModel = newCommentModel,
             };
         }
@@ -91,7 +92,6 @@ namespace SmashPopMVC.Controllers
                 PosterID = posterID,
                 ReplyToID = replyToID == null ? null : replyToID,
                 Content = "",
-                Title = "",
             };
         }
     }

@@ -8,9 +8,9 @@ namespace SmashPopMVC.Models.Comment
 {
     public class CommentModel
     {
-        public string Title { get; set; }
         public string Content { get; set; }
-        public string Created { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
         public string PosterName { get; set; }
 
     }

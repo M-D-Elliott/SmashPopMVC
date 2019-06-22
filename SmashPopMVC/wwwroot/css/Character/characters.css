@@ -56,10 +56,8 @@
     color: pink;
 }
 
-.flex-container {
-    display: flex;
+#Characters.flex-container {
     height: 70%;
     width: 85%;
     flex-wrap: wrap;
 }
-

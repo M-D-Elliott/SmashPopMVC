@@ -1,0 +1,8 @@
+﻿@model SmashPopMVC.Models.Comment.LoadCommentsModel
+
+<form asp-controller="Comment" asp-action="LoadMoreComments" class="LoadCommentsForm">
+    <input type="hidden" asp-for="@Model.ProfileUserID" value="@Model.ProfileUserID" id="" class="ProfileUserID"/>
+    <input type="hidden" asp-for="@Model.CurrentUserID" value="@Model.CurrentUserID" id="" class="CurrentUserID"/>
+    <input type="hidden" asp-for="@Model.LastCommentID" value="@Model.LastCommentID" id="" class="LastCommentID"/>
+    <input type="hidden" asp-for="@Model.Take" value="@Model.Take" id="" class="Take"/>
+</form>

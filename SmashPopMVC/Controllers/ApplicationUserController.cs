@@ -4,13 +4,12 @@ using SmashPopMVC.Data.Models;
 using System.Linq;
 using SmashPopMVC.Data;
 using Microsoft.AspNetCore.Authorization;
-using SmashPopMVC.Service.Validators;
 using System.Collections.Generic;
 using SmashPopMVC.Models.ApplicationUser;
-using System;
-using SmashPopMVC.Models.Comment;
 using SmashPopMVC.Models.Vote;
 using SmashPopMVC.Models.Character;
+using SmashPopMVC.Services;
+using System;
 
 namespace SmashPopMVC.Controllers
 {
@@ -20,16 +19,19 @@ namespace SmashPopMVC.Controllers
         private readonly IApplicationUser _applicationUserService;
         private readonly ICharacter _characterService;
         private readonly IFriend _friendService;
+        private readonly ICommentPackager _commentPackager;
 
         public ApplicationUserController(UserManager<ApplicationUser> userManager, 
                                          IApplicationUser applicationUserService, 
                                          ICharacter characterService, 
-                                         IFriend friendService)
+                                         IFriend friendService, 
+                                         ICommentPackager commentPackager)
         {
             _userManager = userManager;
             _applicationUserService = applicationUserService;
             _characterService = characterService;
             _friendService = friendService;
+            _commentPackager = commentPackager;
         }
 
         [AllowAnonymous]
@@ -63,30 +65,40 @@ namespace SmashPopMVC.Controllers
         [AllowAnonymous]
         public IActionResult Search(string query, bool byMain, bool byAlt, bool byScore)
         {
-            return RedirectToAction("Results", new { query, byMain, byAlt, byScore });
+            var model = new UserSearchModel
+            {
+                SearchQuery = query,
+                ByMain = byMain,
+                ByAlt = byAlt,
+                ByScore = byScore,
+            };
+            model = CompleteSearchModel(model);
+            if(model.Total == 1)
+            {
+                var user = model.Results.FirstOrDefault();
+                return RedirectToAction("Profile", new { user.ID} );
+            }
+            return View("Results", model);
         }
 
         [AllowAnonymous]
-        public IActionResult Results(string query, bool byMain, bool byAlt, bool byScore)
+        public IActionResult Results(UserSearchModel model)
         {
-            var users = _applicationUserService.SearchUsers(query, byMain, byAlt, byScore);
-
-            var model = new UserSearchModel
+            if(model.Results == null)
             {
-                Results = BuildUserList(users),
-            };
-
+                model = CompleteSearchModel(model);
+            }
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void Update(UpdateViewModel viewModel)
+        public IActionResult Update(UpdateViewModel viewModel)
         {
             var currentUserID = GetCurrentUserID();
             if (viewModel.UserID != currentUserID)
             {
-                return;
+                return Json(new { success = false, responseText = "You are not this user." });
             }
 
             if (ModelState.IsValid)
@@ -94,26 +106,41 @@ namespace SmashPopMVC.Controllers
                 var new_main = _characterService.GetByID(viewModel.MainID);
                 var new_alt = _characterService.GetByID(viewModel.AltID);
                 _applicationUserService.UpdateUserCharacters(viewModel.UserID, new_main, new_alt);
+                return Json(new { success = true, responseText = "Profile Updated!" });
+            }
+            else
+            {
+                return Json(new { success = false, responseText = "Error."});
             }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void AddFriend(AddFriendViewModel viewModel)
+        public IActionResult AddFriend(AddFriendViewModel viewModel)
         {
             if(ModelState.IsValid)
             {
                 var user = _applicationUserService.GetUser(viewModel.UserID, social: true);
                 var newFriend = _applicationUserService.GetUser(viewModel.FriendID, social: true);
                 _friendService.AddFriend(user, newFriend);
+                return Json(new { success = true, responseText = "Friend request sent!" });
             }
+            return Json(new { success = false, responseText = "Submitted data was incorrect." });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void AcceptFriend(int requestID)
+        public IActionResult AcceptFriend(int requestID)
         {
-            _friendService.AcceptFriend(requestID);
+            var unacceptedRequest = _friendService.AcceptFriend(requestID);
+            if (unacceptedRequest)
+            {
+                return Json(new { success = true, responseText = "Friend accepted!" });
+            }
+            else
+            {
+                return Json(new { success = false, responseText = "Request already accepted." });
+            }
         }
 
         public string CurrentUserShortName()
@@ -123,9 +150,27 @@ namespace SmashPopMVC.Controllers
             return user.ShortName ?? user.UserName;
         }
 
-        private IEnumerable<UserListingModel> BuildUserList(IEnumerable<ApplicationUser> users)
+        private string GetCurrentUserID()
+        {
+            return _userManager.GetUserId(User);
+        }
+
+        private UserSearchModel CompleteSearchModel(UserSearchModel model)
+        {
+            var users = _applicationUserService.SearchUsers(model.SearchQuery, model.ByMain, model.ByAlt, model.ByScore);
+            model.Take = model.Take == 0 ? 20 : model.Take;
+            model.Page = model.Page == 0 ? 1 : model.Page;
+            model.Results = BuildUserList(users, page: model.Page, take: model.Take);
+            model.Total = model.Total == 0 ? users.Count() : model.Total;
+            model.End = model.End ? model.End : model.Total <= model.Page * model.Take;
+            return model;
+        }
+
+        private IEnumerable<UserListingModel> BuildUserList(IList<ApplicationUser> users, int page = 1, int take = 20)
         {
             return users
+                .Skip(take * (page - 1))
+                .Take(take)
                 .Select(u => new UserListingModel
                 {
                     ID = u.Id,
@@ -140,10 +185,11 @@ namespace SmashPopMVC.Controllers
 
         private UserListingModel BuildUserData(ApplicationUser user)
         {
+            int maxNameLength = 5;
             return new UserListingModel
             {
                 ID = user.Id,
-                Name = user.UserName.Substring(0, user.UserName.IndexOf('@')),
+                Name = user.ShortName.Length > maxNameLength ? user.ShortName.Substring(0, maxNameLength - 1) + "..." : user.ShortName,
                 MainName = user.Main == null ? "Random" : user.Main.Name,
                 MainImage = user.Main == null ? "random" : user.Main.ImageName,
             };
@@ -151,24 +197,14 @@ namespace SmashPopMVC.Controllers
 
         private ProfileIndexModel BuildUserProfile(ApplicationUser user)
         {
-            var updateViewModel = new UpdateViewModel
-            {
-                UserID = user.Id,
-                MainID = user.Main?.ID,
-                AltID = user.Alt?.ID,
-            };
             var currentUserID = GetCurrentUserID();
-            var commentListing = new CommentListingModel
-            {
-                Comments = BuildProfileCommentListing(user.Comments.Where(c => c.ReplyToID == null), currentUserID),
-                NewCommentModel = BuildNewCommentModel(user.Id, currentUserID, null),
-            };
-
+            var currentUserFriend = user.Friends.Where(f => f.Id == currentUserID).ToList();
+            var currentUserIsFriend = user.FriendsApproved.Where(f => f.Id == currentUserID).Any();
             return new ProfileIndexModel
             {
                 ID = user.Id,
                 CurrentUserID = currentUserID,
-                CurrentUserIsFriends = user.Friends.Where(f => f.Id == currentUserID).Any(),
+                CurrentUserFriend = BuildFriendModel(currentUserFriend, accepted: currentUserIsFriend).FirstOrDefault(),
                 Name = user.ShortName ?? user.UserName,
                 Main = BuildCharacterData(user.Main),
                 Alt = BuildCharacterData(user.Alt),
@@ -176,42 +212,9 @@ namespace SmashPopMVC.Controllers
                 PartnerName = user.Partner?.UserName,
                 PartnerMainImage = user.Partner?.Main.ImageName,
                 Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived, isCurrentUser: (currentUserID == user.Id)),
-                Comments = commentListing,
+                Comments = _commentPackager.BuildCommentListing(user.Id, currentUserID),
                 Votes = BuildVoteListing(user.Votes, take: 3, currentUser: user.Id == currentUserID),
-                UpdateViewModel = updateViewModel,
-            };
-        }
-
-        private string GetCurrentUserID()
-        {
-            return _userManager.GetUserId(User);
-        }
-
-        private IEnumerable<CommentDataModel> BuildProfileCommentListing(IEnumerable<Comment> comments, string currentUserID)
-        {
-            return comments
-                .OrderByDescending(c => c.Created)
-                .Select(c => new CommentDataModel
-                {
-                    ID = c.ID,
-                    Content = c.Content,
-                    Date = c.Created.ToString("yyyy-MM-dd"),
-                    Time = c.Created.ToString("HH:mm:ss"),
-                    PosterName = c.Poster.UserName.Substring(0, c.Poster.UserName.IndexOf('@')),
-                    PosterID = c.Poster.Id,
-                    Replies = BuildProfileCommentListing(c.Replies, currentUserID),
-                    NewCommentModel = BuildNewCommentModel(c.PosteeID, currentUserID, c.ID),
-                });
-        }
-
-        private NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID)
-        {
-            return new NewCommentModel
-            {
-                Content = "",
-                PosteeID = posteeID,
-                PosterID = posterID,
-                ReplyToID = replyToID == null ? null : replyToID,
+                UpdateViewModel = BuildUpdateViewModel(user),
             };
         }
 
@@ -220,18 +223,14 @@ namespace SmashPopMVC.Controllers
                                                       ICollection<Friend> friendRequestsReceived,
                                                       bool isCurrentUser = false)
         {
-            var approvedFriends = friendsApproved
-                .Select(f => new UserFriendModel
-                {
-                    FriendData = BuildUserData(f),
-                    Accepted = true,
-                });
+            var approvedFriends = BuildFriendModel(friendsApproved, accepted: true);
+
             var requestedFriends = friendRequestsSent
                 .Select(f => new UserFriendModel
                 {
                     RequestID = f.ID,
                     FriendData = BuildUserData(f.RequestedTo),
-                    Accepted = false,
+                    Accepted = true,
                 });
             var friendRequests = friendRequestsReceived
                 .Select(f => new UserFriendModel
@@ -249,6 +248,16 @@ namespace SmashPopMVC.Controllers
                 IsCurrentUser = isCurrentUser,
             };
 
+        }
+
+        public IEnumerable<UserFriendModel> BuildFriendModel(ICollection<ApplicationUser> friends, bool accepted = false)
+        {
+            return friends
+                .Select(f => new UserFriendModel
+                {
+                    FriendData = BuildUserData(f),
+                    Accepted = accepted,
+                });
         }
 
         private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000, bool currentUser=false)
@@ -280,6 +289,16 @@ namespace SmashPopMVC.Controllers
             return new NewVoteModel
             {
                 UserID = GetCurrentUserID(),
+            };
+        }
+
+        private UpdateViewModel BuildUpdateViewModel(ApplicationUser user)
+        {
+            return new UpdateViewModel
+            {
+                UserID = user.Id,
+                MainID = user.Main?.ID,
+                AltID = user.Alt?.ID,
             };
         }
 

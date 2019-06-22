@@ -1,37 +1,66 @@
 ﻿let animate = true;
 
-function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, modalClass) {
-    if (modalClass === undefined) {
-        modalClass = "";
+function sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type) {
+    if (type == undefined || type == null) {
+        type = "POST";
     }
-    const select = $(initialSelect).clone();
-    animate = true;
-    select.removeClass('modal-link updatable col-6');
-    modal.addClass(modalClass);
+    if (dataType == undefined || dataType == null) {
+        dataType = "json";
+    }
+    if (successCallBack == undefined || dataType == null) {
+        successCallBack = function (res) { }
+    }
+    if (errorCallBack == undefined || errorCallBack == null) {
+        try {
+            errorCallBack = function (ts) { swal("Error!", ts.error, "warning"); };
+        }
+        catch (err) {
+            errorCallBack = function (ts) { console.log(ts.error); };
+        }
+    }
+    const data = form == null ? null : form.serialize();
+    $.ajax({
+        type: type,
+        url: url,
+        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+        data: data,
+        dataType: dataType,
+        success: function (res) { successCallBack(res, form); },
+        error: function (ts) { errorCallBack(ts); }
+    });
+}
+
+function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, modalClass) {
     if ($.trim(modal.html()) == '' || !(modal.find('#Characters').length)) {
-        $.ajax({
-            type: "GET",
-            url: '/Character/Select',
-            success: function (res) {
-                modal.html(res);
-                const characters = modal.find('#Characters .card');
-                characters.click(function () { addToSelected($(this).children('img').clone(), maxSelect) })
-                modal.on('click', function () {
-                    endAnimateCharacterCard();
-                });
-                startCharacterModal(modal, select, maxSelect, submitCallBack);
-            },
-        });
+        const successCallBack = function (res, form) {
+            startCharacterModal(modal, res, initialSelect, maxSelect, submitCallBack, modalClass);
+        };
+        sendAjaxRequest('/Character/Select', null, 'html', successCallBack, null, 'GET')
     } else {
-        startCharacterModal(modal, select, maxSelect, submitCallBack);
+        startCharacterModal(modal, null, initialSelect, maxSelect, submitCallBack, modalClass);
     }
 }
 
-function startCharacterModal(modal, select, maxSelect, submitCallBack) {
+function startCharacterModal(modal, res, initialSelect, maxSelect, submitCallBack, modalClass) {
+    animate = true;
+    if (modalClass != undefined) {
+        modal.addClass(modalClass);
+    }
+    if (res != undefined && res != null) {
+        modal.html(res);
+    }
+    const select = $(initialSelect).clone();
+    select.removeClass('modal-link updatable col-6');
+    
+    const characters = modal.find('#Characters .card');
+    characters.click(function () { addToSelected($(this).children('img').clone(), maxSelect) })
+    modal.on('click', function () {
+        endAnimateCharacterCard();
+    });
     addToSelected(select.children('img').clone(), maxSelect);
     const select_type = select.attr('id');
     select.removeAttr('id');
-    modal.children('.modal-body').children('#ChooseYourCharacter').text(`Choose your ${select_type} Character!`);
+    modal.children('.modal-body').children('#ChooseYourCharacter').text("Choose your " + select_type + " Character!");
     submitButton = modal.find('#SubmitButton');
     submitButton.off('click');
     submitButton.on('click', function () {
@@ -101,7 +130,6 @@ function changeCharacterCard(modal, type, modalClass) {
     const newID = newImage.attr('data-id');
     
     if (newImage.length > 0 && hiddenInput.val() !== newID) {
-        characterCard.children('.card-title').text(newImage.attr('title'));
         hiddenInput.val(newID);
         newImage
             .insertBefore(originalImage);

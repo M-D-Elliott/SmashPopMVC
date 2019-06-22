@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
-
-@model SmashPopMVC.Models.ApplicationUser.UserSearchModel
+@using SmashPopMVC.Models.ApplicationUser
+@model UserSearchModel
 
 <div class="container body-content">
     <div class="row">
@@ -11,8 +11,8 @@
                     @foreach (var user in Model.Results)
                     {
                         <tr>
-                            <td>
-                                <div class="row flex-container">
+                            <td class="center">
+                                <div class="row inline-flex">
                                     <div class="card flex-item" title="@user.MainName">
                                         <img class="card-img-top character @user.MainImage" alt="...">
                                     </div>
@@ -39,6 +39,28 @@
                     }
                 </tbody>
             </table>
+            <div class="ResultsNav">
+                <span>&lt;-- </span>
+                @if (Model.Page > 1)
+                {
+                    <span>@Html.ActionLink("Prev", "Results", "ApplicationUser", new UserSearchModel { SearchQuery = Model.SearchQuery, ByMain = Model.ByMain, ByAlt = Model.ByAlt, ByScore = Model.ByScore, Page = Model.Page - 1 })</span>
+                }
+                else
+                {
+                    <span>Prev</span>
+                }
+                <span> </span>
+                @if (!Model.End)
+                {
+                    <span>@Html.ActionLink("Next", "Results", "ApplicationUser", new UserSearchModel { SearchQuery = Model.SearchQuery, ByMain = Model.ByMain, ByAlt = Model.ByAlt, ByScore = Model.ByScore, Page = Model.Page + 1 })</span>
+                }
+                else
+                {
+                    <span>Next</span>
+                }
+                <span> --&gt;</span>
+            </div>
+
         }
         else
         {

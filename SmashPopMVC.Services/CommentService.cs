@@ -23,22 +23,91 @@ namespace SmashPopMVC.Service
             _context.SaveChanges();
         }
 
-        public Comment Get(int? commentID)
+        public Comment Delete(int ID)
+        {
+            var comment = Get(ID);
+            if(comment != null)
+            {
+                comment.Content = "Comment has been removed by user.";
+                comment.Deleted = true;
+                Update(comment);
+            }
+            return comment;
+        }
+
+        public Comment Get(int? commentID, bool replies = false)
         {
             if(commentID == null)
             {
                 return null;
             }
-            return _context.Comments
-                .Where(c => c.ID == commentID)
+            var comment = _context.Comments
+                .Where(c => c.ID == commentID);
+
+            if (replies)
+            {
+                comment = comment
+                    .Include(c => c.Replies);
+            }
+
+            return comment
                 .Include(c => c.Poster)
                 .FirstOrDefault();
         }
 
-        public IEnumerable<Comment> GetUserProfileCommentsWithReplies(string userID)
+        public IEnumerable<Comment> GetChildComments(int parentID)
         {
-            throw new NotImplementedException();
+            return _context.Comments
+                    .Where(c => c.ReplyToID == parentID)
+                    .Include(r => r.Poster);
         }
+
+        public IEnumerable<Comment> GetByPostee(string posteeID, int? lastCommentID, int take)
+        {
+            var comments = _context.Comments
+                .Where(c => c.PosteeID == posteeID)
+                .Where(c => c.ReplyToID == null);
+
+
+            if (lastCommentID != null)
+            {
+                comments = comments
+                    .Where(c => c.ID < lastCommentID);
+            }
+            return comments
+                .OrderByDescending(c => c.Created)
+                .Include(c => c.Poster)
+                .Take(take);
+        }
+
+        //public IEnumerable<Comment> GetMoreComments(string profileUserID, int? lastCommentID, int take)
+        //{
+        //    var table = _context.Comments;
+        //    var comments = table
+        //        .Where(c => c.PosteeID == profileUserID)
+        //        .Where(c => c.ReplyToID == null);
+
+        //    if (lastCommentID != null)
+        //    {
+        //        comments = comments
+        //            .Where(c => c.ID < lastCommentID);
+        //    }
+
+        //    comments = comments
+        //        .OrderByDescending(c => c.Created)
+        //        .Take(take)
+        //        .Include(c => c.Poster)
+        //        .Select(c => new Comment
+        //        {
+        //            ID = c.ID,
+        //            Content = c.Content,
+        //            Created = c.Created,
+        //            Replies = GetChildComments(c.ID),
+        //            Deleted = c.Deleted,
+        //            Poster = c.Poster
+        //        });
+        //    return comments;
+        //}
 
         public IEnumerable<Comment> SearchComments(string userID, string searchQuery)
         {
@@ -50,5 +119,21 @@ namespace SmashPopMVC.Service
             _context.Entry(comment).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+        //public IEnumerable<Comment> GetChildComments(int parentID)
+        //{
+        //    return _context.Comments
+        //            .Where(c => c.ReplyToID == parentID)
+        //            .Include(r => r.Poster)
+        //            .Select(c => new Comment
+        //            {
+        //                ID = c.ID,
+        //                Content = c.Content,
+        //                Created = c.Created,
+        //                Replies = GetChildComments(c.ID),
+        //                Deleted = c.Deleted,
+        //                Poster = c.Poster,
+        //            });
+        //}
     }
 }

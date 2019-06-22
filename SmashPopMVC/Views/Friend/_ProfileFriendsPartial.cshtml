@@ -1,45 +1,50 @@
 ﻿@model SmashPopMVC.Models.ApplicationUser.FriendListingModel
 @using SmashPopMVC.Models.ApplicationUser
 
-<div class="row">
+<div id="ApprovedFriends">
+    <p>Friends:</p>
     @if (!Model.ApprovedFriends.Any() || Model.ApprovedFriends == null)
     {
-        <p> Use the user search to find your friends!</p>
+        <p id="noFriendsMessage"> Use the user search to find your friends!</p>
     }
     else
     {
-        <p>Friends:</p>
-        @foreach (var friend in Model.ApprovedFriends)
-        {
-            @Html.Partial("../Friend/_FriendDataCardPartial", friend)
-        }
+        <div class="row friends-holder">
+            @foreach (var friend in Model.ApprovedFriends)
+            {
+                @Html.Partial("../Friend/_FriendDataCardPartial", friend)
+            }
+        </div>
     }
 </div>
 @if (User.Identity.IsAuthenticated && Model.IsCurrentUser)
 {
-<div class="center">
-    @if (Model.FriendRequests.Any() && Model.FriendRequests != null)
+    @if (Model.IsCurrentUser)
     {
-        <br />
-        <div class="row">
-            <p>My Requests:</p>
-            @foreach (var friend in Model.FriendRequests)
-            {
-                @Html.Partial("../Friend/_FriendDataCardPartial", friend)
-            }
-        </div>
-    }
-    @if (Model.RequestedFriends.Any() && Model.RequestedFriends != null)
-    {
-        <br />
-        <div class="row">
-            <p>Requsted Received:</p>
-            @foreach (var friend in Model.RequestedFriends)
-            {
-                @Html.Partial("../Friend/_FriendDataCardPartial", friend)
-            }
-        </div>
-    }
-</div>
+        @if (Model.RequestedFriends.Any() && Model.RequestedFriends != null)
+        {
+            <div id="RequestedFriends">
+                <p>My Requests:</p>
+                <div class="row friends-holder">
+                    @foreach (var friend in Model.RequestedFriends)
+                    {
+                        @Html.Partial("../Friend/_FriendDataCardPartial", friend)
+                    }
+                </div>
+            </div>
 
+        }
+        @if (Model.FriendRequests.Any() && Model.FriendRequests != null)
+        {
+            <div id="FriendRequests">
+                <p>My Requests:</p>
+                <div class="row friends-holder">
+                    @foreach (var friend in Model.RequestedFriends)
+                    {
+                        @Html.Partial("../Friend/_FriendDataCardPartial", friend)
+                    }
+                </div>
+            </div>
+        }
+    }
 }

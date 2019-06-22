@@ -30,8 +30,6 @@ namespace SmashPopMVC.Service
                 user = user
                     .Include(u => u.SentFriendRequests).ThenInclude(s => s.RequestedTo).ThenInclude(f => f.Main)
                     .Include(u => u.ReceievedFriendRequests).ThenInclude(s => s.RequestedBy).ThenInclude(f => f.Main)
-                    .Include(u => u.Comments).ThenInclude(c => c.Replies)
-                    .Include(u => u.Comments).ThenInclude(c => c.Poster)
                     .Include(u => u.Partner).ThenInclude(p => p.Main)
                     .Include(u => u.Votes).ThenInclude(v => v.LeastDifficult)
                     .Include(u => u.Votes).ThenInclude(v => v.MostDifficult)
@@ -43,7 +41,7 @@ namespace SmashPopMVC.Service
         }
 
 
-        public IEnumerable<ApplicationUser> SearchUsers(
+        public IList<ApplicationUser> SearchUsers(
             string searchQuery, 
             bool byMain,
             bool byAlt,
@@ -61,7 +59,9 @@ namespace SmashPopMVC.Service
                            : byAlt ? u.Alt.Name.Contains(searchQuery)
                            : byScore ? u.UserName.Contains(searchQuery)
                            : u.NormalizedUserName.Contains(searchQuery));
-            return users.OrderBy(u => u.NormalizedUserName);
+            return users
+                .OrderBy(u => u.NormalizedUserName)
+                .ToList();
         }
 
         public void UpdateUserCharacters(string userID, Character new_main, Character new_alt)

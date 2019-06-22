@@ -146,5 +146,3 @@ function endGame() {
     score = 0;
     calcScore();
 }
-
-console.log(whackCharacters);

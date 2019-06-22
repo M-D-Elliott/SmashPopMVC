@@ -1,8 +1,4 @@
-﻿function changeUserImage(modal, mainOrAlt, modalClass) {
-    if (changeCharacterCard(modal, mainOrAlt, modalClass)) {
-        $('#UpdateUser').show();
-    }
-}
+﻿//|||| General functions |||||
 
 function createObjectFromHtml(html, jQIdentifier) {
     const temp_object = $('#SmashPopTemp');
@@ -15,65 +11,180 @@ function createObjectFromHtml(html, jQIdentifier) {
     return domObject;
 }
 
-function attachCommentSubmit(inputAreas, callBack) {
-    inputAreas.blur(function (e) {
-        callBack($(this));
-        activeForm = false;
+//|||| Event attachers ||||||
+
+function attachButtonEvents(buttons, callBack) {
+    buttons.off('click');
+    buttons.on('click', function(e) {
+        e.preventDefault();
+        const form = $(this).parent();
+        callBack(form);
         return false;
     });
+}
 
-    //forms.on("keydown", ":input:not(textarea)", function (e) {
-    //    return event.key != "Enter";
-    //});
+function attachAjaxButtonEvents(buttons, url, dataType, successCallBack, errorCallBack, type) {
+    const ajaxRequest = function (form) { sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type) };
+    attachButtonEvents(buttons, ajaxRequest);
+}
+
+function attachImageEvents(images) {
+    images.off('click');
+    images.on('click', function () {
+        const select = this;
+        const type = $(this).attr('id');
+        const addClass = 'main-alt-select';
+        const modal = $('#modal-container .modal-content');
+        const callBack = function () {
+            changeUserImage(modal, type, addClass)
+        };
+        loadCharacterModal(modal, select, 1, callBack, addClass);
+    });
+}
+
+function attachInputEvents(inputAreas, callBack) {
+    inputAreas.blur(function (e) {
+        callBack($(this));
+        return false;
+    });
     inputAreas.on("keydown", function (e) {
         if (e.key == "Enter") {
             e.preventDefault();
             callBack($(this));
-            activeForm = false;
             return false;
         }
     });
 }
 
-function requestReplyForm(form) {
-    const commentParent = form.parent().siblings('.replies');
-    requestNewCommentForm(form, commentParent);
+function attachScrollEvents(scrollObject, heightObject, callBack, triggerPercent) {
+    if (triggerPercent == undefined || triggerPercent == null) {
+        triggerPercent = 95;
+    }
+    if (heightObject == undefined || heightObject == null) {
+        heightObject = scrollObject;
+    }
+    scrollObject.on("scroll", function (e) {
+        const percent = 100 * $(this).scrollTop() / (heightObject.height() - $(this).height());
+        if (percent > triggerPercent) {
+            callBack($(this));
+            scrollObject.off("scroll");
+        }
+    });
 }
+
+function attachCommentScrollEvents(profileComments) {
+    const commentsBody = profileComments.children('#comments-body');
+    const lastCommentID = commentsBody.children(".LoadCommentsForm").children(".LastCommentID");
+    if (lastCommentID.val()) {
+        const requestCommentsCallBack = function (scrollObject) { requestMoreComments(scrollObject) };
+        attachScrollEvents(profileComments, commentsBody, requestCommentsCallBack);
+    }
+}
+
+function buildCommentsEvents(parent) {
+    const replyButtons = parent.find('.NewCommentForm .comment-reply');
+    const replyButtonsCallBack = function (res, requestForm) { loadNewCommentForm(res, requestForm.parent().siblings('.replies')) };
+    attachAjaxButtonEvents(replyButtons, '/Comment/New', 'html', replyButtonsCallBack);
+
+    const editButtons = parent.find('.EditCommentForm .comment-edit');
+    const editFormSubmitCallBack = function (inputArea) { submitCommentEdit(inputArea) };
+    const editButtonsCallBack = function (form) { revealEditCommentForm(form, editFormSubmitCallBack) };
+    attachButtonEvents(editButtons, editButtonsCallBack);
+
+    const deleteButtons = parent.find('.DeleteCommentForm .comment-delete');
+    const deleteButtonsCallBack = function (res, form) {
+        buildAndPlaceRevisedComment(res, form.parent().parent())
+        swal("Success!", "Comment deleted.", "success");
+    };
+    attachAjaxButtonEvents(deleteButtons, '/Comment/Delete', "html", deleteButtonsCallBack, null, "DELETE")
+}
+
+//|||| Simple CallBacks ||||||
+
+function successRemoveButtonCallBack(res, form) {
+    swal("Success!", res.responseText, "success");
+    form.children('button').hide();
+}
+
+function changeUserImage(modal, mainOrAlt, modalClass) {
+    if (changeCharacterCard(modal, mainOrAlt, modalClass)) {
+        $('#UpdateUser').show();
+    }
+}
+
+function acceptFriendCallBack(res, form) {
+    const card = form.parent();
+    form.remove();
+    const approvedFriends = $("#ApprovedFriends");
+    approvedFriends.children("#noFriendsMessage").remove();
+    approvedFriends.append(card);
+}
+
+//|||| Comment CallBacks ||||||
 
 function buildComment(res) {
     const comment = createObjectFromHtml(res, '.comment');
     const links = comment.children('.comment-links');
-
-    const replyButtons = links.find('.NewCommentForm .comment-reply');
-    attachCommentReplyEvents(replyButtons);
-
-    const editButtons = links.find('.EditCommentForm .edit-button');
-    const inputAreas = links.find('.EditCommentForm .content-input');
-    attachCommentEditEvents(editButtons, inputAreas);
+    buildCommentsEvents(links);
     return comment;
 }
 
-function attachCommentReplyEvents(replyButtons) {
-    replyButtons.off('click');
-    replyButtons.on('click', function (e) {
-        e.preventDefault();
-        requestReplyForm($(this).parent());
-        return false;
-    });
+function buildNewComment(res, form, commentParent) {
+    commentParent.prepend(buildComment(res));
+    form.remove();
 }
 
-function attachCommentEditEvents(editButtons, inputAreas) {
-    const callBack = function (inputArea) { submitCommentEdit(inputArea) }
-    editButtons.off('click');
-    editButtons.on('click', function (e) {
-        e.preventDefault();
-        const form = $(this).parent();
-        revealEditCommentForm(form, callBack);
-        return false;
-    });
+function commentRestore(originalComment) {
+    originalComment.children('.comment-content').show();
 }
 
-function revealEditCommentForm(form, callBack) {
+function buildAndPlaceRevisedComment(res, originalComment) {
+    const revisedComment = buildComment(res);
+    const replies = originalComment.children('.replies').children();
+    revisedComment.insertBefore(originalComment);
+    revisedComment.children('.replies').append(replies);
+    originalComment.remove();
+}
+
+function requestMoreComments(profileComments) {
+    const form = profileComments.children("#comments-body").children('.LoadCommentsForm');
+    const url = "/Comment/More";
+    const successCallBack = function (res, form) { buildAndPlaceComments(res, form) };
+    const errorCallBack = function (ts) { console.log(ts) };
+    sendAjaxRequest(url, form, "html", successCallBack, errorCallBack, null);
+}
+
+function buildAndPlaceComments(res, form) {
+    if (res.length) {
+        const commentsBody = form.parent();
+        const profileComments = commentsBody.parent();
+        form.remove();
+        const newComments = createObjectFromHtml(res, '.comment, form');
+        buildCommentsEvents(newComments);
+        commentsBody.append(newComments);
+        attachCommentScrollEvents(profileComments);
+    } else {
+        console.error("No more comments.");
+    }
+
+}
+
+//|||| Comment request callbacks ||||
+
+function loadNewCommentForm(res, commentParent) {
+    const newCommentForm = createObjectFromHtml(res, 'form');
+    commentParent.prepend(newCommentForm);
+    const input = newCommentForm.children('.content-input');
+    const url = "/Comment/Add";
+    const callBack = function (inputArea) {
+        const successCallBack = function (res, form) { buildNewComment(res, form, commentParent); };
+        sendAjaxRequest(url, inputArea.parent(), "html", successCallBack)
+    };
+    attachInputEvents(input, callBack);
+    input.focus();
+}
+
+function revealEditCommentForm(form, submitCallBack) {
     const comment = form.parent().parent();
     const commentContent = comment.children('.comment-content');
     commentContent.hide();
@@ -81,151 +192,50 @@ function revealEditCommentForm(form, callBack) {
     form = form.clone();
     comment.prepend(form);
     const formInput = form.children('.content-input');
-    const editButton = form.children('.edit-button');
+    const editButton = form.children('.comment-edit');
     editButton.hide();
     formInput.show();
-    attachCommentSubmit(formInput, callBack);
+    attachInputEvents(formInput, submitCallBack);
     formInput.focus();
-}
-
-function requestNewCommentForm(form, commentParent) {
-    if (commentParent == null) {
-        commentParent = $('#ProfileComments').children('#comments-body');
-    }
-    data = form.serialize();
-    $.ajax({
-        type: "POST",
-        url: '/Comment/New',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: data,
-        dataType: "html",
-        success: function (res) {
-            const newCommentForm = createObjectFromHtml(res, 'form');
-            commentParent.prepend(newCommentForm);
-            const callBack = function (inputArea) { submitNewComment(inputArea.parent(), commentParent) };
-            const input = newCommentForm.children('.content-input');
-            attachCommentSubmit(input, callBack);
-            input.focus();
-        },
-        error: function (ts) {
-            console.log("error", ts);
-        }
-    });
-}
-
-function submitNewComment(form, commentParent) {
-    const data = form.serialize();
-    form.remove();
-    $.ajax({
-        type: "POST",
-        url: '/Comment/Add',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: data,
-        dataType: "html",
-        success: function (res) {
-            const comment = buildComment(res);
-            commentParent.prepend(comment);
-        },
-        error: function (ts) { console.log('error', ts)}
-    });
 }
 
 function submitCommentEdit(inputArea) {
     let form = inputArea.parent();
     const originalComment = form.parent();
-    const data = form.serialize();
-    form.remove();
-    $.ajax({
-        type: "POST",
-        url: '/Comment/Update',
-        contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-        data: data,
-        dateType: "html",
-        success: function (res) {
-            const revisedComment = buildComment(res);
-            const replies = originalComment.children('.replies').children();
-            revisedComment.insertBefore(originalComment);
-            revisedComment.children('.replies').append(replies);
-            originalComment.remove();
-        },
-        error: function (ts) {
-            originalComment.children('.comment-content').show();
-            console.log('error:', ts)
-        },
-    });
+    if (inputArea.val() != originalComment.children('.comment-content').text()) {
+        const successCallBack = function (res, form) { buildAndPlaceRevisedComment(res, originalComment) };
+        const errorCallBack = function (ts) { commentRestore(originalComment); console.log('error:', ts) };
+        const url = '/Comment/Update';
+        sendAjaxRequest(url, form, 'html', successCallBack, errorCallBack)
+    } else {
+        commentRestore(originalComment, form);
+    }
+    form.remove()
 }
 
+//||||Post-Loading Actions ||||||
+
 $(document).ready(function () {
-    $('#ProfileImages .updatable').click(function () {
-        const modal = $('#modal-container .modal-content');
-        const select = this;
-        const type = $(this).attr('id');
-        const addClass = 'main-alt-select';
-        const callBack = function () {
-            changeUserImage(modal, type, addClass)
-        };
-        loadCharacterModal(modal, select, 1, callBack, addClass);
-    });
+    const profileImages = $('#ProfileImages .updatable');
+    attachImageEvents(profileImages);
 
-    $('#UpdateUser').click(function (e) {
-        e.preventDefault();
-        const data = $('#UserUpdateForm').serialize();
-        $.ajax({
-            type: "POST",
-            url: '/ApplicationUser/Update',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: data,
-            dataType: "json",
-            success: function () { alert('Success'); },
-            error: function (ts) { }
-        });
-        $(this).hide();
-        return false;
-    });
+    const updateUserButton = $('#UpdateUser');
+    attachAjaxButtonEvents(updateUserButton, '/ApplicationUser/Update', 'json', successRemoveButtonCallBack);
 
-    $('#AddFriend').click(function (e) {
-        e.preventDefault();
-        const data = $('#AddFriendForm').serialize();
-        $.ajax({
-            type: "POST",
-            url: '/ApplicationUser/AddFriend',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: data,
-            dataType: "json",
-            success: function () { alert('Success'); },
-            error: function (ts) { }
-        });
-        $(this).remove();
-        return false;
-    });
+    const addFriendButton = $('#AddFriend');
+    attachAjaxButtonEvents(addFriendButton, '/ApplicationUser/AddFriend', 'json', successRemoveButtonCallBack);
 
-    $('.accept-friend').click(function (e) {
-        e.preventDefault();
-        const data = $(this).parent().serialize();
-        $.ajax({
-            type: "POST",
-            url: '/ApplicationUser/AcceptFriend',
-            contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-            data: data,
-            dataType: "json",
-            success: function () { alert('Success'); },
-            error: function (ts) { }
-        });
-    });
+    const acceptFriendButtons = $('.accept-friend');
+    attachAjaxButtonEvents(acceptFriendButtons, '/ApplicationUser/AcceptFriend', 'json', acceptFriendCallBack);
 
-    $('#NewComment').off('click');
-    $('#NewComment').on('click', function (e) {
-        e.preventDefault();
-        const form = $(this).parent();
-        requestNewCommentForm(form);
-        return false;
-    });
+    const newCommentButton = $('#NewComment');
+    const newCommentCallBack = function (res, form) { loadNewCommentForm(res, form.siblings('#comments-body')) };
+    attachAjaxButtonEvents(newCommentButton, '/Comment/New', 'html', newCommentCallBack);
 
-    const replyButtons = $('.NewCommentForm .comment-reply');
-    attachCommentReplyEvents(replyButtons);
+    const profileComments = $('#ProfileComments');
+    const commentsBody = profileComments.children('#comments-body');
+    buildCommentsEvents(commentsBody);
+    attachCommentScrollEvents(profileComments);
 
-    const commentEditButtons = $('.EditCommentForm .edit-button');
-    const commentInputAreas = $('.EditCommentForm .content-input');
-    attachCommentEditEvents(commentEditButtons, commentInputAreas);
+
 });
-

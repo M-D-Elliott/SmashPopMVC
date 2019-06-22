@@ -7,6 +7,11 @@ namespace SmashPopMVC.Data.Models
 {
     public class Comment
     {
+        public Comment()
+        {
+            Deleted = false;
+        }
+
         public int ID { get; set; }
         [Column(TypeName = "nvarchar(15)")]
         public string Title { get; set; }
@@ -23,5 +28,7 @@ namespace SmashPopMVC.Data.Models
         public virtual Comment ReplyTo { get; set; }
 
         public virtual IEnumerable<Comment> Replies { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

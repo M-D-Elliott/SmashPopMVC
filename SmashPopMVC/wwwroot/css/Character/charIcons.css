@@ -2,11 +2,6 @@
     display: inline-block;
 }
 
-.center {
-    display: flex;
-    justify-content: center;
-}
-
 .character {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -15,7 +10,7 @@
     -ms-user-select: none; /* Internet Explorer/Edge */
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
-    display: inline-block;
+    display: block;
     width: 45px;
     height: 50px;
     content: url("/images/Character/4550pxtrans.png");

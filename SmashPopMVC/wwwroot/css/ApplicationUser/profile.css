@@ -16,7 +16,6 @@
 #ProfileImages .card h6.card-title {
     border-bottom: 1px solid #666666;
     width: 100%;
-    margin: 0;
     padding: 0;
 }
 
@@ -42,26 +41,28 @@
     margin-right: 6%;
 }
 
-.flex-container {
-    display: flex;
-}
-
 /*|| Profile Comments ||*/
 
 #ProfileComments {
     max-height: 100vh;
     background: #666666;
-    overflow: scroll;
-    -ms-overflow-style: none; /* IE 10+*/
-    scrollbar-width: none; /* Firefox */
+    padding: 0;
+    overflow: auto;
+}
+
+/*#ProfileComments {
+    max-height: 100vh;
+    background: #666666;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
     padding: 0;
 }
 #ProfileComments::-webkit-scrollbar {
-    display: none; /* Safari and Chrome */
-}
+    display: none;
+}*/
 
 #ProfileComments #comments-body {
-    max-height: inherit;
     background: green;
 }
 
@@ -74,7 +75,6 @@
 }
 
 .comment {
-    /*float: left;*/
     width: 100%;
     background: FloralWhite;
     padding: 2%;
@@ -98,3 +98,45 @@
 }
 
 /*||||||| Votes ||||||||*/
+
+
+/*||||||| Friends ||||||||*/
+
+#ProfileFriends div p {
+    margin: 0 0 1% 0;
+    /*border-bottom: 1px solid #666666;
+    background-color: #666666;
+    color: #fff;
+    width: 100%;*/
+    padding: 0 1%;
+}
+
+#ProfileFriends div {
+    margin: 0;
+    margin-bottom: 3%;
+    background-color: #666666;
+    border: 1px solid #666666;
+    padding: 0;
+}
+
+#ProfileFriends div p {
+    color: white;
+}
+
+#ProfileFriends div .friends-holder {
+    background-color: floralwhite;
+    border: 0;
+    margin: 0;
+    padding: 1%;
+}
+
+#ProfileFriends div .card {
+    background-color: firebrick;
+    margin-right: 1%;
+    min-width: 55px;
+}
+
+
+#ProfileFriends div .card a {
+    color: white;
+}

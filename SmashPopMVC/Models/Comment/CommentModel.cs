@@ -11,7 +11,5 @@ namespace SmashPopMVC.Models.Comment
         public string Content { get; set; }
         public string Date { get; set; }
         public string Time { get; set; }
-        public string PosterName { get; set; }
-
     }
 }

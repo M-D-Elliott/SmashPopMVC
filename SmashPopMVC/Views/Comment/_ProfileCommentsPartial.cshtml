@@ -2,8 +2,5 @@
 
 @Html.Partial("../Comment/_NewPartial", Model.NewCommentModel)
 <div id="comments-body">
-    @foreach (var comment in Model.Comments)
-    {
-        @Html.Partial("../Comment/Edit", comment)
-    }
+    @Html.Partial("../Comment/More", Model.MoreCommentsModel)
 </div>

@@ -8,11 +8,12 @@ namespace SmashPopMVC.Data
 {
     public interface IApplicationUser
     {
-        IEnumerable<ApplicationUser> SearchUsers(
+        IList<ApplicationUser> SearchUsers(
             string searchQuery, 
             bool byMain = false, 
             bool byAlt = false, 
-            bool byScore = false);
+            bool byScore = false
+            );
 
         ApplicationUser GetUser(
             string id, 

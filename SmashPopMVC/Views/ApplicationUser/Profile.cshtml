@@ -34,9 +34,19 @@
             <div id="JoinDate">
                 <h4>User since: @Model.Joined</h4>
             </div>
-            @if (User.Identity.IsAuthenticated && Model.ID != Model.CurrentUserID && !Model.CurrentUserIsFriends)
+            @if (User.Identity.IsAuthenticated && Model.ID != Model.CurrentUserID)
             {
-                @Html.Partial("../Friend/_AddFriendPartial", new AddFriendViewModel { UserID = Model.CurrentUserID, FriendID = Model.ID });
+                if (Model.CurrentUserFriend == null)
+                {
+                    @Html.Partial("../Friend/_AddFriendPartial", new AddFriendViewModel { UserID = Model.CurrentUserID, FriendID = Model.ID });
+                }
+                else
+                {
+                    if (Model.CurrentUserFriend.Accepted)
+                    {
+                        @Html.Partial("../Friend/_RequestPartnershipPartial", new RequestPartnershipViewModel { CurrentUserID = Model.CurrentUserID, FriendID = Model.ID })
+                    }
+                }
             }
         </div>
         <div id="RecentVotes" class="col-md-6 container">

@@ -17,13 +17,13 @@ namespace SmashPopMVC.Data.Models
         public int MostDifficultID { get; set; }
         public virtual Character MostDifficult { get; set; }
 
-        public int LeastDifficultID { get; set; }
+        public int? LeastDifficultID { get; set; }
         public virtual Character LeastDifficult { get; set; }
 
-        public int FlavorOfTheMonthID { get; set; }
+        public int? FlavorOfTheMonthID { get; set; }
         public virtual Character FlavorOfTheMonth { get; set; }
 
-        public int MostPowerfulID { get; set; }
+        public int? MostPowerfulID { get; set; }
         public virtual Character MostPowerful { get; set; }
 
         public DateTime Created { get; set; }

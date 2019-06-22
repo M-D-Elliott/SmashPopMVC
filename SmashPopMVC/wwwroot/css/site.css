@@ -3,7 +3,6 @@
     padding-bottom: 20px;
 }
 
-
 .navbar-inverse {
     background-color: #666666 !important;
 }
@@ -71,4 +70,25 @@ html, body, .container-table {
 
 .modal-body {
     height: auto;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.inline-flex {
+    display: inline-flex;
+}
+
+.inline-flex > div {
+    margin: 0 2%;
+}
+
+.card .card-title {
+    margin: 0;
 }

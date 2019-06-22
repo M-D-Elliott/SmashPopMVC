@@ -27,11 +27,19 @@ namespace SmashPopMVC.Service
             _context.SaveChanges();
         }
 
-        public void AcceptFriend(int friendID)
+        public bool AcceptFriend(int friendID)
         {
             var friendship = _context.Friends.Where(f => f.ID == friendID).First();
-            friendship.FriendRequestFlag = FriendRequestFlag.Approved;
-            _context.SaveChanges();
+            if(friendship.FriendRequestFlag != FriendRequestFlag.Approved)
+            {
+                friendship.FriendRequestFlag = FriendRequestFlag.Approved;
+                _context.SaveChanges();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

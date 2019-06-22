@@ -8,6 +8,6 @@ namespace SmashPopMVC.Data
     public interface IFriend
     {
         void AddFriend(ApplicationUser user, ApplicationUser newFriend);
-        void AcceptFriend(int requestID);
+        bool AcceptFriend(int requestID);
     }
 }

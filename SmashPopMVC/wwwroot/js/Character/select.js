@@ -12,7 +12,7 @@ function sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, ty
     }
     if (errorCallBack == undefined || errorCallBack == null) {
         try {
-            errorCallBack = function (ts) { swal("Error!", ts.error, "warning"); };
+            errorCallBack = function (ts) { swal("Error!", ts.responseText, "warning"); };
         }
         catch (err) {
             errorCallBack = function (ts) { console.log(ts.error); };

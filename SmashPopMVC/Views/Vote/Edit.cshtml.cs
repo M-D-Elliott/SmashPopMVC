@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace SmashPopMVC.Views.Vote
 {
-    public class NewModel : PageModel
+    public class EditModel : PageModel
     {
         public void OnGet()
         {

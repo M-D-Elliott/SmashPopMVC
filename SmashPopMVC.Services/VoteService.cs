@@ -17,9 +17,17 @@ namespace SmashPopMVC.Service
             _context = context;
         }
 
-        public IEnumerable<Vote> Get()
+        public Vote Get(int ID)
         {
-            return _context.Votes;
+            return _context.Votes
+                .Where(v => v.ID == ID)
+                .Include(v => v.MostDifficult)
+                .Include(v => v.LeastDifficult)
+                .Include(v => v.FlavorOfTheMonth)
+                .Include(v => v.MostPowerful)
+                .Include(v => v.Voter)
+                .Include(v => v.Tally)
+                .FirstOrDefault();
         }
 
         public IEnumerable<Vote> GetByUser(string userID, int take = 50)
@@ -58,5 +66,10 @@ namespace SmashPopMVC.Service
             _context.SaveChanges();
         }
 
+        public void Update(Vote vote)
+        {
+            _context.Entry(vote).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
     }
 }

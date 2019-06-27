@@ -1,8 +1,6 @@
-﻿#ProfileData {
-    display: table;
-}
+﻿/*||||||| Profile Images ||||||||*/
 
-/*||||||| Profile Images ||||||||*/
+
 #ProfileImages .card {
     display: inline-block;
     border: 1px solid #666666;
@@ -21,24 +19,14 @@
 
 #ProfileImages .card img {
     zoom: 1.5;
-    /*transform: scale(2);
-    transform-origin: 0 0;
-    -ms-transform: scale(2);
-    -ms-transform-origin: 0 0;
-    -webkit-transform: scale(2);
-    -webkit-transform-origin: 0 0;
-    -moz-transform: scale(2);
-    -moz-transform-origin: 0 0;
-    -o-transform: scale(2);
-    -o-transform-origin: 0 0;*/
 }
-
 
 
 /*||||||| Profile Social ||||||||*/
 
-#ProfileSocial > #ProfileComments {
-    margin-right: 6%;
+
+#Profile > div > div {
+    margin-bottom: 7%;
 }
 
 /*|| Profile Comments ||*/
@@ -48,19 +36,12 @@
     background: #666666;
     padding: 0;
     overflow: auto;
+    scrollbar-width: none;
 }
 
-/*#ProfileComments {
-    max-height: 100vh;
-    background: #666666;
-    overflow-y: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    padding: 0;
-}
 #ProfileComments::-webkit-scrollbar {
     display: none;
-}*/
+}
 
 #ProfileComments #comments-body {
     background: green;
@@ -97,26 +78,20 @@
 
 }
 
-/*||||||| Votes ||||||||*/
+/*||||||| Profile Votes ||||||||*/
 
+/*||||||| Profile Friends ||||||||*/
 
-/*||||||| Friends ||||||||*/
 
 #ProfileFriends div p {
     margin: 0 0 1% 0;
-    /*border-bottom: 1px solid #666666;
-    background-color: #666666;
-    color: #fff;
-    width: 100%;*/
     padding: 0 1%;
 }
 
 #ProfileFriends div {
-    margin: 0;
     margin-bottom: 3%;
     background-color: #666666;
     border: 1px solid #666666;
-    padding: 0;
 }
 
 #ProfileFriends div p {

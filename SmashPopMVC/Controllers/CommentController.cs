@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using SmashPopMVC.Controllers.Attributes.Validators;
 using SmashPopMVC.Data;
 using SmashPopMVC.Data.Models;
 using SmashPopMVC.Models.Comment;
@@ -11,16 +12,19 @@ namespace SmashPopMVC.Controllers
 {
     public class CommentController : Controller
     {
+        private readonly IComment _commentService;
         private readonly IApplicationUser _applicationUserService;
         private readonly ICommentPackager _commentPackager;
 
-        public CommentController(IApplicationUser applicationUserService, ICommentPackager commentPackager)
+        public CommentController(IComment commentService, IApplicationUser applicationUserService, ICommentPackager commentPackager)
         {
+            _commentService = commentService;
             _applicationUserService = applicationUserService;
             _commentPackager = commentPackager;
         }
-
-        [HttpPost]
+        
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 100, Name = "NewComment", Message = "request new comments")]
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult New(NewCommentModel model)
         {
             return PartialView(model);
@@ -31,8 +35,8 @@ namespace SmashPopMVC.Controllers
             return PartialView(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 80, Name = "ViewMoreComments", Message = "request comment history")]
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult More(LoadCommentsModel model)
         {
             var dataModel = _commentPackager.BuildMoreComments(model.ProfileUserID, model.CurrentUserID, model.LastCommentID);
@@ -43,8 +47,8 @@ namespace SmashPopMVC.Controllers
             return Content("");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 60, Name ="PostComments", Message ="post comments")]
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult Add(AddCommentModel model)
         {
             var comment = new Comment
@@ -58,8 +62,8 @@ namespace SmashPopMVC.Controllers
             };
             if (ModelState.IsValid)
             {
-                _commentPackager._commentService.Add(comment);
-                var dataModel = BuildCommentEditModel(comment);
+                _commentService.Add(comment);
+                var dataModel = _commentPackager.BuildCommentEditModel(comment);
                 return PartialView("Edit", dataModel);
             }
             else
@@ -68,25 +72,25 @@ namespace SmashPopMVC.Controllers
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 20, Name = "EditComments", Message = "edit comments")]
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult Update(CommentDataModel model)
         {
             var comment = _commentService.Get(model.ID);
             comment.Content = model.Content;
             _commentService.Update(comment);
-            var dataModel = BuildCommentEditModel(comment);
+            var dataModel = _commentPackager.BuildCommentEditModel(comment);
             return PartialView("Edit", dataModel);
         }
 
-        [HttpDelete]
-        [ValidateAntiForgeryToken]
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 200, Name = "DeleteComments", Message = "delete comments")]
+        [RequireHttps, HttpDelete, ValidateAntiForgeryToken]
         public IActionResult Delete(CommentDataModel model)
         {
             var comment = _commentService.Delete(model.ID);
             if(comment != null)
             {
-                var dataModel = BuildCommentEditModel(comment);
+                var dataModel = _commentPackager.BuildCommentEditModel(comment);
                 return PartialView("Edit", dataModel);
             }
             else
@@ -94,23 +98,6 @@ namespace SmashPopMVC.Controllers
                 return Json(new { success = false, responseText = "The comment could not be found." });
             }
 
-        }
-
-        private CommentDataModel BuildCommentEditModel(Comment comment)
-        {
-            var newCommentModel = _commentPackager.BuildNewCommentModel(comment.PosteeID, comment.Poster.Id, comment.ID);
-            return new CommentDataModel
-            {
-                ID = comment.ID,
-                Content = comment.Content,
-                Replies = null,
-                Deleted = comment.Deleted,
-                PosterName = comment.Poster.ShortName,
-                PosterID = comment.Poster.Id,
-                Date = comment.Created.ToString("yyyy-MM-dd"),
-                Time = comment.Created.ToString("HH:mm:ss"),
-                NewCommentModel = newCommentModel,
-            };
         }
     }
 }

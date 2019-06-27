@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SmashPopMVC.Controllers.Attributes.Validators;
 using SmashPopMVC.Data;
 using SmashPopMVC.Data.Models;
 using SmashPopMVC.Models.Character;
@@ -21,8 +22,9 @@ namespace SmashPopMVC.Controllers
             _characterService = characterService;
             _gameService = gameService;
         }
-        
-        [HttpGet]
+
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 30, Name = "SelectCharacters", Message = "use character selector")]
+        [RequireHttps, HttpGet]
         public IActionResult Select()
         {
             var characters = _characterService.GetAll();

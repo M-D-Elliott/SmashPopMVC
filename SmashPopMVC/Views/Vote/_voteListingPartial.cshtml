@@ -1,26 +1,36 @@
 ﻿@model SmashPopMVC.Models.Vote.VoteListingModel;
+@using SmashPopMVC.Models.Vote;
 
 <div class="row">
     <table class="table table-hover table-bordered" id="userVoteListingTable">
         <tbody>
             <tr>
-                <td>Sub. Date</td>
                 <td>
+                    <div class="center">
+                        <h5>Sub. date</h5>
+                    </div>
+                </td>
+                <td class="visible-xs">
+                    <div class="center">
+                        <h5>Votes</h5>
+                    </div>
+                </td>
+                <td class="hidden-xs col-sm">
                     <div class="center">
                         <h5>Most Difficult</h5>
                     </div>
                 </td>
-                <td>
+                <td class="hidden-xs">
                     <div class="center">
                         <h5>Least Difficult</h5>
                     </div>
                 </td>
-                <td>
+                <td class="hidden-xs">
                     <div class="center">
                         <h5>Flavor O.T.M.</h5>
                     </div>
                 </td>
-                <td>
+                <td class="hidden-xs">
                     <div class="center">
                         <h5>Most Powerful</h5>
                     </div>
@@ -29,39 +39,63 @@
             @foreach (var vote in Model.Results)
             {
                 <tr>
-                    <td>@vote.Created</td>
                     <td>
+                        <p>@vote.Created</p>
+                        @if (vote.Editable && Model.IsCurrentUser)
+                        {
+                            @Html.ActionLink("edit", "Edit", "Vote", new EditVoteModel { ID = vote.ID })
+                        }
+                    </td>
+                    <td class="visible-xs">
+                        <div class="center">
+                            <div class="row flex-container">
+                                <div class="card flex-item">
+                                    <img title="@vote.MostDifficult.Name" class="card-img-top character @vote.MostDifficult.ImageName relative-parent" alt="...">
+                                </div>
+                                <div class="card flex-item">
+                                    <img title="@vote.LeastDifficult.Name" class="card-img-top character @vote.LeastDifficult.ImageName relative-parent" alt="...">
+                                </div>
+                                <div class="card flex-item">
+                                    <img title="@vote.FlavorOfTheMonth.Name" class="card-img-top character @vote.FlavorOfTheMonth.ImageName relative-parent" alt="...">
+                                </div>
+                                <div class="card flex-item">
+                                    <img title="@vote.MostPowerful.Name" class="card-img-top character @vote.MostPowerful.ImageName relative-parent" alt="...">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="hidden-xs">
                         <div class="center">
                             <div class="row flex-container most-difficult">
                                 <div class="card flex-item">
-                                    <img title="vote.MostDifficult.Name" class="card-img-top character @vote.MostDifficult.ImageName relative-parent" alt="...">
+                                    <img title="@vote.MostDifficult.Name" class="card-img-top character @vote.MostDifficult.ImageName relative-parent" alt="...">
                                 </div>
                             </div>
                         </div>
                     </td>
-                    <td>
+                    <td class="hidden-xs">
                         <div class="center">
                             <div class="row flex-container least-difficult">
                                 <div class="card flex-item">
-                                    <img title="vote.LeastDifficult.Name" class="card-img-top character @vote.LeastDifficult.ImageName relative-parent" alt="...">
+                                    <img title="@vote.LeastDifficult.Name" class="card-img-top character @vote.LeastDifficult.ImageName relative-parent" alt="...">
                                 </div>
                             </div>
                         </div>
                     </td>
-                    <td>
+                    <td class="hidden-xs">
                         <div class="center">
                             <div class="row flex-container flavor-of-the-month">
                                 <div class="card flex-item">
-                                    <img title="vote.FlavorOfTheMonth.Name" class="card-img-top character @vote.FlavorOfTheMonth.ImageName relative-parent" alt="...">
+                                    <img title="@vote.FlavorOfTheMonth.Name" class="card-img-top character @vote.FlavorOfTheMonth.ImageName relative-parent" alt="...">
                                 </div>
                             </div>
                         </div>
                     </td>
-                    <td>
+                    <td class="hidden-xs">
                         <div class="center">
                             <div class="row flex-container most-powerful">
                                 <div class="card flex-item">
-                                    <img title="vote.MostPowerful.Name" class="card-img-top character @vote.MostPowerful.ImageName relative-parent" alt="...">
+                                    <img title="@vote.MostPowerful.Name" class="card-img-top character @vote.MostPowerful.ImageName relative-parent" alt="...">
                                 </div>
                             </div>
                         </div>

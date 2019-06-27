@@ -9,6 +9,7 @@ namespace SmashPopMVC.Models.Vote
 {
     public class VoteModel
     {
+        public int ID { get; set; }
         public string UserID { get; set; }
         public string UserName { get; set; }
         public CharacterDataModel MostDifficult { get; set; }

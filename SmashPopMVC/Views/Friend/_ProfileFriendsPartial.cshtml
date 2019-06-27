@@ -37,9 +37,9 @@
         @if (Model.FriendRequests.Any() && Model.FriendRequests != null)
         {
             <div id="FriendRequests">
-                <p>My Requests:</p>
+                <p>Requests to approve:</p>
                 <div class="row friends-holder">
-                    @foreach (var friend in Model.RequestedFriends)
+                    @foreach (var friend in Model.FriendRequests)
                     {
                         @Html.Partial("../Friend/_FriendDataCardPartial", friend)
                     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SmashPopMVC.Controllers.Attributes.Validators;
 using SmashPopMVC.Data.Models;
 using SmashPopMVC.Models.AccountViewModels;
 using SmashPopMVC.Services;
@@ -36,8 +37,7 @@ namespace SmashPopMVC.Controllers
         [TempData]
         public string ErrorMessage { get; set; }
 
-        [HttpGet]
-        [AllowAnonymous]
+        [RequireHttps, HttpGet, AllowAnonymous]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
             // Clear the existing external cookie to ensure a clean login process
@@ -47,9 +47,8 @@ namespace SmashPopMVC.Controllers
             return View();
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 5, Name = "AttemptLogin", Message = "attempt to login")]
+        [RequireHttps, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;

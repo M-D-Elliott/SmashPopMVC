@@ -7,10 +7,11 @@ namespace SmashPopMVC.Data
 {
     public interface IVote
     {
-        IEnumerable<Vote> Get();
+        Vote Get(int ID);
         IEnumerable<Vote> GetByUser(string userID, int take = 50);
         IEnumerable<Vote> GetByCharacter(int characterID, int take = 1000);
 
+        void Update(Vote vote);
         void Add(Vote vote);
     }
 }

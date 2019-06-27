@@ -10,6 +10,7 @@ namespace SmashPopMVC.Models.ApplicationUser
         public string ID { get; set; }
         public string CurrentUserID { get; set; }
         public UserFriendModel CurrentUserFriend { get; set; }
+        public bool IsCurrentUser { get; set; }
         public string Name { get; set; }
         public string Joined { get; set; }
         public CharacterDataModel Main { get; set; }

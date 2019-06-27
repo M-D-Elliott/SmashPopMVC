@@ -9,5 +9,6 @@ namespace SmashPopMVC.Models.Vote
     public class VoteDataModel : VoteModel
     {
         public string Created { get; set; }
+        public bool Editable { get; set; }
     }
 }

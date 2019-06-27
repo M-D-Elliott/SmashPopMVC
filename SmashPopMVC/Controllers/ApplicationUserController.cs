@@ -10,6 +10,7 @@ using SmashPopMVC.Models.Vote;
 using SmashPopMVC.Models.Character;
 using SmashPopMVC.Services;
 using System;
+using SmashPopMVC.Controllers.Attributes.Validators;
 
 namespace SmashPopMVC.Controllers
 {
@@ -34,7 +35,7 @@ namespace SmashPopMVC.Controllers
             _commentPackager = commentPackager;
         }
 
-        [AllowAnonymous]
+        [RequireHttps, AllowAnonymous]
         public IActionResult Profile(string id = null)
         { 
 
@@ -61,8 +62,7 @@ namespace SmashPopMVC.Controllers
             return NotFound("User not found.");
         }
 
-        [HttpPost]
-        [AllowAnonymous]
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken, AllowAnonymous]
         public IActionResult Search(string query, bool byMain, bool byAlt, bool byScore)
         {
             var model = new UserSearchModel
@@ -81,7 +81,7 @@ namespace SmashPopMVC.Controllers
             return View("Results", model);
         }
 
-        [AllowAnonymous]
+        [RequireHttps, AllowAnonymous]
         public IActionResult Results(UserSearchModel model)
         {
             if(model.Results == null)
@@ -90,9 +90,9 @@ namespace SmashPopMVC.Controllers
             }
             return View(model);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        
+        [Throttle(Name = "UserUpdateThrottle", Seconds = 300)]
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult Update(UpdateViewModel viewModel)
         {
             var currentUserID = GetCurrentUserID();
@@ -113,9 +113,8 @@ namespace SmashPopMVC.Controllers
                 return Json(new { success = false, responseText = "Error."});
             }
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult AddFriend(AddFriendViewModel viewModel)
         {
             if(ModelState.IsValid)
@@ -128,8 +127,7 @@ namespace SmashPopMVC.Controllers
             return Json(new { success = false, responseText = "Submitted data was incorrect." });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult AcceptFriend(int requestID)
         {
             var unacceptedRequest = _friendService.AcceptFriend(requestID);
@@ -203,6 +201,7 @@ namespace SmashPopMVC.Controllers
             return new ProfileIndexModel
             {
                 ID = user.Id,
+                IsCurrentUser = user.Id == currentUserID,
                 CurrentUserID = currentUserID,
                 CurrentUserFriend = BuildFriendModel(currentUserFriend, accepted: currentUserIsFriend).FirstOrDefault(),
                 Name = user.ShortName ?? user.UserName,
@@ -262,11 +261,15 @@ namespace SmashPopMVC.Controllers
 
         private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000, bool currentUser=false)
         {
-            var results = votes
+            var now = DateTime.Now;
+            votes = votes
                 .OrderByDescending(v => v.Created)
-                .Take(take)
+                .Take(take);
+            var results = votes
                 .Select(v => new VoteDataModel
                 {
+                    ID = v.ID,
+                    Editable = v.Created.Month == now.Month && v.Created.Year == now.Year,
                     Created = v.Created.ToString("d"),
                     UserID = v.VoterID,
                     UserName = v.Voter.UserName.Substring(0, v.Voter.UserName.IndexOf('@')),
@@ -276,17 +279,20 @@ namespace SmashPopMVC.Controllers
                     MostPowerful = BuildCharacterData(v.MostPowerful),
                 });
 
-
+            var mostRecentVote = results.FirstOrDefault();
+            var currentVote = mostRecentVote == null ? false : mostRecentVote.Editable;
             return new VoteListingModel
             {
                 Results = results,
-                NewVoteModel = currentUser ? BuildNewVoteModel() : null,
+                CurrentVote = currentVote,
+                NewVoteModel = BuildNewVoteModel(),
+                IsCurrentUser = currentUser,
             };
         }
 
-        private NewVoteModel BuildNewVoteModel()
+        private EditVoteModel BuildNewVoteModel()
         {
-            return new NewVoteModel
+            return new EditVoteModel
             {
                 UserID = GetCurrentUserID(),
             };

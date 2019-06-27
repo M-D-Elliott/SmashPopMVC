@@ -23,9 +23,15 @@ function attachButtonEvents(buttons, callBack) {
     });
 }
 
-function attachAjaxButtonEvents(buttons, url, dataType, successCallBack, errorCallBack, type) {
-    const ajaxRequest = function (form) { sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type) };
-    attachButtonEvents(buttons, ajaxRequest);
+function attachAjaxButtonEvents(buttons, url, dataType, successCallBack, errorCallBack, type, validationCallBack) {
+    if (validationCallBack == undefined || validationCallBack == null) {
+        validationCallBack = function (form, callBack) { callBack(form) }
+    }
+    const ajaxRequest = function (form) { sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type, validationCallBack) };
+    const validation = function (form) {
+        validationCallBack(form, ajaxRequest)
+    }
+    attachButtonEvents(buttons, validation);
 }
 
 function attachImageEvents(images) {
@@ -93,13 +99,17 @@ function buildCommentsEvents(parent) {
 
     const deleteButtons = parent.find('.DeleteCommentForm .comment-delete');
     const deleteButtonsCallBack = function (res, form) {
-        buildAndPlaceRevisedComment(res, form.parent().parent())
+        buildAndPlaceRevisedComment(res, form.parent().parent());
         swal("Success!", "Comment deleted.", "success");
     };
-    attachAjaxButtonEvents(deleteButtons, '/Comment/Delete', "html", deleteButtonsCallBack, null, "DELETE")
+    const message = "You will not be able to recover deleted comments.";
+    const confirmDelete = function (form, callBack) {
+        basicConfirmationCallBack(message, form, callBack);
+    };
+    attachAjaxButtonEvents(deleteButtons, '/Comment/Delete', "html", deleteButtonsCallBack, null, "DELETE", confirmDelete);
 }
 
-//|||| Simple CallBacks ||||||
+//|||| Simple Success CallBacks ||||||
 
 function successRemoveButtonCallBack(res, form) {
     swal("Success!", res.responseText, "success");
@@ -117,8 +127,25 @@ function acceptFriendCallBack(res, form) {
     form.remove();
     const approvedFriends = $("#ApprovedFriends");
     approvedFriends.children("#noFriendsMessage").remove();
-    approvedFriends.append(card);
+    approvedFriends.children(".friends-holder").append(card);
 }
+
+// |||||| Simple validation CallBack ||||
+function basicConfirmationCallBack(text, form, callBack) {
+    swal({
+        title: "Are you sure?",
+        text: text,
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((confirm) => {
+        if (confirm) {
+            callBack(form);
+        }
+    });
+}
+
 
 //|||| Comment CallBacks ||||||
 

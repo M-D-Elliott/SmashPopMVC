@@ -14,8 +14,13 @@
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+    width: 100%;
+    padding: 0;
+}
+
+.body-content > footer {
+    margin: auto;
+    width: 70%;
 }
 
 /* Carousel */
@@ -91,4 +96,17 @@ html, body, .container-table {
 
 .card .card-title {
     margin: 0;
+}
+
+[class*="col-"] {
+    margin: 0;
+    padding: 0;
+}
+
+.body-content > .row,
+.body-content > div > .row {
+    max-width: 100%;
+    padding: 0 1%;
+    margin: 0 3%;
+    max-width: 94%;
 }

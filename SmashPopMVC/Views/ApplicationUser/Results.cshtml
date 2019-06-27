@@ -11,12 +11,12 @@
                     @foreach (var user in Model.Results)
                     {
                         <tr>
-                            <td class="center">
+                            <td class="center" style="min-width: 50px;">
                                 <div class="row inline-flex">
                                     <div class="card flex-item" title="@user.MainName">
                                         <img class="card-img-top character @user.MainImage" alt="...">
                                     </div>
-                                    <div class="card flex-item" title="@user.AltName">
+                                    <div class="card flex-item hidden-xs" title="@user.AltName">
                                         <img class="card-img-top character @user.AltImage" alt="...">
                                     </div>
                                 </div>

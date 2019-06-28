@@ -1,7 +1,7 @@
-﻿@using (Html.BeginForm("Search", "ApplicationUser"))
+﻿@using (Html.BeginForm("Search", "ApplicationUser", FormMethod.Post, new { @class = "navbar-form", role = "form" }))
 {
     @Html.TextBox("query", "", new { @class = "form-control", placeholder = "Search Users..." })
     @*@Html.CheckBox("byMain")
-    @Html.CheckBox("byAlt")
-    @Html.CheckBox("byScore")*@
+        @Html.CheckBox("byAlt")
+        @Html.CheckBox("byScore")*@
 }

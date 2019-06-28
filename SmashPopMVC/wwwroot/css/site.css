@@ -47,7 +47,7 @@
     }
 }
 
-@import url('http://getbootstrap.com/dist/css/bootstrap.css');
+/*@import url('http://getbootstrap.com/dist/css/bootstrap.css');*/
 
 html, body, .container-table {
     height: 100%;
@@ -68,9 +68,12 @@ html, body, .container-table {
 
 /* Modal settings*/
 
-.modal-content {
-    width: 70% !important;
-    margin: 30px auto !important;
+#modal-container {
+    padding: 0 !important;
+}
+
+.col-centered {
+    margin: 0 auto !important;
 }
 
 .modal-body {
@@ -103,10 +106,8 @@ html, body, .container-table {
     padding: 0;
 }
 
-.body-content > .row,
-.body-content > div > .row {
+.row {
     max-width: 100%;
     padding: 0 1%;
     margin: 0 3%;
-    max-width: 94%;
 }

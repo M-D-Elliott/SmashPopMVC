@@ -2,16 +2,12 @@
 
 @model SmashPopMVC.Models.Character.CharacterListingModel
 
-<environment include="Development">
-    <link rel="stylesheet" href="~/css/Character/characters.css" />
-</environment>
-
 <div class="modal-body">
     <button type="button" class="btn btn-outline-dark ml-1 float-right grey-white modal-close-btn"><i class="fa fa-window-close"></i></button>
     <hr>
     <h4 id="ChooseYourCharacter" class="display-4">Choose your character!</h4>
     <hr>
-    <div class="center forty-percent-height">
+    <div class="center forty-percent-height flex-container">
         <div class="row flex-container" id="Characters">
             @foreach (CharacterSelectingModel character in Model.CharacterList)
             {
@@ -27,6 +23,7 @@
             </div>
         </div>
     </div>
+    <br class="visible-xs" />
     <div class="center">
         <div id="SelectedCharacters" class="row flex-container">
         </div>

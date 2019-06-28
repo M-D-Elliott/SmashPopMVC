@@ -263,6 +263,4 @@ $(document).ready(function () {
     const commentsBody = profileComments.children('#comments-body');
     buildCommentsEvents(commentsBody);
     attachCommentScrollEvents(profileComments);
-
-
 });

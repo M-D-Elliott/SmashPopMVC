@@ -23,7 +23,7 @@ namespace SmashPopMVC.Controllers
             _gameService = gameService;
         }
 
-        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 30, Name = "SelectCharacters", Message = "use character selector")]
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 50, Name = "SelectCharacters", Message = "use character selector")]
         [RequireHttps, HttpGet]
         public IActionResult Select()
         {

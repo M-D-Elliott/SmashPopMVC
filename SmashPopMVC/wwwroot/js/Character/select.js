@@ -1,5 +1,9 @@
 ﻿let animate = true;
 
+function standardErrorAlert(ts) {
+    swal("Error!", ts.responseText, "warning");
+}
+
 function sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type) {
     if (type == undefined || type == null) {
         type = "POST";
@@ -12,7 +16,7 @@ function sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, ty
     }
     if (errorCallBack == undefined || errorCallBack == null) {
         try {
-            errorCallBack = function (ts) { swal("Error!", ts.responseText, "warning"); };
+            errorCallBack = function (ts) { standardErrorAlert(ts) };
         }
         catch (err) {
             errorCallBack = function (ts) { console.log(ts.error); };
@@ -35,7 +39,8 @@ function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, mod
         const successCallBack = function (res, form) {
             startCharacterModal(modal, res, initialSelect, maxSelect, submitCallBack, modalClass);
         };
-        sendAjaxRequest('/Character/Select', null, 'html', successCallBack, null, 'GET')
+        const errorCallBack = function (ts) { standardErrorAlert(ts); closeModal(modal); };
+        sendAjaxRequest('/Character/Select', null, 'html', successCallBack, errorCallBack, 'GET')
     } else {
         startCharacterModal(modal, null, initialSelect, maxSelect, submitCallBack, modalClass);
     }
@@ -139,10 +144,19 @@ function changeCharacterCard(modal, type, modalClass) {
     return false;
 }
 
+function closeModal(modal) {
+    modal.hide();
+    removeModal(modal);
+}
+
+function removeModal(modal) {
+    modal.find('#Characters .card').removeClass('show');
+    $('body').removeClass('modal-open');
+    $('.modal-backdrop').remove();
+}
+
 $(document).ready(function () {
     $("#modal-container").on('hidden.bs.modal', function () {
-        $(this).find('#Characters .card').removeClass('show');
-        $('body').removeClass('modal-open');
-        $('.modal-backdrop').remove();
+        removeModal($(this));
     });
 });

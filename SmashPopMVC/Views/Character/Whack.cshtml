@@ -5,10 +5,6 @@
     ViewData["Title"] = "Whack-A-Main!";
 }
 
-<environment include="Development">
-    <link rel="stylesheet" href="~/css/MiniGames/whack.css" />
-</environment>
-
 <div class="vertical-center">
     <div id="Stats">
         <h3>Score: <span id="Score">0</span></h3>
@@ -25,6 +21,6 @@
 </div>
 
 <script>
-    const whackCharacters = @Json.Serialize(Model.CharacterList);
+    whackCharacters = @Json.Serialize(Model.CharacterList);
 </script>
 

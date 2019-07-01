@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAzP3K/1QXZ0qw28NQFvajbwAAAAACAAAAAAAQZgAAAAEAACAAAACxH9RZDCjsJN+Ek5unQrxjbM3PM1GhCbdimq0a/lyLxQAAAAAOgAAAAAIAACAAAABCgkQeauh+SRtlQrgHdPUGtospDEL2jwKFbw8qqHGieIAAAAC0lINXWLEjX04lvpYYp8pA8Fv5D7xVGILlEdgKDlSjbOUOxzBc6CLow1j4+jrNM+JncWit7ZnjKDL9cU1U8ks433IPVbB0UE/Uj/QugLM6dTejAnjmd+3CrLJx5slKliuwERPkqRh4cobFqfRz9cH8bC78ZAE0/aR3L1c0Eto1CEAAAAD22LggZ76KyHipDlJUE0rbpuLFSS5cINIoUdr97YQApdNvh5qpvTogPi1uTRnvXXbwlNcFtpWjRkyXNrPpgEj+</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <EFMigrations Include="SmashPopMVC.Data.ApplicationDbContext">
+      <Value>Data Source=tcp:smashpopmvc20190628015407dbserver.database.windows.net,1433%3bInitial Catalog=SmashPopMVC20190628015407_db%3bUser Id=meekus%40smashpopmvc20190628015407dbserver%3bPassword=!RealityRock89</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

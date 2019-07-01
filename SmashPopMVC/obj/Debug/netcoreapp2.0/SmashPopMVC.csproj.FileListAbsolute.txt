@@ -1,0 +1,17 @@
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.deps.json
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.runtimeconfig.json
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.runtimeconfig.dev.json
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.dll
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.pdb
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.Data.dll
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.Service.dll
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.Data.pdb
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\bin\Debug\netcoreapp2.0\SmashPopMVC.Service.pdb
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\SmashPopMVC.csprojAssemblyReference.cache
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\SmashPopMVC.csproj.CoreCompileInputs.cache
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\UserSecretsAssemblyInfo.cs
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\SmashPopMVC.AssemblyInfoInputs.cache
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\SmashPopMVC.AssemblyInfo.cs
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\SmashPopMVC.csproj.CopyComplete
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\SmashPopMVC.dll
+C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC\obj\Debug\netcoreapp2.0\SmashPopMVC.pdb

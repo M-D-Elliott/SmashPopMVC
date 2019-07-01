@@ -1,0 +1,64 @@
+﻿#Characters .card.come-in {
+    transform: translateY(50px);
+    animation: come-in 0.01s ease forwards;
+}
+
+#Characters .card {
+    display: none;
+}
+
+.forty-percent-height {
+    min-height: 40vh;
+}
+
+@keyframes come-in {
+    to {
+        transform: translateY(0);
+    }
+}
+
+
+.fa-window-close {
+    color: #f3172d;
+}
+
+.relative-parent,
+.relative-parent img {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+.relative-parent .btn {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 1%;
+    right: 1%;
+    z-index: 2;
+}
+
+.fa-window-close {
+    padding: 0;
+    margin: 0;
+}
+
+.btn.grey-white {
+    background-color: lightgrey;
+}
+
+.btn.grey-white:hover {
+    background-color: white;
+}
+
+#ChooseYourCharacter {
+    color: #666666;
+}
+
+#Characters.flex-container {
+    height: 70%;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0;
+}

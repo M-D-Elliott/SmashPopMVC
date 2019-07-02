@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.0",
-    "signature": "e02280a7c88c67ef8d05ba8974b5095e657a3c1a"
+    "signature": "ee7cbdd9179b2d820a6afff18af1d37a89757751"
   },
   "compilationOptions": {
     "defines": [
@@ -29,6 +29,7 @@
           "Font.Awesome": "5.8.1",
           "Microsoft.AspNetCore.All": "2.0.0",
           "Microsoft.NETCore.App": "2.0.0",
+          "Microsoft.SqlServer.Types": "14.0.1016.290",
           "SmashPopMVC.Data": "1.0.0",
           "SmashPopMVC.Service": "1.0.0"
         },
@@ -2753,6 +2754,17 @@
         },
         "compile": {
           "lib/netstandard1.4/Microsoft.Rest.ClientRuntime.Azure.dll": {}
+        }
+      },
+      "Microsoft.SqlServer.Types/14.0.1016.290": {
+        "runtime": {
+          "lib/net40/Microsoft.SqlServer.Types.dll": {
+            "assemblyVersion": "14.0.0.0",
+            "fileVersion": "2017.140.1016.290"
+          }
+        },
+        "compile": {
+          "lib/net40/Microsoft.SqlServer.Types.dll": {}
         }
       },
       "Microsoft.VisualStudio.Web.BrowserLink/2.0.0": {
@@ -5684,6 +5696,13 @@
       "sha512": "sha512-6u8JIuvrztse4tPOcvNzAJuzGBP0uY+Ijggk8ZYhp0siGEZ1XfZylf1vpNGUicvwcrhhoIgDW73Z1L6QGssr2g==",
       "path": "microsoft.rest.clientruntime.azure/3.3.7",
       "hashPath": "microsoft.rest.clientruntime.azure.3.3.7.nupkg.sha512"
+    },
+    "Microsoft.SqlServer.Types/14.0.1016.290": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-isHCxuC16Tsgp7YfuagLRHEoFfJs0ibc0xBlSuU0yqUB9BeKRVxTU4CbsWfzsaW67I7LG5XLW4UCZFbVktmEuA==",
+      "path": "microsoft.sqlserver.types/14.0.1016.290",
+      "hashPath": "microsoft.sqlserver.types.14.0.1016.290.nupkg.sha512"
     },
     "Microsoft.VisualStudio.Web.BrowserLink/2.0.0": {
       "type": "package",

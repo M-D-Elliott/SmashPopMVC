@@ -11,8 +11,8 @@ namespace SmashPopMVC.Services
     {
         CommentListingModel BuildCommentListing(string profileUserID, string currentUserID);
         MoreCommentsModel BuildMoreComments(string profileUserID, string currentUserID, int? lastCommentID);
-        IEnumerable<CommentDataModel> BuildCommentDataList(IEnumerable<Comment> comments, string currentUserID, int take = 20);
-        NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID);
-        CommentDataModel BuildCommentEditModel(Comment comment);
+        IEnumerable<CommentDataModel> BuildCommentDataList(IEnumerable<Comment> comments, string currentUserID, int take, int maxDepth = 5);
+        NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID, int maxDepth = 5);
+        CommentDataModel BuildCommentEditModel(Comment comment, int maxDepth = 5);
     }
 }

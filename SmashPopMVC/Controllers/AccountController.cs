@@ -47,7 +47,7 @@ namespace SmashPopMVC.Controllers
             return View();
         }
 
-        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 5, Name = "AttemptLogin", Message = "attempt to login")]
+        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 10, Name = "AttemptLogin", Message = "attempt to login")]
         [RequireHttps, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {

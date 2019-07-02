@@ -50,7 +50,7 @@ namespace SmashPopMVC.Service
                 };
                 New(tally);
             }
-            return tally;
+            return GetByDateCreated(now);
         }
 
         public async void New(Tally tally)

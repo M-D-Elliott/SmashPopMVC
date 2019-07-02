@@ -1,0 +1,335 @@
+﻿.flex-item {
+    display: inline-block;
+}
+
+.character {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome and Opera */
+    display: block;
+    width: 45px;
+    height: 50px;
+    content: url("/images/Character/4550pxtrans.png");
+    background-image: url('/images/Character/SmashCharIconsFinal.jpg');
+}
+
+.clickable-card .character:hover,
+.updatable .character:hover {
+    background-position-y: -50px;
+}
+
+.donkey-kong {
+    background-position-x: -45px;
+}
+
+.link {
+    background-position-x: -90px;
+}
+
+.samus {
+    background-position-x: -135px;
+}
+
+.dark-samus {
+    background-position-x: -180px;
+}
+
+.yoshi {
+    background-position-x: -225px;
+}
+
+.kirby {
+    background-position-x: -270px;
+}
+
+.fox {
+    background-position-x: -315px;
+}
+
+.pikachu {
+    background-position-x: -360px;
+}
+
+.luigi {
+    background-position-x: -405px;
+}
+
+.ness {
+    background-position-x: -450px;
+}
+
+.captain-falcon {
+    background-position-x: -495px;
+}
+
+.jigglypuff {
+    background-position-x: -540px;
+}
+
+.peach {
+    background-position-x: -585px;
+}
+
+.daisy {
+    background-position-x: -630px;
+}
+
+.bowser {
+    background-position-x: -675px;
+}
+
+.ice-climbers {
+    background-position-x: -720px;
+}
+
+.sheik {
+    background-position-x: -765px;
+}
+
+.zelda {
+    background-position-x: -810px;
+}
+
+.dr-mario {
+    background-position-x: -855px;
+}
+
+.pichu {
+    background-position-x: -900px;
+}
+
+.falco {
+    background-position-x: -945px;
+}
+
+.marth {
+    background-position-x: -990px;
+}
+
+.lucina {
+    background-position-x: -1035px;
+}
+
+.young-link {
+    background-position-x: -1080px;
+}
+
+.gandondorf {
+    background-position-x: -1125px;
+}
+
+.mewtwo {
+    background-position-x: -1170px;
+}
+
+.roy {
+    background-position-x: -1215px;
+}
+
+.chrom {
+    background-position-x: -1260px;
+}
+
+.mr-game-and-watch {
+    background-position-x: -1305px;
+}
+
+.meta-knight {
+    background-position-x: -1350px;
+}
+
+.pit {
+    background-position-x: -1395px;
+}
+
+.dark-pit {
+    background-position-x: -1440px;
+}
+
+.zero-suit-samus {
+    background-position-x: -1485px;
+}
+
+.wario {
+    background-position-x: -1530px;
+}
+
+.snake {
+    background-position-x: -1575px;
+}
+
+.ike {
+    background-position-x: -1620px;
+}
+
+.squirtle {
+    background-position-x: -1665px;
+}
+
+.ivysaur {
+    background-position-x: -1710px;
+}
+
+.charizard {
+    background-position-x: -1755px;
+}
+
+.diddy-kong {
+    background-position-x: -1800px;
+}
+
+.lucas {
+    background-position-x: -1845px;
+}
+
+.sonic {
+    background-position-x: -1890px;
+}
+
+.king-dedede {
+    background-position-x: -1935px;
+}
+
+.olimar {
+    background-position-x: -1980px;
+}
+
+.lucario {
+    background-position-x: -2025px;
+}
+
+.rob {
+    background-position-x: -2070px;
+}
+
+.toon-link {
+    background-position-x: -2115px;
+}
+
+.wolf {
+    background-position-x: -2160px;
+}
+
+.villager {
+    background-position-x: -2205px;
+}
+
+.megaman {
+    background-position-x: -2250px;
+}
+
+.wii-fit-trainer {
+    background-position-x: -2295px;
+}
+
+.rosalina {
+    background-position-x: -2340px;
+}
+
+.little-mac {
+    background-position-x: -2385px;
+}
+
+.greninja {
+    background-position-x: -2430px;
+}
+
+.mii-brawler {
+    background-position-x: -2475px;
+}
+
+.mii-swordfighter {
+    background-position-x: -2520px;
+}
+
+.mii-gunner {
+    background-position-x: -2565px;
+}
+
+.palutena {
+    background-position-x: -2610px;
+}
+
+.pac-man {
+    background-position-x: -2655px;
+}
+
+.robin {
+    background-position-x: -2700px;
+}
+
+.shulk {
+    background-position-x: -2745px;
+}
+
+.bowser-jr {
+    background-position-x: -2790px;
+}
+
+.duck-hunt {
+    background-position-x: -2835px;
+}
+
+.ryu {
+    background-position-x: -2880px;
+}
+
+.ken {
+    background-position-x: -2925px;
+}
+
+.cloud {
+    background-position-x: -2970px;
+}
+
+.corrin {
+    background-position-x: -3015px;
+}
+
+.bayonetta {
+    background-position-x: -3060px;
+}
+
+.inkling {
+    background-position-x: -3105px;
+}
+
+.ridley {
+    background-position-x: -3150px;
+}
+
+.simon {
+    background-position-x: -3195px;
+}
+
+.richter {
+    background-position-x: -3240px;
+}
+
+.king-k-rool {
+    background-position-x: -3285px;
+}
+
+.isabelle {
+    background-position-x: -3330px;
+}
+
+.incineroar {
+    background-position-x: -3375px;
+}
+
+.piranha-plant {
+    background-position-x: -3420px;
+}
+
+.joker {
+    background-position-x: -3465px;
+}
+
+.random {
+    background-position-x: -3510px;
+}

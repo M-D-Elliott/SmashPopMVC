@@ -27,7 +27,7 @@ function attachAjaxButtonEvents(buttons, url, dataType, successCallBack, errorCa
     if (validationCallBack == undefined || validationCallBack == null) {
         validationCallBack = function (form, callBack) { callBack(form) }
     }
-    const ajaxRequest = function (form) { sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type, validationCallBack) };
+    const ajaxRequest = function (form) { sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type) };
     const validation = function (form) {
         validationCallBack(form, ajaxRequest)
     }

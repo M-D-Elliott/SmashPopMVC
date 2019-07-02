@@ -51,7 +51,7 @@ namespace SmashPopMVC.Services
             return model;
         }
 
-        public IEnumerable<CommentDataModel> BuildCommentDataList(IEnumerable<Comment> comments, string currentUserID, int take)
+        public IEnumerable<CommentDataModel> BuildCommentDataList(IEnumerable<Comment> comments, string currentUserID, int take, int maxDepth = 5)
         {
             return comments
                 .Select(c => new CommentDataModel
@@ -63,12 +63,14 @@ namespace SmashPopMVC.Services
                     PosterName = c.Poster.UserName.Substring(0, c.Poster.UserName.IndexOf('@')),
                     PosterID = c.Poster.Id,
                     Deleted = c.Deleted,
-                    Replies = BuildCommentDataList(_commentService.GetChildComments(c.ID), currentUserID, take: 1000),
-                    NewCommentModel = BuildNewCommentModel(c.PosteeID, currentUserID, c.ID),
+                    CurrentUserID = currentUserID,
+                    Replies = c.Depth >= maxDepth ? null : BuildCommentDataList(_commentService.GetChildComments(c.ID), currentUserID, 1000),
+                    NewCommentModel = c.Depth >= maxDepth ? null : BuildNewCommentModel(c.PosteeID, currentUserID, c.ID, maxDepth: maxDepth),
+                    MaxDepth = maxDepth,
                 });
         }
 
-        public NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID)
+        public NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID, int maxDepth = 5)
         {
             return new NewCommentModel
             {
@@ -76,12 +78,13 @@ namespace SmashPopMVC.Services
                 PosteeID = posteeID,
                 PosterID = posterID,
                 ReplyToID = replyToID == null ? null : replyToID,
+                MaxDepth = maxDepth,
             };
         }
 
-        public CommentDataModel BuildCommentEditModel(Comment comment)
+        public CommentDataModel BuildCommentEditModel(Comment comment, int maxDepth = 5)
         {
-            var newCommentModel = BuildNewCommentModel(comment.PosteeID, comment.Poster.Id, comment.ID);
+            var newCommentModel = comment.Depth >= maxDepth ? null : BuildNewCommentModel(comment.PosteeID, comment.Poster.Id, comment.ID);
             return new CommentDataModel
             {
                 ID = comment.ID,
@@ -92,7 +95,9 @@ namespace SmashPopMVC.Services
                 PosterID = comment.Poster.Id,
                 Date = comment.Created.ToString("yyyy-MM-dd"),
                 Time = comment.Created.ToString("HH:mm:ss"),
+                CurrentUserID = comment.Poster.Id,
                 NewCommentModel = newCommentModel,
+                MaxDepth = maxDepth
             };
         }
     }

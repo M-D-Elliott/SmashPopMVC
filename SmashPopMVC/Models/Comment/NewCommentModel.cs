@@ -10,5 +10,7 @@ namespace SmashPopMVC.Models.Comment
         public string PosteeID { get; set; }
         public string PosterID { get; set; }
         public int? ReplyToID { get; set; }
+        public int Depth { get; set; }
+        public int MaxDepth { get; set; }
     }
 }

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="SmashPopMVC20190628015407" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\Marcus\\source\\repos\\SmashPopMVC\\SmashPopMVC\\obj\\Release\\netcoreapp2\.0\\win-x86\\PubTmp\\Out\\$" />
+  </parameter>
+</parameters>

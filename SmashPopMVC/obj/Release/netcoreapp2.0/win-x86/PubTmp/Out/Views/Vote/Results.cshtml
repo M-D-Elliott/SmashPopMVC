@@ -1,0 +1,18 @@
+﻿@model SmashPopMVC.Models.Vote.VoteListingModel;
+
+<div id="Votes" class="container">
+    @if (Model.Results.Any())
+    {
+        @Html.Partial("../Vote/_voteListingPartial", Model)
+    }
+    else
+    {
+        <div class="noResults">
+            <i class="material-icons md-72">question_answer</i>
+            <h3>
+                You don't have any votes.
+                <a>Make your first vote!</a>
+            </h3>
+        </div>
+    }
+</div>

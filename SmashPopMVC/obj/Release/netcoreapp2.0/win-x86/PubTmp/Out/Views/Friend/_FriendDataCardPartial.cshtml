@@ -1,0 +1,16 @@
+﻿@model SmashPopMVC.Models.ApplicationUser.UserFriendModel
+
+<div class="col-6 card flex-item" title="@Model.FriendData.MainName">
+    <a asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="@Model.FriendData.ID">
+        <h4 class="card-title">@Model.FriendData.Name</h4>
+        <img class="card-img-top character @Model.FriendData.MainImage center-block" alt="...">
+    </a>
+    @if (!Model.Accepted)
+    {
+        <form asp-controller="ApplicationUser" asp-action="AcceptFriend">
+            <input type="hidden" asp-for="@Model.RequestID" class="RequestID" />
+            <button class="accept-friend btn btn-default" value="submit">Accept</button>
+        </form>
+    }
+</div>
+

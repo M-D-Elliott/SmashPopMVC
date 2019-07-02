@@ -6,7 +6,6 @@
       "wwwroot/lib/jquery/dist/jquery.min.js",
       "wwwroot/lib/bootstrap/dist/js/bootstrap.min.js",
       "wwwroot/js/site.js",
-      "wwwroot/js/MiniGames/whack.js",
       "wwwroot/js/Character/select.js",
       "wwwroot/js/Profile/profile.js",
       "wwwroot/js/Vote/new_vote.js"

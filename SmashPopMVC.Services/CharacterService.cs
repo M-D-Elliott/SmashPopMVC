@@ -35,7 +35,7 @@ namespace SmashPopMVC.Service
         {
             if (id == null)
             {
-                int toSkip = _random.Next(0, _context.Characters.ToList().Count);
+                int toSkip = _random.Next(0, _context.Characters.ToList().Count - 1);
                 return _context.Characters.Skip(toSkip).Take(1).First();
             }
             else

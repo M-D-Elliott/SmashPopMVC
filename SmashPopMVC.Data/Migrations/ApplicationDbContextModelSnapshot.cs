@@ -251,6 +251,8 @@ namespace SmashPopMVC.Data.Migrations
 
                     b.Property<bool>("Deleted");
 
+                    b.Property<int>("Depth");
+
                     b.Property<string>("PosteeID");
 
                     b.Property<string>("PosterId");

@@ -1,0 +1,6 @@
+﻿@model SmashPopMVC.Models.Comment.CommentListingModel
+
+@Html.Partial("../Comment/_NewPartial", Model.NewCommentModel)
+<div id="comments-body">
+    @Html.Partial("../Comment/More", Model.MoreCommentsModel)
+</div>

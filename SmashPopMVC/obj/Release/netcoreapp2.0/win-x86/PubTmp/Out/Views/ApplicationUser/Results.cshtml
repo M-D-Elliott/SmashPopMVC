@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using SmashPopMVC.Models.ApplicationUser
+@model UserSearchModel
+
+<div class="container body-content">
+    <div class="row">
+        @if (Model.Results.Any())
+        {
+            <table class="table table-hover table-bordered" id="userListingTable">
+                <tbody>
+                    @foreach (var user in Model.Results)
+                    {
+                        <tr>
+                            <td class="center" style="min-width: 50px;">
+                                <div class="row inline-flex">
+                                    <div class="card flex-item" title="@user.MainName">
+                                        <img class="card-img-top character @user.MainImage" alt="...">
+                                    </div>
+                                    <div class="card flex-item hidden-xs" title="@user.AltName">
+                                        <img class="card-img-top character @user.AltImage" alt="...">
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="userSocial">
+                                    <div class="userName">
+                                        <a asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="@user.ID">@user.Name</a>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="userData">
+                                    <div class="dateJoined">
+                                        @user.Joined
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="ResultsNav">
+                <span>&lt;-- </span>
+                @if (Model.Page > 1)
+                {
+                    <span>@Html.ActionLink("Prev", "Results", "ApplicationUser", new UserSearchModel { SearchQuery = Model.SearchQuery, ByMain = Model.ByMain, ByAlt = Model.ByAlt, ByScore = Model.ByScore, Page = Model.Page - 1 })</span>
+                }
+                else
+                {
+                    <span>Prev</span>
+                }
+                <span> </span>
+                @if (!Model.End)
+                {
+                    <span>@Html.ActionLink("Next", "Results", "ApplicationUser", new UserSearchModel { SearchQuery = Model.SearchQuery, ByMain = Model.ByMain, ByAlt = Model.ByAlt, ByScore = Model.ByScore, Page = Model.Page + 1 })</span>
+                }
+                else
+                {
+                    <span>Next</span>
+                }
+                <span> --&gt;</span>
+            </div>
+
+        }
+        else
+        {
+            <div class="noResults">
+                <i class="material-icons md-72">question_answer</i>
+                <h3>
+                    Can't find users by that query. Try again?
+                </h3>
+            </div>
+        }
+    </div>
+</div>

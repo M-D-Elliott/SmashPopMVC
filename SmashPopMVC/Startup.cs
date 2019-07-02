@@ -29,7 +29,7 @@ namespace SmashPopMVC
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            
             services.AddMemoryCache();
 
             // Add application services.

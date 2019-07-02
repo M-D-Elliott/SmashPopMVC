@@ -51,20 +51,30 @@ namespace SmashPopMVC.Controllers
         [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult Add(AddCommentModel model)
         {
-            var comment = new Comment
-            {
-                Postee = _applicationUserService.GetUser(model.PosteeID),
-                Poster = _applicationUserService.GetUser(model.PosterID),
-                ReplyTo = _commentService.Get(model.ReplyToID),
-                Content = model.Content,
-                Created = DateTime.Now,
-                Replies = new List<Comment>(),
-            };
             if (ModelState.IsValid)
             {
-                _commentService.Add(comment);
-                var dataModel = _commentPackager.BuildCommentEditModel(comment);
-                return PartialView("Edit", dataModel);
+                var replyTo = _commentService.Get(model.ReplyToID);
+                var comment = new Comment
+                {
+                    Postee = _applicationUserService.GetUser(model.PosteeID),
+                    Poster = _applicationUserService.GetUser(model.PosterID),
+                    ReplyTo = replyTo,
+                    Content = model.Content,
+                    Created = DateTime.Now,
+                    Replies = new List<Comment>(),
+                    Depth = replyTo == null ? 1 : replyTo.Depth + 1,
+                };
+                if (comment.Depth <= model.MaxDepth)
+                {
+                    _commentService.Add(comment);
+                    var dataModel = _commentPackager.BuildCommentEditModel(comment);
+                    return PartialView("Edit", dataModel);
+                }
+                else
+                {
+                    return Json(new { success = false, responseText = "Max comment depth exceeded." });
+                }
+
             }
             else
             {

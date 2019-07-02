@@ -1,0 +1,113 @@
+﻿/*||||||| Profile Images ||||||||*/
+
+
+#ProfileImages .card {
+    display: inline-block;
+    border: 1px solid #666666;
+    padding: 0;
+}
+
+#ProfileImages .card div.card-title {
+    max-width: 50%;
+}
+
+#ProfileImages .card h6.card-title {
+    border-bottom: 1px solid #666666;
+    width: 100%;
+    padding: 0;
+}
+
+#ProfileImages .card img {
+    zoom: 1.5;
+}
+
+
+/*||||||| Profile Social ||||||||*/
+
+
+#Profile > div > div {
+    margin-bottom: 7%;
+}
+
+/*|| Profile Comments ||*/
+
+#ProfileComments {
+    max-height: 100vh;
+    background: #666666;
+    padding: 0;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+#ProfileComments::-webkit-scrollbar {
+    display: none;
+}
+
+#ProfileComments #comments-body {
+    background: green;
+}
+
+#comments-body > .comment {
+    border: 1px solid #666666;
+}
+
+.replies > .comment {
+    border-left : 1px solid #666666;
+}
+
+.comment {
+    width: 100%;
+    background: FloralWhite;
+    padding: 2%;
+}
+
+.replies {
+    margin-left: 5%;
+}
+
+.comment-links div,
+.comment-links form,
+.comment-links button,
+.comment-links span {
+    display: inline-block;
+    margin: 0 0.5%;
+    padding: 0;
+}
+
+/*||||||| Profile Votes ||||||||*/
+
+/*||||||| Profile Friends ||||||||*/
+
+
+#ProfileFriends div p {
+    margin: 0 0 1% 0;
+    padding: 0 1%;
+}
+
+#ProfileFriends div {
+    margin-bottom: 3%;
+    background-color: #666666;
+    border: 1px solid #666666;
+}
+
+#ProfileFriends div p {
+    color: white;
+}
+
+#ProfileFriends div .friends-holder {
+    background-color: floralwhite;
+    border: 0;
+    margin: 0;
+    padding: 1%;
+}
+
+#ProfileFriends div .card {
+    background-color: firebrick;
+    margin-right: 1%;
+    min-width: 55px;
+}
+
+
+#ProfileFriends div .card a {
+    color: white;
+}

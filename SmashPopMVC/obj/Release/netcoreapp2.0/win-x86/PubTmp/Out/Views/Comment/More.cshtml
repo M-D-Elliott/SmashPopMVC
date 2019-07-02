@@ -1,0 +1,7 @@
+﻿@model SmashPopMVC.Models.Comment.MoreCommentsModel
+
+@foreach (var comment in Model.Comments)
+{
+    @Html.Partial("../Comment/Edit", comment)
+}
+@Html.Partial("../Comment/_LoadCommentsForm", Model.LoadCommentsModel)

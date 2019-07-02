@@ -28,6 +28,7 @@ namespace SmashPopMVC.Data.Models
         public virtual Comment ReplyTo { get; set; }
 
         public virtual IEnumerable<Comment> Replies { get; set; }
+        public int Depth { get; set; }
 
         public bool Deleted { get; set; }
     }

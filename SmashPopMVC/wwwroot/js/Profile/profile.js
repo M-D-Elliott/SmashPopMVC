@@ -126,7 +126,7 @@ function acceptFriendCallBack(res, form) {
     const card = form.parent();
     form.remove();
     const approvedFriends = $("#ApprovedFriends");
-    approvedFriends.children("#noFriendsMessage").remove();
+    $("#noFriendsMessage").remove();
     approvedFriends.children(".friends-holder").append(card);
 }
 
@@ -253,7 +253,7 @@ $(document).ready(function () {
     attachAjaxButtonEvents(addFriendButton, '/ApplicationUser/AddFriend', 'json', successRemoveButtonCallBack);
 
     const acceptFriendButtons = $('.accept-friend');
-    attachAjaxButtonEvents(acceptFriendButtons, '/ApplicationUser/AcceptFriend', 'json', acceptFriendCallBack);
+    attachAjaxButtonEvents(acceptFriendButtons, '/Friend/Accept', 'json', acceptFriendCallBack);
 
     const newCommentButton = $('#NewComment');
     const newCommentCallBack = function (res, form) { loadNewCommentForm(res, form.siblings('#comments-body')) };

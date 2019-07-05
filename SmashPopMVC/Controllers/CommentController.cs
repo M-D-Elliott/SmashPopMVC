@@ -23,7 +23,7 @@ namespace SmashPopMVC.Controllers
             _commentPackager = commentPackager;
         }
         
-        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 40, Name = "NewComment", Message = "request new comments")]
+        [ThrottleByCount(TimeUnit = TimeUnit.Minute, Count = 3, Name = "NewComment", Message = "request new comments")]
         [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult New(NewCommentModel model)
         {
@@ -47,7 +47,7 @@ namespace SmashPopMVC.Controllers
             return Content("");
         }
 
-        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 40, Name ="PostComments", Message ="post comments")]
+        [ThrottleByCount(TimeUnit = TimeUnit.Minute, Count = 3, Name ="PostComments", Message ="post comments")]
         [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult Add(AddCommentModel model)
         {
@@ -82,7 +82,7 @@ namespace SmashPopMVC.Controllers
             }
         }
 
-        [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 20, Name = "EditComments", Message = "edit comments")]
+        [ThrottleByCount(TimeUnit = TimeUnit.Minute, Count = 3, Name = "EditComments", Message = "edit comments")]
         [RequireHttps, HttpPost, ValidateAntiForgeryToken]
         public IActionResult Update(CommentDataModel model)
         {

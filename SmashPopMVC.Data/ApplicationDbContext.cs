@@ -32,6 +32,10 @@ namespace SmashPopMVC.Data
                 .HasOne(f => f.RequestedTo)
                 .WithMany(u => u.ReceievedFriendRequests);
 
+            modelBuilder.Entity<Friend>()
+                .HasOne(f => f.RequestedTo)
+                .WithMany(u => u.ReceievedFriendRequests);
+
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.ReplyTo)
                 .WithMany(c => c.Replies)

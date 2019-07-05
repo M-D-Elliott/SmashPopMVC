@@ -1,4 +1,5 @@
-﻿using SmashPopMVC.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SmashPopMVC.Data;
 using SmashPopMVC.Data.Models;
 using System;
 using System.Linq;
@@ -14,6 +15,22 @@ namespace SmashPopMVC.Service
             _context = context;
         }
 
+        public Friend Get(int friendID, bool includeUsers = false)
+        {
+            var friend = _context.Friends
+                .Where(f => f.ID == friendID);
+
+            if(includeUsers)
+            {
+                friend = friend
+                    .Include(f => f.RequestedBy)
+                        .ThenInclude(u => u.Partner)
+                    .Include(f=> f.RequestedTo)
+                        .ThenInclude(u => u.Partner);
+            }
+            return friend.FirstOrDefault();
+        }
+
         public void AddFriend(ApplicationUser user, ApplicationUser newFriend)
         {
             var friendRequest = new Friend()
@@ -21,7 +38,7 @@ namespace SmashPopMVC.Service
                 RequestedBy = user,
                 RequestedTo = newFriend,
                 RequestTime = DateTime.Now,
-                FriendRequestFlag = FriendRequestFlag.None
+                RequestFlag = RequestFlag.None
             };
             user.SentFriendRequests.Add(friendRequest);
             _context.SaveChanges();
@@ -29,10 +46,10 @@ namespace SmashPopMVC.Service
 
         public bool AcceptFriend(int friendID)
         {
-            var friendship = _context.Friends.Where(f => f.ID == friendID).First();
-            if(friendship.FriendRequestFlag != FriendRequestFlag.Approved)
+            var friendship = Get(friendID);
+            if(friendship.RequestFlag != RequestFlag.Approved)
             {
-                friendship.FriendRequestFlag = FriendRequestFlag.Approved;
+                friendship.RequestFlag = RequestFlag.Approved;
                 _context.SaveChanges();
                 return true;
             }

@@ -7,8 +7,8 @@
     </a>
     @if (!Model.Accepted)
     {
-        <form asp-controller="ApplicationUser" asp-action="AcceptFriend">
-            <input type="hidden" asp-for="@Model.RequestID" class="RequestID" />
+        <form asp-controller="Friend" asp-action="Accept">
+            <input type="hidden" asp-for="@Model.RequestID" class="requestID" />
             <button class="accept-friend btn btn-default" value="submit">Accept</button>
         </form>
     }

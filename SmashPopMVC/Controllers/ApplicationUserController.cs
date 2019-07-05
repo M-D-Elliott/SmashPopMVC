@@ -11,6 +11,7 @@ using SmashPopMVC.Models.Character;
 using SmashPopMVC.Services;
 using System;
 using SmashPopMVC.Controllers.Attributes.Validators;
+using SmashPopMVC.Models.Friend;
 
 namespace SmashPopMVC.Controllers
 {
@@ -35,7 +36,7 @@ namespace SmashPopMVC.Controllers
             _commentPackager = commentPackager;
         }
 
-        [RequireHttps, AllowAnonymous]
+        [RequireHttps]
         public IActionResult Profile(string id = null)
         { 
 
@@ -125,20 +126,6 @@ namespace SmashPopMVC.Controllers
                 return Json(new { success = true, responseText = "Friend request sent!" });
             }
             return Json(new { success = false, responseText = "Submitted data was incorrect." });
-        }
-
-        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
-        public IActionResult AcceptFriend(int requestID)
-        {
-            var unacceptedRequest = _friendService.AcceptFriend(requestID);
-            if (unacceptedRequest)
-            {
-                return Json(new { success = true, responseText = "Friend accepted!" });
-            }
-            else
-            {
-                return Json(new { success = false, responseText = "Request already accepted." });
-            }
         }
 
         public string CurrentUserShortName()

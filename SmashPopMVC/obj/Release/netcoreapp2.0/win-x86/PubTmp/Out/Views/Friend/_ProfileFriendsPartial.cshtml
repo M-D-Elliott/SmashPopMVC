@@ -3,19 +3,20 @@
 
 <div id="ApprovedFriends">
     <p>Friends:</p>
-    @if (!Model.ApprovedFriends.Any() || Model.ApprovedFriends == null)
-    {
-        <p id="noFriendsMessage"> Use the user search to find your friends!</p>
-    }
-    else
-    {
-        <div class="row friends-holder">
+    <div class="row friends-holder">
+        @if (!Model.ApprovedFriends.Any() || Model.ApprovedFriends == null)
+        {
+            <p id="noFriendsMessage"> Use the user search to find your friends!</p>
+        }
+        else
+        {
+
             @foreach (var friend in Model.ApprovedFriends)
             {
                 @Html.Partial("../Friend/_FriendDataCardPartial", friend)
             }
-        </div>
-    }
+        }
+    </div>
 </div>
 @if (User.Identity.IsAuthenticated && Model.IsCurrentUser)
 {

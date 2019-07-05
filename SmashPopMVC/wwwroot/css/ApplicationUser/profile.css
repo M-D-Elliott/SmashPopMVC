@@ -82,16 +82,17 @@
 #ProfileFriends div p {
     margin: 0 0 1% 0;
     padding: 0 1%;
+    color: white;
+}
+
+#ProfileFriends > div > div > p {
+    color: black;
 }
 
 #ProfileFriends div {
     margin-bottom: 3%;
     background-color: #666666;
     border: 1px solid #666666;
-}
-
-#ProfileFriends div p {
-    color: white;
 }
 
 #ProfileFriends div .friends-holder {

@@ -10,10 +10,12 @@ namespace SmashPopMVC.Services
     public class CommentPackager : ICommentPackager
     {
         private readonly IComment _commentService;
+        private readonly int _maxDepth;
 
         public CommentPackager(IComment commentService)
         {
             _commentService = commentService;
+            _maxDepth = 5;
         }
 
         public CommentListingModel BuildCommentListing(string profileUserID, string currentUserID)
@@ -51,7 +53,7 @@ namespace SmashPopMVC.Services
             return model;
         }
 
-        public IEnumerable<CommentDataModel> BuildCommentDataList(IEnumerable<Comment> comments, string currentUserID, int take, int maxDepth = 5)
+        public IEnumerable<CommentDataModel> BuildCommentDataList(IEnumerable<Comment> comments, string currentUserID, int take)
         {
             return comments
                 .Select(c => new CommentDataModel
@@ -64,13 +66,13 @@ namespace SmashPopMVC.Services
                     PosterID = c.Poster.Id,
                     Deleted = c.Deleted,
                     CurrentUserID = currentUserID,
-                    Replies = c.Depth >= maxDepth ? null : BuildCommentDataList(_commentService.GetChildComments(c.ID), currentUserID, 1000),
-                    NewCommentModel = c.Depth >= maxDepth ? null : BuildNewCommentModel(c.PosteeID, currentUserID, c.ID, maxDepth: maxDepth),
-                    MaxDepth = maxDepth,
+                    Replies = c.Depth >= _maxDepth ? null : BuildCommentDataList(_commentService.GetChildComments(c.ID), currentUserID, 1000),
+                    NewCommentModel = c.Depth >= _maxDepth ? null : BuildNewCommentModel(c.PosteeID, currentUserID, c.ID),
+                    MaxDepth = _maxDepth,
                 });
         }
 
-        public NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID, int maxDepth = 5)
+        public NewCommentModel BuildNewCommentModel(string posteeID, string posterID, int? replyToID)
         {
             return new NewCommentModel
             {
@@ -78,13 +80,13 @@ namespace SmashPopMVC.Services
                 PosteeID = posteeID,
                 PosterID = posterID,
                 ReplyToID = replyToID == null ? null : replyToID,
-                MaxDepth = maxDepth,
+                MaxDepth = _maxDepth,
             };
         }
 
-        public CommentDataModel BuildCommentEditModel(Comment comment, int maxDepth = 5)
+        public CommentDataModel BuildCommentEditModel(Comment comment)
         {
-            var newCommentModel = comment.Depth >= maxDepth ? null : BuildNewCommentModel(comment.PosteeID, comment.Poster.Id, comment.ID);
+            var newCommentModel = comment.Depth >= _maxDepth ? null : BuildNewCommentModel(comment.PosteeID, comment.Poster.Id, comment.ID);
             return new CommentDataModel
             {
                 ID = comment.ID,
@@ -97,7 +99,7 @@ namespace SmashPopMVC.Services
                 Time = comment.Created.ToString("HH:mm:ss"),
                 CurrentUserID = comment.Poster.Id,
                 NewCommentModel = newCommentModel,
-                MaxDepth = maxDepth
+                MaxDepth = _maxDepth
             };
         }
     }

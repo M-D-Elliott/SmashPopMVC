@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmashPopMVC.Controllers.Attributes.Validators;
 using SmashPopMVC.Data;
@@ -37,6 +38,7 @@ namespace SmashPopMVC.Controllers
             return PartialView(model);
         }
 
+        [RequireHttps, AllowAnonymous, HttpGet]
         public IActionResult Whack()
         {
             var characters =  _characterService.GetAllWithGames();

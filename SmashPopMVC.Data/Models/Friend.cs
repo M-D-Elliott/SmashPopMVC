@@ -17,18 +17,20 @@ namespace SmashPopMVC.Data.Models
 
         public DateTime? RequestTime { get; set; }
 
-        public DateTime? BecameFriendsTime { get; set; }
+        public DateTime? ApprovalDate { get; set; }
 
-        public FriendRequestFlag FriendRequestFlag { get; set; }
+        public RequestFlag RequestFlag { get; set; }
 
         [NotMapped]
-        public bool Approved => FriendRequestFlag == FriendRequestFlag.Approved;
+        public bool Approved => RequestFlag == RequestFlag.Approved;
 
     }
 
-    public enum FriendRequestFlag
+    public enum RequestFlag
     {
         None,
+        Partnered,
+        PartnerRequest,
         Approved,
         Rejected,
         Blocked,

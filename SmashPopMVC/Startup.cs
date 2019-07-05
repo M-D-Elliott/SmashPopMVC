@@ -8,6 +8,8 @@ using SmashPopMVC.Data;
 using SmashPopMVC.Services;
 using SmashPopMVC.Service;
 using SmashPopMVC.Data.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace SmashPopMVC
 {
@@ -44,7 +46,15 @@ namespace SmashPopMVC
             services.AddScoped<IFriend, FriendService>();
             services.AddScoped<ITally, TallyService>();
 
-            services.AddMvc();
+            var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                //.RequireRole("Admin", "SuperUser")
+                .Build();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

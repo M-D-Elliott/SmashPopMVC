@@ -18,7 +18,7 @@ namespace SmashPopMVC.Service
             _context = context;
         }
 
-        public ApplicationUser GetUser(string id, bool social = false)
+        public ApplicationUser Get(string id, bool social = false)
         {
             var user = _context.ApplicationUsers.Where(u => u.Id == id);
             user = user
@@ -64,31 +64,10 @@ namespace SmashPopMVC.Service
                 .ToList();
         }
 
-        public void UpdateUserCharacters(string userID, Character new_main, Character new_alt)
+        public void Update(ApplicationUser user)
         {
-            var user = GetUser(userID);
-            if (user != null)
-            {
-                if(user.Main?.ID != new_main?.ID)
-                {
-                    user.Main = new_main ?? null;
-                    if(user.Main != null)
-                    {
-                        _context.Entry(user.Main).State = EntityState.Modified;
-                    }
-                }
-
-                if (user.Alt?.ID != new_alt?.ID)
-                {
-                    user.Alt = new_alt ?? null;
-                    if(user.Alt != null)
-                    {
-                        _context.Entry(user.Alt).State = EntityState.Modified;
-                    }
-                }
-                _context.Entry(user).State = EntityState.Modified;
-                _context.SaveChanges();
-            }
+            _context.Entry(user).State = EntityState.Modified;
+            _context.SaveChanges();
         }
     }
 }

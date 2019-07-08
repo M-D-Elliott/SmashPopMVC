@@ -13,9 +13,10 @@ using System;
 namespace SmashPopMVC.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190705203027_Explicitly added foreign key field for RequstedToID to Friend Model.")]
+    partial class ExplicitlyaddedforeignkeyfieldforRequstedToIDtoFriendModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

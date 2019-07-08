@@ -56,8 +56,8 @@ namespace SmashPopMVC.Controllers
                 var replyTo = _commentService.Get(model.ReplyToID);
                 var comment = new Comment
                 {
-                    Postee = _applicationUserService.GetUser(model.PosteeID),
-                    Poster = _applicationUserService.GetUser(model.PosterID),
+                    Postee = _applicationUserService.Get(model.PosteeID),
+                    Poster = _applicationUserService.Get(model.PosterID),
                     ReplyTo = replyTo,
                     Content = model.Content,
                     Created = DateTime.Now,

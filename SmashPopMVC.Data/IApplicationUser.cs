@@ -15,9 +15,9 @@ namespace SmashPopMVC.Data
             bool byScore = false
             );
 
-        ApplicationUser GetUser(
+        ApplicationUser Get(
             string id, 
             bool social = false);
-        void UpdateUserCharacters(string userID, Character new_main, Character new_alt);
+        void Update(ApplicationUser user);
     }
 }

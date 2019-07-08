@@ -11,8 +11,10 @@ namespace SmashPopMVC.Data.Models
     {
         public int ID { get; set; }
         [ForeignKey("RequestedBy")]
-        public string RequestedById { get; set; }
+        public string RequestedByID { get; set; }
         public virtual ApplicationUser RequestedBy { get; set; }
+        [ForeignKey("RequestedTo")]
+        public string RequestedToID { get; set; }
         public virtual ApplicationUser RequestedTo { get; set; }
 
         public DateTime? RequestTime { get; set; }
@@ -22,18 +24,18 @@ namespace SmashPopMVC.Data.Models
         public RequestFlag RequestFlag { get; set; }
 
         [NotMapped]
-        public bool Approved => RequestFlag == RequestFlag.Approved;
+        public bool Approved => RequestFlag >= RequestFlag.Approved;
 
     }
 
     public enum RequestFlag
     {
         None,
-        Partnered,
-        PartnerRequest,
-        Approved,
         Rejected,
         Blocked,
-        Spam
+        Spam,
+        Approved,
+        PartnerRequest,
+        Partnered,
     };
 }

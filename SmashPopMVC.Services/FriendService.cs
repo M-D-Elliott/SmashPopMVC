@@ -17,18 +17,18 @@ namespace SmashPopMVC.Service
 
         public Friend Get(int friendID, bool includeUsers = false)
         {
-            var friend = _context.Friends
+            var friendship = _context.Friends
                 .Where(f => f.ID == friendID);
 
             if(includeUsers)
             {
-                friend = friend
+                friendship = friendship
                     .Include(f => f.RequestedBy)
                         .ThenInclude(u => u.Partner)
                     .Include(f=> f.RequestedTo)
                         .ThenInclude(u => u.Partner);
             }
-            return friend.FirstOrDefault();
+            return friendship.FirstOrDefault();
         }
 
         public void AddFriend(ApplicationUser user, ApplicationUser newFriend)
@@ -44,19 +44,27 @@ namespace SmashPopMVC.Service
             _context.SaveChanges();
         }
 
-        public bool AcceptFriend(int friendID)
+        public void Update(Friend friendship)
         {
-            var friendship = Get(friendID);
-            if(friendship.RequestFlag != RequestFlag.Approved)
+            _context.Entry(friendship).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
+
+        public Friend GetByUsersID(string user1ID, string user2ID, bool includeUsers = false)
+        {
+            var friendship = _context.Friends
+                .Where(f => (user1ID == f.RequestedByID && user2ID == f.RequestedToID) || (user2ID == f.RequestedByID && user1ID == f.RequestedToID));
+
+            if (includeUsers)
             {
-                friendship.RequestFlag = RequestFlag.Approved;
-                _context.SaveChanges();
-                return true;
+                friendship = friendship
+                    .Include(f => f.RequestedBy)
+                        .ThenInclude(u => u.Partner)
+                    .Include(f => f.RequestedTo)
+                        .ThenInclude(u => u.Partner);
             }
-            else
-            {
-                return false;
-            }
+            return friendship
+                .FirstOrDefault();
         }
     }
 }

@@ -9,9 +9,8 @@
 <div id="Profile" class="p-0">
     <div id="ProfileData" class="row">
         <div class="col-xs-12 col-md-6">
-            <h2 id="ProfileUserName">@Model.Name</h2>
-            <br />
-            <div id="ProfileImages">
+            <h2 id="ProfileUserName">@Model.Name's profile</h2>
+            <div id="UserProfileImages" class="profileImages">
                 <div id="Main" class="@("col-6 card" + (Model.IsCurrentUser ? " modal-link updatable" : ""))">
                     <h6 class="card-title">Main</h6>
                     <img title="@Model.Main.Name"
@@ -33,19 +32,42 @@
             </div>
             @if (User.Identity.IsAuthenticated && !Model.IsCurrentUser)
             {
-                if (Model.CurrentUserFriend == null)
+                if (Model.Friends.CurrentUserFriend == null)
                 {
-                    @Html.Partial("../Friend/_AddFriendPartial", new AddFriendViewModel { UserID = Model.CurrentUserID, FriendID = Model.ID });
+                    @Html.Partial("../Friend/_AddFriendPartial", new AddFriendViewModel { CurrentUserID = Model.CurrentUserID, ProfileUserID = Model.ID });
                 }
                 else
                 {
-                    @*if (Model.CurrentUserFriend.Accepted)
+                    if (Model.Friends.RequestPartnershipViewModel != null)
                     {
-                        @Html.Partial("../Friend/_RequestPartnershipPartial", new RequestPartnershipViewModel { CurrentUserID = Model.CurrentUserID, FriendID = Model.ID })
-                    }*@
+                        @Html.Partial("../Friend/_RequestPartnershipPartial", Model.Friends.RequestPartnershipViewModel);
+                    }
                 }
             }
-        </div>
+            @if (Model.Friends.PartnerFriend != null)
+            {
+                <br />
+                <div id="PartnerImages" class="profileImages">
+                    <h4>Partner: <a asp-controller="ApplicationUser" asp-action="Profile" asp-route-id="@Model.Friends.PartnerFriend.FriendData.ID">@Model.Friends.PartnerFriend.FriendData.Name</a></h4>
+                    <div class="col-6 card">
+                        <h6 class="card-title">Main</h6>
+                        <img title="@Model.Friends.PartnerFriend.FriendData.MainName"
+                             class="card-img-top character @Model.Friends.PartnerFriend.FriendData.MainImage"
+                             alt="...">
+                    </div>
+                    <div class="col-6 card">
+                        <h6 class="card-title">Alt</h6>
+                        <img title="@Model.Friends.PartnerFriend.FriendData.AltName"
+                             class="card-img-top character @Model.Friends.PartnerFriend.FriendData.AltImage"
+                             alt="...">
+                    </div>
+                </div>
+                @if (Model.IsCurrentUser)
+                {
+                    @Html.Partial("../Friend/_CancelPartnershipPartial", new RequestPartnershipViewModel { CurrentUserID = Model.CurrentUserID, FriendID = Model.Friends.PartnerFriend.RequestID })
+                }
+            }
+            </div>
         <div id="RecentVotes" class="col-xs-12 col-md-6 container">
             @if (!Model.Votes.CurrentVote)
             {

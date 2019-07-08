@@ -1,7 +1,7 @@
 ﻿@model SmashPopMVC.Models.Friend.AddFriendViewModel
 
 <form asp-controller="ApplicationUser" asp-action="AddFriend" id="AddFriendForm">
-    <input type="hidden" asp-for="@Model.UserID" id="UserID" />
-    <input type="hidden" asp-for="@Model.FriendID" id="FriendID" />
+    <input type="hidden" asp-for="@Model.CurrentUserID" id="CurrentUserID" value="@Model.CurrentUserID"/>
+    <input type="hidden" asp-for="@Model.ProfileUserID" id="ProfileUserID" value="@Model.ProfileUserID"/>
     <button id="AddFriend" class="btn btn-default" onclick="return false;"><i class="fas fa-plus"></i>Add Friend!</button>
 </form>

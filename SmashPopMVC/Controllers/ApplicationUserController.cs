@@ -20,23 +20,16 @@ namespace SmashPopMVC.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IApplicationUser _applicationUserService;
         private readonly ICharacter _characterService;
-        private readonly IFriend _friendService;
         private readonly ICommentPackager _commentPackager;
 
-        public ApplicationUserController(UserManager<ApplicationUser> userManager, 
-                                         IApplicationUser applicationUserService, 
-                                         ICharacter characterService, 
-                                         IFriend friendService, 
-                                         ICommentPackager commentPackager)
+        public ApplicationUserController(UserManager<ApplicationUser> userManager, IApplicationUser applicationUserService, ICharacter characterService, ICommentPackager commentPackager)
         {
             _userManager = userManager;
             _applicationUserService = applicationUserService;
             _characterService = characterService;
-            _friendService = friendService;
             _commentPackager = commentPackager;
         }
-
-        [RequireHttps]
+        
         public IActionResult Profile(string id = null)
         { 
 
@@ -52,7 +45,7 @@ namespace SmashPopMVC.Controllers
                 }
             }
 
-            var user = _applicationUserService.GetUser(id, social: true);
+            var user = _applicationUserService.Get(id, social: true);
 
             if(user != null)
             {
@@ -106,7 +99,42 @@ namespace SmashPopMVC.Controllers
             {
                 var new_main = _characterService.GetByID(viewModel.MainID);
                 var new_alt = _characterService.GetByID(viewModel.AltID);
-                _applicationUserService.UpdateUserCharacters(viewModel.UserID, new_main, new_alt);
+                var user = _applicationUserService.Get(viewModel.UserID);
+                if (user != null)
+                {
+                    //if (user.Main?.ID != new_main?.ID)
+                    //{
+                    //    user.Main = new_main ?? null;
+                    //    if (user.Main != null)
+                    //    {
+                    //        _context.Entry(user.Main).State = EntityState.Modified;
+                    //    }
+                    //}
+
+                    //if (user.Alt?.ID != new_alt?.ID)
+                    //{
+                    //    user.Alt = new_alt ?? null;
+                    //    if (user.Alt != null)
+                    //    {
+                    //        _context.Entry(user.Alt).State = EntityState.Modified;
+                    //    }
+                    //}
+                    bool update = false;
+                    if (user.Main?.ID != new_main?.ID)
+                    {
+                        user.Main = new_main;
+                        update = true;
+                    }
+                    if (user.Alt?.ID != new_alt?.ID)
+                    {
+                        user.Alt = new_alt;
+                        update = true;
+                    }
+                    if (update)
+                    {
+                        _applicationUserService.Update(user);
+                    }
+                }
                 return Json(new { success = true, responseText = "Profile Updated!" });
             }
             else
@@ -114,24 +142,12 @@ namespace SmashPopMVC.Controllers
                 return Json(new { success = false, responseText = "Error."});
             }
         }
-        
-        [RequireHttps, HttpPost, ValidateAntiForgeryToken]
-        public IActionResult AddFriend(AddFriendViewModel viewModel)
-        {
-            if(ModelState.IsValid)
-            {
-                var user = _applicationUserService.GetUser(viewModel.UserID, social: true);
-                var newFriend = _applicationUserService.GetUser(viewModel.FriendID, social: true);
-                _friendService.AddFriend(user, newFriend);
-                return Json(new { success = true, responseText = "Friend request sent!" });
-            }
-            return Json(new { success = false, responseText = "Submitted data was incorrect." });
-        }
+      
 
         public string CurrentUserShortName()
         {
             var id = _userManager.GetUserId(User);
-            var user = _applicationUserService.GetUser(id);
+            var user = _applicationUserService.Get(id);
             return user.ShortName ?? user.UserName;
         }
 
@@ -183,68 +199,148 @@ namespace SmashPopMVC.Controllers
         private ProfileIndexModel BuildUserProfile(ApplicationUser user)
         {
             var currentUserID = GetCurrentUserID();
-            var currentUserFriend = user.Friends.Where(f => f.Id == currentUserID).ToList();
-            var currentUserIsFriend = user.FriendsApproved.Where(f => f.Id == currentUserID).Any();
+            var isCurrentUser = user.Id == currentUserID;
+
+            var friends = BuildFriendListing(user.SentFriendRequests, user.ReceievedFriendRequests, currentUserID, isCurrentUser: isCurrentUser);
+            //var currentUserFriend = user.Friends.Where(f => f.Id == currentUserID).Any();
+            //var currentUserIsFriend = user.FriendsApproved.Where(f => f.Id == currentUserID).Any();
             return new ProfileIndexModel
             {
                 ID = user.Id,
-                IsCurrentUser = user.Id == currentUserID,
+                IsCurrentUser = isCurrentUser,
                 CurrentUserID = currentUserID,
-                CurrentUserFriend = BuildFriendModel(currentUserFriend, accepted: currentUserIsFriend).FirstOrDefault(),
+                //CurrentUserFriend = currentUserFriend,
                 Name = user.ShortName ?? user.UserName,
                 Main = BuildCharacterData(user.Main),
                 Alt = BuildCharacterData(user.Alt),
                 Joined = user.MemberSince.ToString("d"),
-                PartnerName = user.Partner?.UserName,
-                PartnerMainImage = user.Partner?.Main.ImageName,
-                Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived, isCurrentUser: (currentUserID == user.Id)),
+                //Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived, isCurrentUser: (currentUserID == user.Id)),
+                Friends = friends,
                 Comments = _commentPackager.BuildCommentListing(user.Id, currentUserID),
                 Votes = BuildVoteListing(user.Votes, take: 3, currentUser: user.Id == currentUserID),
                 UpdateViewModel = BuildUpdateViewModel(user),
             };
         }
 
-        private FriendListingModel BuildFriendListing(ICollection<ApplicationUser> friendsApproved,
-                                                      ICollection<Friend> friendRequestsSent,
-                                                      ICollection<Friend> friendRequestsReceived,
-                                                      bool isCurrentUser = false)
+        private FriendListingModel BuildFriendListing(
+                                              ICollection<Friend> sentRequests,
+                                              ICollection<Friend> receivedRequests,
+                                              string currentUserID,
+                                              bool isCurrentUser = false)
         {
-            var approvedFriends = BuildFriendModel(friendsApproved, accepted: true);
 
-            var requestedFriends = friendRequestsSent
+            var approvedSentRequests = sentRequests
+                .Where(x => x.Approved)
+                .Select(f => new UserFriendModel {
+                    Flag = f.RequestFlag,
+                    RequestID = f.ID,
+                    FriendData = BuildUserData(f.RequestedTo),
+                    Accepted = true,
+                })
+                .OrderByDescending(f => f.Flag)
+                .ToList();
+
+            var approvedReceivedRequests = receivedRequests
+                .Where(x => x.Approved)
+                .Select(f => new UserFriendModel
+                {
+                    Flag = f.RequestFlag,
+                    RequestID = f.ID,
+                    FriendData = BuildUserData(f.RequestedBy),
+                    Accepted = true,
+                })
+                .OrderByDescending(f => f.Flag);
+
+            var approvedFriends = approvedSentRequests;
+            approvedFriends.AddRange(approvedReceivedRequests);
+
+            var partnerFriend = approvedFriends?
+                .Where(af => af.Flag == RequestFlag.Partnered)
+                .FirstOrDefault();
+
+            var sentFriends = sentRequests
+                .Where(f => !f.Approved)
                 .Select(f => new UserFriendModel
                 {
                     RequestID = f.ID,
                     FriendData = BuildUserData(f.RequestedTo),
                     Accepted = true,
-                });
-            var friendRequests = friendRequestsReceived
+                })
+                .ToList();
+            var receivedFriends = receivedRequests
+                .Where(f => !f.Approved)
                 .Select(f => new UserFriendModel
                 {
                     RequestID = f.ID,
                     FriendData = BuildUserData(f.RequestedBy),
                     Accepted = false,
-                });
+                })
+                .ToList();
+
+            var friends = new List<UserFriendModel>();
+            friends.AddRange(approvedFriends);
+            friends.AddRange(sentFriends);
+            friends.AddRange(receivedFriends);
+            var currentUserFriend = friends?
+                .Where(af => af.FriendData.ID == currentUserID)
+                .FirstOrDefault();
+
+            var requestPartnershipViewModel = (isCurrentUser || partnerFriend != null || currentUserFriend == null) ? null : new RequestPartnershipViewModel { CurrentUserID = currentUserID, FriendID = currentUserFriend.RequestID };
 
             return new FriendListingModel
             {
                 ApprovedFriends = approvedFriends,
-                RequestedFriends = requestedFriends,
-                FriendRequests = friendRequests,
+                RequestedFriends = sentFriends,
+                FriendRequests = receivedFriends,
+                PartnerFriend = partnerFriend ?? null,
+                CurrentUserFriend = currentUserFriend ?? null,
                 IsCurrentUser = isCurrentUser,
+                RequestPartnershipViewModel = requestPartnershipViewModel,
             };
-
         }
 
-        public IEnumerable<UserFriendModel> BuildFriendModel(ICollection<ApplicationUser> friends, bool accepted = false)
-        {
-            return friends
-                .Select(f => new UserFriendModel
-                {
-                    FriendData = BuildUserData(f),
-                    Accepted = accepted,
-                });
-        }
+        //private FriendListingModel BuildFriendListing(ICollection<ApplicationUser> friendsApproved,
+        //                                              ICollection<Friend> friendRequestsSent,
+        //                                              ICollection<Friend> friendRequestsReceived,
+        //                                              bool isCurrentUser = false)
+        //{
+        //    var approvedFriends = BuildFriendModel(friendsApproved, accepted: true);
+
+        //    var requestedFriends = friendRequestsSent
+        //        .Select(f => new UserFriendModel
+        //        {
+        //            RequestID = f.ID,
+        //            FriendData = BuildUserData(f.RequestedTo),
+        //            Accepted = true,
+        //        });
+        //    var friendRequests = friendRequestsReceived
+        //        .Select(f => new UserFriendModel
+        //        {
+        //            RequestID = f.ID,
+        //            FriendData = BuildUserData(f.RequestedBy),
+        //            Accepted = false,
+        //        });
+
+        //    return new FriendListingModel
+        //    {
+        //        ApprovedFriends = approvedFriends,
+        //        RequestedFriends = requestedFriends,
+        //        FriendRequests = friendRequests,
+        //        IsCurrentUser = isCurrentUser,
+        //    };
+
+        //}
+
+        //public IEnumerable<UserFriendModel> BuildFriendModel(ICollection<ApplicationUser> friends, bool accepted = false)
+        //{
+        //    return friends
+        //        .Select(f => new UserFriendModel
+        //        {
+
+        //            FriendData = BuildUserData(f),
+        //            Accepted = accepted,
+        //        });
+        //}
 
         private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000, bool currentUser=false)
         {

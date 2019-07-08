@@ -26,15 +26,12 @@ namespace SmashPopMVC.Data
             modelBuilder.Entity<Friend>()
                 .HasOne(f => f.RequestedBy)
                 .WithMany(u => u.SentFriendRequests)
-                .HasForeignKey(f => f.RequestedById);
+                .HasForeignKey(f => f.RequestedByID);
 
             modelBuilder.Entity<Friend>()
                 .HasOne(f => f.RequestedTo)
-                .WithMany(u => u.ReceievedFriendRequests);
-
-            modelBuilder.Entity<Friend>()
-                .HasOne(f => f.RequestedTo)
-                .WithMany(u => u.ReceievedFriendRequests);
+                .WithMany(u => u.ReceievedFriendRequests)
+                .HasForeignKey(f=> f.RequestedToID);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(c => c.ReplyTo)

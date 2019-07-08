@@ -10,6 +10,8 @@ using SmashPopMVC.Service;
 using SmashPopMVC.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace SmashPopMVC
 {
@@ -54,6 +56,7 @@ namespace SmashPopMVC
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AuthorizeFilter(policy));
+                options.Filters.Add(new RequireHttpsAttribute());
             });
         }
 
@@ -72,8 +75,13 @@ namespace SmashPopMVC
             }
 
             app.UseStaticFiles();
-
             app.UseAuthentication();
+
+            // Force all http to redirect to https.
+            var options = new RewriteOptions()
+                .AddRedirectToHttps();
+
+            app.UseRewriter(options);
 
             app.UseMvc(routes =>
             {

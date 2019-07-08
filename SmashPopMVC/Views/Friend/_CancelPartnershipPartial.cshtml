@@ -1,7 +1,7 @@
 ﻿@model SmashPopMVC.Models.Friend.RequestPartnershipViewModel
 
-<form asp-controller="Friend" asp-action="RequestPartnership" id="RequestPartnershipForm">
+<form asp-controller="Friend" asp-action="CancelPartnership" id="CancelPartnershipForm">
     <input type="hidden" asp-for="@Model.CurrentUserID" id="PartnerRequestcurrentUserID" value="@Model.CurrentUserID" />
     <input type="hidden" asp-for="@Model.FriendID" id="PartnerRequestFriendID" value="@Model.FriendID" />
-    <button id="RequestPartnership" class="btn btn-default" onclick="return false;"><i class="fas fa-plus"></i>Request Partnership!</button>
+    <button id="CancelPartnership" class="btn btn-default" onclick="return false;"><i class="fa fa-window-close"></i> Terminate</button>
 </form>

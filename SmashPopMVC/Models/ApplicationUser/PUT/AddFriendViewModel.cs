@@ -7,7 +7,7 @@ namespace SmashPopMVC.Models.Friend
 {
     public class AddFriendViewModel
     {
-        public string UserID { get; set; }
-        public string FriendID { get; set; }
+        public string CurrentUserID { get; set; }
+        public string ProfileUserID { get; set; }
     }
 }

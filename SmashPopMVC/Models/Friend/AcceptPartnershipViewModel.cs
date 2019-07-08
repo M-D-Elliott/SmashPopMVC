@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace SmashPopMVC.Models.Friend
 {
-    public class RequestPartnershipViewModel
+    public class AcceptPartnershipViewModel
     {
-        public string CurrentUserID { get; set; }
         public int FriendID { get; set; }
     }
 }

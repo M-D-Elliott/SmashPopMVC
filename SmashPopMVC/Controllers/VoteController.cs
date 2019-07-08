@@ -62,7 +62,7 @@ namespace SmashPopMVC.Controllers
             {
                 var vote = new Vote
                 {
-                    Voter = _applicationUserService.GetUser(model.UserID),
+                    Voter = _applicationUserService.Get(model.UserID),
                     Created = model.Created,
                     MostDifficult = _characterService.GetByIDOrRandom(model.MostDifficult.ID),
                     LeastDifficult = _characterService.GetByIDOrRandom(model.LeastDifficult.ID),

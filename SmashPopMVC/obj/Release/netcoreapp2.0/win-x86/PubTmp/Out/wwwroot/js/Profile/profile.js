@@ -112,8 +112,12 @@ function buildCommentsEvents(parent) {
 //|||| Simple Success CallBacks ||||||
 
 function successRemoveButtonCallBack(res, form) {
-    swal("Success!", res.responseText, "success");
-    form.children('button').hide();
+    if (res.success) {
+        swal("Success!", res.responseText, "success");
+        form.children('button').hide();
+    } else {
+        standardErrorAlert(res);
+    }
 }
 
 function changeUserImage(modal, mainOrAlt, modalClass) {
@@ -139,7 +143,7 @@ function basicConfirmationCallBack(text, form, callBack) {
         buttons: true,
         dangerMode: true,
     })
-    .then((confirm) => {
+    .then(function(confirm)  {
         if (confirm) {
             callBack(form);
         }
@@ -243,14 +247,20 @@ function submitCommentEdit(inputArea) {
 //||||Post-Loading Actions ||||||
 
 $(document).ready(function () {
-    const profileImages = $('#ProfileImages .updatable');
+    const profileImages = $('#UserProfileImages .updatable');
     attachImageEvents(profileImages);
 
     const updateUserButton = $('#UpdateUser');
     attachAjaxButtonEvents(updateUserButton, '/ApplicationUser/Update', 'json', successRemoveButtonCallBack);
 
     const addFriendButton = $('#AddFriend');
-    attachAjaxButtonEvents(addFriendButton, '/ApplicationUser/AddFriend', 'json', successRemoveButtonCallBack);
+    attachAjaxButtonEvents(addFriendButton, '/Friend/Add', 'json', successRemoveButtonCallBack);
+
+    const requestPartnershipButton = $('#RequestPartnership');
+    attachAjaxButtonEvents(requestPartnershipButton, '/Friend/RequestPartnership', 'json', successRemoveButtonCallBack);
+
+    const cancelPartnershipButton = $('#CancelPartnership');
+    attachAjaxButtonEvents(cancelPartnershipButton, '/Friend/CancelPartnership', 'json', successRemoveButtonCallBack);
 
     const acceptFriendButtons = $('.accept-friend');
     attachAjaxButtonEvents(acceptFriendButtons, '/Friend/Accept', 'json', acceptFriendCallBack);

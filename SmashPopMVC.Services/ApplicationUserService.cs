@@ -30,7 +30,7 @@ namespace SmashPopMVC.Service
                 user = user
                     .Include(u => u.SentFriendRequests).ThenInclude(s => s.RequestedTo).ThenInclude(f => f.Main)
                     .Include(u => u.ReceievedFriendRequests).ThenInclude(s => s.RequestedBy).ThenInclude(f => f.Main)
-                    .Include(u => u.Partner).ThenInclude(p => p.Main)
+                    .Include(u => u.Partner).ThenInclude(p => p.Alt)
                     .Include(u => u.Votes).ThenInclude(v => v.LeastDifficult)
                     .Include(u => u.Votes).ThenInclude(v => v.MostDifficult)
                     .Include(u => u.Votes).ThenInclude(v => v.FlavorOfTheMonth)

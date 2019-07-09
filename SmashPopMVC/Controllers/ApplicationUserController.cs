@@ -102,23 +102,6 @@ namespace SmashPopMVC.Controllers
                 var user = _applicationUserService.Get(viewModel.UserID);
                 if (user != null)
                 {
-                    //if (user.Main?.ID != new_main?.ID)
-                    //{
-                    //    user.Main = new_main ?? null;
-                    //    if (user.Main != null)
-                    //    {
-                    //        _context.Entry(user.Main).State = EntityState.Modified;
-                    //    }
-                    //}
-
-                    //if (user.Alt?.ID != new_alt?.ID)
-                    //{
-                    //    user.Alt = new_alt ?? null;
-                    //    if (user.Alt != null)
-                    //    {
-                    //        _context.Entry(user.Alt).State = EntityState.Modified;
-                    //    }
-                    //}
                     bool update = false;
                     if (user.Main?.ID != new_main?.ID)
                     {
@@ -200,21 +183,19 @@ namespace SmashPopMVC.Controllers
         {
             var currentUserID = GetCurrentUserID();
             var isCurrentUser = user.Id == currentUserID;
-
             var friends = BuildFriendListing(user.SentFriendRequests, user.ReceievedFriendRequests, currentUserID, isCurrentUser: isCurrentUser);
-            //var currentUserFriend = user.Friends.Where(f => f.Id == currentUserID).Any();
-            //var currentUserIsFriend = user.FriendsApproved.Where(f => f.Id == currentUserID).Any();
+
             return new ProfileIndexModel
             {
                 ID = user.Id,
                 IsCurrentUser = isCurrentUser,
                 CurrentUserID = currentUserID,
-                //CurrentUserFriend = currentUserFriend,
                 Name = user.ShortName ?? user.UserName,
                 Main = BuildCharacterData(user.Main),
                 Alt = BuildCharacterData(user.Alt),
+                PartnerAltName = user.Partner?.Alt.Name,
+                PartnerAltImage = user.Partner?.Alt.ImageName,
                 Joined = user.MemberSince.ToString("d"),
-                //Friends = BuildFriendListing(user.FriendsApproved, user.FriendRequestsSent, user.FriendRequestsReceived, isCurrentUser: (currentUserID == user.Id)),
                 Friends = friends,
                 Comments = _commentPackager.BuildCommentListing(user.Id, currentUserID),
                 Votes = BuildVoteListing(user.Votes, take: 3, currentUser: user.Id == currentUserID),
@@ -298,49 +279,6 @@ namespace SmashPopMVC.Controllers
                 RequestPartnershipViewModel = requestPartnershipViewModel,
             };
         }
-
-        //private FriendListingModel BuildFriendListing(ICollection<ApplicationUser> friendsApproved,
-        //                                              ICollection<Friend> friendRequestsSent,
-        //                                              ICollection<Friend> friendRequestsReceived,
-        //                                              bool isCurrentUser = false)
-        //{
-        //    var approvedFriends = BuildFriendModel(friendsApproved, accepted: true);
-
-        //    var requestedFriends = friendRequestsSent
-        //        .Select(f => new UserFriendModel
-        //        {
-        //            RequestID = f.ID,
-        //            FriendData = BuildUserData(f.RequestedTo),
-        //            Accepted = true,
-        //        });
-        //    var friendRequests = friendRequestsReceived
-        //        .Select(f => new UserFriendModel
-        //        {
-        //            RequestID = f.ID,
-        //            FriendData = BuildUserData(f.RequestedBy),
-        //            Accepted = false,
-        //        });
-
-        //    return new FriendListingModel
-        //    {
-        //        ApprovedFriends = approvedFriends,
-        //        RequestedFriends = requestedFriends,
-        //        FriendRequests = friendRequests,
-        //        IsCurrentUser = isCurrentUser,
-        //    };
-
-        //}
-
-        //public IEnumerable<UserFriendModel> BuildFriendModel(ICollection<ApplicationUser> friends, bool accepted = false)
-        //{
-        //    return friends
-        //        .Select(f => new UserFriendModel
-        //        {
-
-        //            FriendData = BuildUserData(f),
-        //            Accepted = accepted,
-        //        });
-        //}
 
         private VoteListingModel BuildVoteListing(IEnumerable<Vote> votes, int take=1000, bool currentUser=false)
         {

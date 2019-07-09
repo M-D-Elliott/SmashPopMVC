@@ -1,24 +1,31 @@
 ﻿/*||||||| Profile Images ||||||||*/
 
-
-#ProfileImages .card {
+.profileImages .card {
     display: inline-block;
     border: 1px solid #666666;
     padding: 0;
 }
 
-#ProfileImages .card div.card-title {
+.profileImages .card div.card-title {
     max-width: 50%;
 }
 
-#ProfileImages .card h6.card-title {
+.profileImages .card h6.card-title {
     border-bottom: 1px solid #666666;
     width: 100%;
     padding: 0;
 }
 
-#ProfileImages .card img {
+#UserProfileImages .card img {
     zoom: 1.5;
+    /*-moz-transform: scale(1.5);
+    -moz-transform-origin: 0 0;
+    -o-transform: scale(1.5);
+    -o-transform-origin: 0 0;
+    -webkit-transform: scale(1.5);
+    -webkit-transform-origin: 0 0;
+    transform: scale(1.5);
+    transform-origin: 0 0;*/
 }
 
 
@@ -111,4 +118,10 @@
 
 #ProfileFriends div .card a {
     color: white;
+}
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    #UserProfileImages .card {
+        min-width: 70px;
+    }
 }

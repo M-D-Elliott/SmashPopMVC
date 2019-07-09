@@ -33,6 +33,9 @@ namespace SmashPopMVC.Data.Models
         public int SmashPopMains { get; set; }
         public int SmashPopAlts { get; set; }
 
+        //Voting data
+        //public virtual IEnumerable<Vote> Votes { get; set; }
+
         public virtual IEnumerable<Vote> MostDifficultVotes { get; set; }
         public virtual IEnumerable<Vote> LeastDifficultVotes { get; set; }
         public virtual IEnumerable<Vote> FlavorOfTheMonthVotes { get; set; }

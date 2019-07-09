@@ -16,6 +16,8 @@ namespace SmashPopMVC.Models.ApplicationUser
         public string Joined { get; set; }
         public CharacterDataModel Main { get; set; }
         public CharacterDataModel Alt { get; set; }
+        public string PartnerAltName { get; set; }
+        public string PartnerAltImage { get; set; }
         public FriendListingModel Friends { get; set; }
         public UpdateViewModel UpdateViewModel { get; set; }
         public CommentListingModel Comments { get; set; }

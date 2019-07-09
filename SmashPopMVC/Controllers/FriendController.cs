@@ -52,6 +52,7 @@ namespace SmashPopMVC.Controllers
         }
 
         [ThrottleByCount(TimeUnit = TimeUnit.Hour, Count = 1, Name = "CancelPartner", Message = "cancel partnerships")]
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult CancelPartnership(RequestPartnershipViewModel model)
         {
             if (ModelState.IsValid)

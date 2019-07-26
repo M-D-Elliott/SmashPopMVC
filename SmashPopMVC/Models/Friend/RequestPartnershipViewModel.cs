@@ -8,6 +8,6 @@ namespace SmashPopMVC.Models.Friend
     public class RequestPartnershipViewModel
     {
         public string CurrentUserID { get; set; }
-        public int FriendID { get; set; }
+        public int? FriendID { get; set; }
     }
 }

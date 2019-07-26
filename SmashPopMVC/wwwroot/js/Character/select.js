@@ -11,7 +11,7 @@ function sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, ty
     if (dataType == undefined || dataType == null) {
         dataType = "json";
     }
-    if (successCallBack == undefined || dataType == null) {
+    if (successCallBack == undefined || successCallBack == null) {
         successCallBack = function (res) { }
     }
     if (errorCallBack == undefined || errorCallBack == null) {
@@ -30,7 +30,7 @@ function sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, ty
         data: data,
         dataType: dataType,
         success: function (res) { successCallBack(res, form); },
-        error: function (ts) { errorCallBack(ts); }
+        error: function (ts) { errorCallBack(ts, form); }
     });
 }
 
@@ -39,7 +39,7 @@ function loadCharacterModal(modal, initialSelect, maxSelect, submitCallBack, mod
         const successCallBack = function (res, form) {
             startCharacterModal(modal, res, initialSelect, maxSelect, submitCallBack, modalClass);
         };
-        const errorCallBack = function (ts) { standardErrorAlert(ts); closeModal(modal); };
+        const errorCallBack = function (ts, form) { standardErrorAlert(ts); closeModal(modal); };
         sendAjaxRequest('/Character/Select', null, 'html', successCallBack, errorCallBack, 'GET')
     } else {
         startCharacterModal(modal, null, initialSelect, maxSelect, submitCallBack, modalClass);

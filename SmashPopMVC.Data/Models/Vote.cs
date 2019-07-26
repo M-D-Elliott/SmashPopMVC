@@ -10,6 +10,7 @@ namespace SmashPopMVC.Data.Models
 
         public string VoterID { get; set; }
         public virtual ApplicationUser Voter { get; set; }
+        public DateTime Created { get; set; }
 
         public int TallyID { get; set; }
         public virtual Tally Tally { get; set; }
@@ -26,6 +27,5 @@ namespace SmashPopMVC.Data.Models
         public int? MostPowerfulID { get; set; }
         public virtual Character MostPowerful { get; set; }
 
-        public DateTime Created { get; set; }
     }
 }

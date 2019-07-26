@@ -10,5 +10,6 @@ namespace SmashPopMVC.Models.ApplicationUser
         public string UserID { get; set; }
         public int? MainID { get; set; }
         public int? AltID { get; set; }
+        public string ShortName { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC.Data\bin\Debug\netcoreapp2.0\SmashPopMVC.Data.deps.json
 C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC.Data\bin\Debug\netcoreapp2.0\SmashPopMVC.Data.dll
 C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC.Data\bin\Debug\netcoreapp2.0\SmashPopMVC.Data.pdb
-C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC.Data\obj\Debug\netcoreapp2.0\SmashPopMVC.Data.csprojAssemblyReference.cache
 C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC.Data\obj\Debug\netcoreapp2.0\SmashPopMVC.Data.csproj.CoreCompileInputs.cache
 C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC.Data\obj\Debug\netcoreapp2.0\SmashPopMVC.Data.AssemblyInfoInputs.cache
 C:\Users\Marcus\source\repos\SmashPopMVC\SmashPopMVC.Data\obj\Debug\netcoreapp2.0\SmashPopMVC.Data.AssemblyInfo.cs

@@ -11,5 +11,16 @@ namespace SmashPopMVC.Data.Models
 
         public int CharacterID { get; set; }
         public Character Character { get; set; }
+
+        public VoteFlag VoteFlag { get; set; }
+
     }
+
+    public enum VoteFlag
+    {
+        MostDifficult,
+        LeastDifficult,
+        FlavorOfTheMonth,
+        MostPowerful,
+    };
 }

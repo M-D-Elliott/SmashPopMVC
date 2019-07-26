@@ -7,6 +7,6 @@ namespace SmashPopMVC.Models.Character
 {
     public class CharacterListingModel
     {
-        public IEnumerable<CharacterSelectingModel> CharacterList { get; set; } 
+        public IEnumerable<CharacterDataModel> CharacterList { get; set; } 
     }
 }

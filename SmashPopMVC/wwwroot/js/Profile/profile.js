@@ -1,5 +1,9 @@
 ﻿//|||| General functions |||||
 
+//Takes raw html, perhaps an ajax response, and
+// ad jQ identifying string, such as a class then 
+// turns it into a real JQ object, ready to attach 
+// to any html element.
 function createObjectFromHtml(html, jQIdentifier) {
     const temp_object = $('#SmashPopTemp');
     temp_object.html(html);
@@ -13,6 +17,8 @@ function createObjectFromHtml(html, jQIdentifier) {
 
 //|||| Event attachers ||||||
 
+// Attachs any callback which takes the resulting 
+// form when instantiated to a button, or any JQ object.
 function attachButtonEvents(buttons, callBack) {
     buttons.off('click');
     buttons.on('click', function(e) {
@@ -23,17 +29,27 @@ function attachButtonEvents(buttons, callBack) {
     });
 }
 
+// passes an anonymous function containing the sendAjaxRequest function into
+// the attachButtonEvents function as it's callback. It also injects an
+// interceding validation callBack, such as confirmationCallBack if this
+// argument is supplied.
 function attachAjaxButtonEvents(buttons, url, dataType, successCallBack, errorCallBack, type, validationCallBack) {
     if (validationCallBack == undefined || validationCallBack == null) {
         validationCallBack = function (form, callBack) { callBack(form) }
     }
     const ajaxRequest = function (form) { sendAjaxRequest(url, form, dataType, successCallBack, errorCallBack, type) };
-    const validation = function (form) {
-        validationCallBack(form, ajaxRequest)
+
+    let validation = ajaxRequest;
+    if (validationCallBack != undefined && validationCallBack != null) {
+        validation = function (form) {
+            validationCallBack(form, ajaxRequest)
+        }
     }
     attachButtonEvents(buttons, validation);
 }
 
+// attaches the specific submit events related to image interaction
+// with a selection modal.
 function attachImageEvents(images) {
     images.off('click');
     images.on('click', function () {
@@ -48,6 +64,9 @@ function attachImageEvents(images) {
     });
 }
 
+// Attaches events related to submitting user-input fields, such as
+// text boxes, activating on either leaving the input field or
+// pressing the enter key.
 function attachInputEvents(inputAreas, callBack) {
     inputAreas.blur(function (e) {
         callBack($(this));
@@ -62,6 +81,10 @@ function attachInputEvents(inputAreas, callBack) {
     });
 }
 
+// attaches an event that activates the callBack when the user scrolls
+// the supplied object. A height object that is a child of that object that
+// will be full height of all it's children are needed. the trigger percent
+// determines the portion scrolled before the callBack is called.
 function attachScrollEvents(scrollObject, heightObject, callBack, triggerPercent) {
     if (triggerPercent == undefined || triggerPercent == null) {
         triggerPercent = 95;
@@ -78,6 +101,7 @@ function attachScrollEvents(scrollObject, heightObject, callBack, triggerPercent
     });
 }
 
+// Attaches the scroll event above to the comments, using the default scroll value.
 function attachCommentScrollEvents(profileComments) {
     const commentsBody = profileComments.children('#comments-body');
     const lastCommentID = commentsBody.children(".LoadCommentsForm").children(".LastCommentID");
@@ -87,10 +111,46 @@ function attachCommentScrollEvents(profileComments) {
     }
 }
 
+// |||||| Data Interface builders. ||||||
+
+// builds character selecting events and user-update events
+// using attach functions found above.
+function buildProfileDataEvents(profileData) {
+    const addFriendButton = profileData.find('#AddFriend');
+    attachAjaxButtonEvents(addFriendButton, '/Friend/Add', 'json', successRemoveButtonCallBack);
+
+    const requestPartnershipButton = profileData.find('#RequestPartnership');
+    attachAjaxButtonEvents(requestPartnershipButton, '/Friend/RequestPartnership', 'json', successRemoveButtonCallBack, null, 'PUT');
+
+    const message = "Your partnership will be cleared.";
+    const confirmTerminatePartner = function (form, callBack) {
+        basicConfirmationCallBack(message, form, callBack);
+    };
+    const cancelPartnershipButton = profileData.find('#CancelPartnership');
+    attachAjaxButtonEvents(cancelPartnershipButton, '/Friend/CancelPartnership', 'json', successRemoveFormParentCallBack, null, 'PUT', confirmTerminatePartner);
+
+    const profileImages = profileData.find('#UserProfileImages .updatable');
+    attachImageEvents(profileImages);
+
+    const updateUserButton = profileData.find('#UpdateUser');
+    attachAjaxButtonEvents(updateUserButton, '/ApplicationUser/Update', 'json', successRemoveButtonCallBack, null, 'PUT');
+}
+
+// Attaches ajax button events to Friend and Partnership related buttons.
+function buildFriendsEvents(profileFriends) {
+    const acceptFriendButtons = profileFriends.find('.accept-friend');
+    attachAjaxButtonEvents(acceptFriendButtons, '/Friend/Accept', 'json', acceptFriendCallBack, null, 'PUT');
+}
+
+//Attaches ajax button events to comment related buttons.
 function buildCommentsEvents(parent) {
+    const newCommentButton = parent.find('#NewComment');
+    const newCommentCallBack = function (res, form) { loadNewCommentForm(res, form.siblings('#comments-body')) };
+    attachAjaxButtonEvents(newCommentButton, '/Comment/New', 'html', newCommentCallBack, null, 'POST');
+
     const replyButtons = parent.find('.NewCommentForm .comment-reply');
-    const replyButtonsCallBack = function (res, requestForm) { loadNewCommentForm(res, requestForm.parent().siblings('.replies')) };
-    attachAjaxButtonEvents(replyButtons, '/Comment/New', 'html', replyButtonsCallBack);
+    const replyButtonsCallBack = function (res, form) { loadNewCommentForm(res, form.parent().siblings('.replies')) };
+    attachAjaxButtonEvents(replyButtons, '/Comment/New', 'html', replyButtonsCallBack, null, 'POST');
 
     const editButtons = parent.find('.EditCommentForm .comment-edit');
     const editFormSubmitCallBack = function (inputArea) { submitCommentEdit(inputArea) };
@@ -106,10 +166,24 @@ function buildCommentsEvents(parent) {
     const confirmDelete = function (form, callBack) {
         basicConfirmationCallBack(message, form, callBack);
     };
-    attachAjaxButtonEvents(deleteButtons, '/Comment/Delete', "html", deleteButtonsCallBack, null, "DELETE", confirmDelete);
+    attachAjaxButtonEvents(deleteButtons, '/Comment/Delete', "html", deleteButtonsCallBack, null, 'PUT', confirmDelete);
 }
 
 //|||| Simple Success CallBacks ||||||
+
+// Removes the button that triggered the callback as a success function.
+function standardErrorCallBack(ts, callBack) {
+    if (callBack == undefined || callBack == null) {
+        callBack = function (ts, form) { };
+    }
+    try {
+        errorCallBack = function (ts, form) { standardErrorAlert(ts); callBack(ts, form); };
+    }
+    catch (err) {
+        errorCallBack = function (ts, form) { console.log(ts.error); callBack(ts, form); };
+    }
+    return errorCallBack;
+}
 
 function successRemoveButtonCallBack(res, form) {
     if (res.success) {
@@ -120,12 +194,23 @@ function successRemoveButtonCallBack(res, form) {
     }
 }
 
+function successRemoveFormParentCallBack(res, form) {
+    if (res.success) {
+        swal("Success!", res.responseText, "success");
+        form.parent().hide();
+    } else {
+        standardErrorAlert(res);
+    }
+}
+
+// Changes the user images as a success callback.
 function changeUserImage(modal, mainOrAlt, modalClass) {
     if (changeCharacterCard(modal, mainOrAlt, modalClass)) {
         $('#UpdateUser').show();
     }
 }
 
+// Places the newly approved friend in the accepted friend box.
 function acceptFriendCallBack(res, form) {
     const card = form.parent();
     form.remove();
@@ -134,7 +219,10 @@ function acceptFriendCallBack(res, form) {
     approvedFriends.children(".friends-holder").append(card);
 }
 
-// |||||| Simple validation CallBack ||||
+// |||||| Simple validation Callbacks ||||
+
+// Uses sweet alerts to confirm the user is sure of their action.
+// used for deletion and partership removal.
 function basicConfirmationCallBack(text, form, callBack) {
     swal({
         title: "Are you sure?",
@@ -153,6 +241,9 @@ function basicConfirmationCallBack(text, form, callBack) {
 
 //|||| Comment CallBacks ||||||
 
+// builds comments that have newly arrived from the server
+// such as newly placed comments, those that have been
+// edited, or deleted. Also attaches events.
 function buildComment(res) {
     const comment = createObjectFromHtml(res, '.comment');
     const links = comment.children('.comment-links');
@@ -160,32 +251,17 @@ function buildComment(res) {
     return comment;
 }
 
-function buildNewComment(res, form, commentParent) {
+// attaches the newly created comment from the buildComment
+// to a parent and removes the form used to create it.
+function buildNewComment(res, commentParent) {
     commentParent.prepend(buildComment(res));
-    form.remove();
 }
 
-function commentRestore(originalComment) {
-    originalComment.children('.comment-content').show();
-}
-
-function buildAndPlaceRevisedComment(res, originalComment) {
-    const revisedComment = buildComment(res);
-    const replies = originalComment.children('.replies').children();
-    revisedComment.insertBefore(originalComment);
-    revisedComment.children('.replies').append(replies);
-    originalComment.remove();
-}
-
-function requestMoreComments(profileComments) {
-    const form = profileComments.children("#comments-body").children('.LoadCommentsForm');
-    const url = "/Comment/More";
-    const successCallBack = function (res, form) { buildAndPlaceComments(res, form) };
-    const errorCallBack = function (ts) { console.log(ts) };
-    sendAjaxRequest(url, form, "html", successCallBack, errorCallBack, null);
-}
-
-function buildAndPlaceComments(res, form) {
+// attaches more comments when they arrive from server,
+// including a fresh more comments form, which contains
+// the id of the most recently loaded comment. Also attaches
+// scroll events.
+function buildAndPlaceMoreComments(res, form) {
     if (res.length) {
         const commentsBody = form.parent();
         const profileComments = commentsBody.parent();
@@ -200,21 +276,50 @@ function buildAndPlaceComments(res, form) {
 
 }
 
+// uses the build comment function above to place an edited comment
+// after receiving it from the server.
+function buildAndPlaceRevisedComment(res, originalComment) {
+    const revisedComment = buildComment(res);
+    const replies = originalComment.children('.replies').children();
+    revisedComment.insertBefore(originalComment);
+    revisedComment.children('.replies').append(replies);
+    originalComment.remove();
+}
+
+// sends an ajax request and attaches a function which builds and
+// places the new comments as well as their load more comments form to
+// bottom of the comment list.
+function requestMoreComments(profileComments) {
+    const form = profileComments.children("#comments-body").children('.LoadCommentsForm');
+    const url = "/Comment/More";
+    const successCallBack = function (res, form) { buildAndPlaceMoreComments(res, form) };
+    const errorCallBack = function (ts) { console.log(ts) };
+    sendAjaxRequest(url, form, "html", successCallBack, errorCallBack, null);
+}
+
 //|||| Comment request callbacks ||||
 
+// attaches reply events to a newly generated comment.
 function loadNewCommentForm(res, commentParent) {
     const newCommentForm = createObjectFromHtml(res, 'form');
     commentParent.prepend(newCommentForm);
     const input = newCommentForm.children('.content-input');
     const url = "/Comment/Add";
     const callBack = function (inputArea) {
-        const successCallBack = function (res, form) { buildNewComment(res, form, commentParent); };
-        sendAjaxRequest(url, inputArea.parent(), "html", successCallBack)
+        const successCallBack = function (res) {
+            buildNewComment(res, commentParent);
+        };
+        const form = inputArea.parent();
+        errorCallBack = function (ts, form) { standardErrorCallBack(ts)(ts, form); };
+        sendAjaxRequest(url, form, "html", successCallBack, errorCallBack);
+        form.remove();
     };
     attachInputEvents(input, callBack);
     input.focus();
 }
 
+// hides the comment's content field, attaches the comment's edit
+// comment form to the main comment area and makes it visible.
 function revealEditCommentForm(form, submitCallBack) {
     const comment = form.parent().parent();
     const commentContent = comment.children('.comment-content');
@@ -230,6 +335,9 @@ function revealEditCommentForm(form, submitCallBack) {
     formInput.focus();
 }
 
+// attaches the build and place revised comment success callback as
+// well as the comment restore error callback to ajax request to
+// update the comment.
 function submitCommentEdit(inputArea) {
     let form = inputArea.parent();
     const originalComment = form.parent();
@@ -237,7 +345,7 @@ function submitCommentEdit(inputArea) {
         const successCallBack = function (res, form) { buildAndPlaceRevisedComment(res, originalComment) };
         const errorCallBack = function (ts) { commentRestore(originalComment); console.log('error:', ts) };
         const url = '/Comment/Update';
-        sendAjaxRequest(url, form, 'html', successCallBack, errorCallBack)
+        sendAjaxRequest(url, form, 'html', successCallBack, errorCallBack, 'PUT');
     } else {
         commentRestore(originalComment, form);
     }
@@ -246,31 +354,20 @@ function submitCommentEdit(inputArea) {
 
 //||||Post-Loading Actions ||||||
 
+// primarily used to attach button events through builders after page loads,
+// replacing any "return false" submit on the form buttons.
 $(document).ready(function () {
-    const profileImages = $('#UserProfileImages .updatable');
-    attachImageEvents(profileImages);
 
-    const updateUserButton = $('#UpdateUser');
-    attachAjaxButtonEvents(updateUserButton, '/ApplicationUser/Update', 'json', successRemoveButtonCallBack);
+    // Profile Data events.
+    const profileData = $("#ProfileData");
+    buildProfileDataEvents(profileData);
 
-    const addFriendButton = $('#AddFriend');
-    attachAjaxButtonEvents(addFriendButton, '/Friend/Add', 'json', successRemoveButtonCallBack);
+    // Friends events.
+    const profileFriends = $("#ProfileFriends");
+    buildFriendsEvents(profileFriends);
 
-    const requestPartnershipButton = $('#RequestPartnership');
-    attachAjaxButtonEvents(requestPartnershipButton, '/Friend/RequestPartnership', 'json', successRemoveButtonCallBack);
-
-    const cancelPartnershipButton = $('#CancelPartnership');
-    attachAjaxButtonEvents(cancelPartnershipButton, '/Friend/CancelPartnership', 'json', successRemoveButtonCallBack);
-
-    const acceptFriendButtons = $('.accept-friend');
-    attachAjaxButtonEvents(acceptFriendButtons, '/Friend/Accept', 'json', acceptFriendCallBack);
-
-    const newCommentButton = $('#NewComment');
-    const newCommentCallBack = function (res, form) { loadNewCommentForm(res, form.siblings('#comments-body')) };
-    attachAjaxButtonEvents(newCommentButton, '/Comment/New', 'html', newCommentCallBack);
-
+    // Comments events.
     const profileComments = $('#ProfileComments');
-    const commentsBody = profileComments.children('#comments-body');
-    buildCommentsEvents(commentsBody);
+    buildCommentsEvents(profileComments);
     attachCommentScrollEvents(profileComments);
 });

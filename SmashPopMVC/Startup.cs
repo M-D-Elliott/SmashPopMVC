@@ -5,13 +5,19 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SmashPopMVC.Data;
-using SmashPopMVC.Services;
-using SmashPopMVC.Service;
 using SmashPopMVC.Data.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Rewrite;
+using SmashPopMVC.Data.Sync;
+using SmashPopMVC.Service.Sync;
+using SmashPopMVC.Services.Sync;
+//using SmashPopMVC.Data.Async;
+//using SmashPopMVC.Service.Async;
+//using SmashPopMVC.Services.Async;
+using SmashPopMVC.Services;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace SmashPopMVC
 {
@@ -53,6 +59,12 @@ namespace SmashPopMVC
                 //.RequireRole("Admin", "SuperUser")
                 .Build();
 
+            services.Configure<RazorViewEngineOptions>(options =>
+            {
+                options.AreaViewLocationFormats.Clear();
+                options.AreaViewLocationFormats.Add("/Views/{1}/{0}.cshtml");
+            });
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AuthorizeFilter(policy));
@@ -85,9 +97,24 @@ namespace SmashPopMVC
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
+                routes.MapAreaRoute(
+                    name: "AsyncControllers",
+                    areaName: "Async",
+                    template: "Async/{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapAreaRoute(
+                    name: "SyncControllers",
+                    areaName: "Sync",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapAreaRoute(
+                    name: "SharedControllers",
+                    areaName: "Shared",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                   name: "default",
+                   template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

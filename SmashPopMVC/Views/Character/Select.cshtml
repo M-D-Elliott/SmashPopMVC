@@ -9,7 +9,7 @@
     <hr>
     <div class="center forty-percent-height flex-container">
         <div class="row flex-container" id="Characters">
-            @foreach (CharacterSelectingModel character in Model.CharacterList)
+            @foreach (var character in Model.CharacterList)
             {
                 <div class="card flex-item clickable-card">
                     <img title="@character.Name"

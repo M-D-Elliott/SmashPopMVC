@@ -61,11 +61,12 @@
                              class="card-img-top character @Model.PartnerAltImage"
                              alt="...">
                     </div>
+                    @if (Model.IsCurrentUser)
+                    {
+                        @Html.Partial("../Friend/_CancelPartnershipPartial", new RequestPartnershipViewModel { CurrentUserID = Model.CurrentUserID, FriendID = Model.Friends.PartnerFriend.RequestID })
+                    }
                 </div>
-                @if (Model.IsCurrentUser)
-                {
-                    @Html.Partial("../Friend/_CancelPartnershipPartial", new RequestPartnershipViewModel { CurrentUserID = Model.CurrentUserID, FriendID = Model.Friends.PartnerFriend.RequestID })
-                }
+
             }
             </div>
         <div id="RecentVotes" class="col-xs-12 col-md-6 container">
